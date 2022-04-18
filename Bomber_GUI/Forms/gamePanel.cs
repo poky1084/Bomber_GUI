@@ -41,14 +41,14 @@ namespace Bomber_GUI.Forms
         {
             GameConfig = new GameSettings();
             InitializeComponent();
-            Log("Welcome to MinerBot");
+            Log("Welcome to Bomber GUI");
             
         }
         public gamePanel(bool hideStop)
         {
             GameConfig = new GameSettings();
             InitializeComponent();
-            Log("Welcome to MinerBot");
+            Log("Welcome to Bomber GUI");
             if (hideStop)
             {
                 //button2.Visible = false;
