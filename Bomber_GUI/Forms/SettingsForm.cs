@@ -74,6 +74,7 @@ namespace Bomber_GUI.Forms
         }
         private void useStratCheck_CheckedChanged(object sender, EventArgs e)
         {
+            groupBox5.Enabled = useStratCheck.Checked;
             if (useStratCheck.Checked)
             {
                 if (LoadingDefaults)
@@ -172,6 +173,10 @@ namespace Bomber_GUI.Forms
             GameConfig.CheckboxStopAbove = Properties.Settings.Default.CheckboxStopAbove;
             GameConfig.CheckboxStopBelow = Properties.Settings.Default.CheckboxStopBelow;
 
+            GameConfig.RandomEveryGameChecked = Properties.Settings.Default.RandomEveryGameChecked;
+            GameConfig.RandomEveryWinChecked = Properties.Settings.Default.RandomEveryWinChecked;
+            GameConfig.RandomEveryLossChecked = Properties.Settings.Default.RandomEveryLossChecked;
+
             GameConfig.MetaSettings = Properties.Settings.Default.MetaSettings;
             if (GameConfig.MetaSettings)
             {
@@ -197,9 +202,9 @@ namespace Bomber_GUI.Forms
             GameConfig.UseStrat = Properties.Settings.Default.UseStrat;
             GameConfig.ResetBetMultiplyer = Properties.Settings.Default.ResetBetMultiplyer;
             GameConfig.ResetBetMultiplyerDeadline = Properties.Settings.Default.ResetBetMultiplyerDeadline;
-
-            useStratCheck.Checked = GameConfig.UseStrat;
             
+            useStratCheck.Checked = GameConfig.UseStrat;
+            groupBox5.Enabled = useStratCheck.Checked;
             GameConfig.StratergySquares = Properties.Settings.Default.StratergySquares.Split('-').Select(n => Convert.ToInt32(n)).ToArray();
             if (GameConfig.UseStrat)
             {
@@ -227,6 +232,10 @@ namespace Bomber_GUI.Forms
             //proxyBox.Text = Properties.Settings.Default.Proxy;
             metaChecked.Checked = Properties.Settings.Default.MetaSettings;
 
+            RandomEveryGameChecked.Checked = Properties.Settings.Default.RandomEveryGameChecked;
+            RandomEveryWinChecked.Checked = Properties.Settings.Default.RandomEveryWinChecked;
+            RandomEveryLossChecked.Checked = Properties.Settings.Default.RandomEveryLossChecked;
+            
             nudDelay.Value = Properties.Settings.Default.GameDelay;
 
             //BalanceStopCheck.Checked = Properties.Settings.Default.CheckBalance;
@@ -301,6 +310,10 @@ namespace Bomber_GUI.Forms
             GameConfig.CheckboxStopAbove = balanceStopOverChecked.Checked;
             GameConfig.CheckboxStopBelow = balanceStopUnderChecked.Checked;
 
+            GameConfig.RandomEveryGameChecked = RandomEveryGameChecked.Checked;
+            GameConfig.RandomEveryWinChecked = RandomEveryWinChecked.Checked;
+            GameConfig.RandomEveryLossChecked = RandomEveryLossChecked.Checked;
+
             GameConfig.MetaSettings = metaChecked.Checked;
             if (GameConfig.MetaSettings)
             {
@@ -350,6 +363,11 @@ namespace Bomber_GUI.Forms
             Properties.Settings.Default.BalanceStopAbove = balanceStopOver.Value;
             Properties.Settings.Default.BalanceStopBelow = balanceStopUnder.Value;
             Properties.Settings.Default.MetaSettings = metaChecked.Checked;
+
+            Properties.Settings.Default.RandomEveryGameChecked = RandomEveryGameChecked.Checked;
+            Properties.Settings.Default.RandomEveryWinChecked = RandomEveryWinChecked.Checked;
+            Properties.Settings.Default.RandomEveryLossChecked = RandomEveryLossChecked.Checked;
+
             if (GameConfig.MetaSettings)
             {
                 Properties.Settings.Default.PercentOnLoss = precentOnLoss.Value;
@@ -431,6 +449,34 @@ namespace Bomber_GUI.Forms
         private void cfgTag_SelectedIndexChanged(object sender, EventArgs e)
         {
             
+        }
+
+        private void RandomEveryGameChecked_CheckedChanged(object sender, EventArgs e)
+        {
+            if(RandomEveryGameChecked.CheckState == CheckState.Checked) 
+            {
+                RandomEveryLossChecked.CheckState = CheckState.Unchecked;
+                RandomEveryWinChecked.CheckState = CheckState.Unchecked;
+
+            }   
+        }
+
+        private void RandomEveryLossChecked_CheckedChanged(object sender, EventArgs e)
+        {
+            if(RandomEveryLossChecked.CheckState == CheckState.Checked)
+            {
+                RandomEveryGameChecked.CheckState = CheckState.Unchecked;
+                RandomEveryWinChecked.CheckState = CheckState.Unchecked;
+            } 
+        }
+
+        private void RandomEveryWinChecked_CheckedChanged(object sender, EventArgs e)
+        {
+            if(RandomEveryWinChecked.CheckState == CheckState.Checked)
+            {
+                RandomEveryLossChecked.CheckState = CheckState.Unchecked;
+                RandomEveryGameChecked.CheckState = CheckState.Unchecked;
+            }
         }
     }
 }

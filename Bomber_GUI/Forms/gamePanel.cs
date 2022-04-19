@@ -41,14 +41,14 @@ namespace Bomber_GUI.Forms
         {
             GameConfig = new GameSettings();
             InitializeComponent();
-            Log("Welcome to Bomber GUI");
+            Log("Welcome to Bomber Bot");
             
         }
         public gamePanel(bool hideStop)
         {
             GameConfig = new GameSettings();
             InitializeComponent();
-            Log("Welcome to Bomber GUI");
+            Log("Welcome to Bomber Bot");
             if (hideStop)
             {
                 //button2.Visible = false;
@@ -227,19 +227,19 @@ namespace Bomber_GUI.Forms
 
                     if (running == true)
                     {
-                        await Task.Delay(5000);
+                        await Task.Delay(2000);
                         PrepRequest();
                     }
                     else
                     {
-                        button1.Text = "Start";
+                        BSta(true);
                     }
                 }
                 else
                 {
                     clearSquares();
                     currentBetStreak = 0;
-
+                    stratergyIndex = 0;
 
                     ClearLog(notFirstClear);
                     notFirstClear = true;
@@ -252,9 +252,16 @@ namespace Bomber_GUI.Forms
             }
             catch (Exception ex)
             {
-
                 Log("Failed to start new game.");
-                PrepRequest();
+                if (running == true)
+                {
+                    await Task.Delay(2000);
+                    PrepRequest();
+                }
+                else
+                {
+                    BSta(true);
+                }
             }
             
         }
@@ -321,7 +328,7 @@ namespace Bomber_GUI.Forms
                 lock (this)
                 {
 
-                    if ((GameConfig.StratergySquares.Length == 1) || (stratergyIndex > GameConfig.StratergySquares.Length - 2))
+                    if ((GameConfig.StratergySquares.Length == 1) || (stratergyIndex >= GameConfig.StratergySquares.Length - 1))
                         stratergyIndex = 0;
                     else
                         stratergyIndex++;
@@ -418,12 +425,12 @@ namespace Bomber_GUI.Forms
 
                     if (running == true)
                     {
-                        await Task.Delay(5000);
+                        await Task.Delay(2000);
                         endCashoutResponce();
                     }
                     else
                     {
-                        button1.Text = "Start";
+                        BSta(true);
                     }
 
                 }
@@ -477,8 +484,12 @@ namespace Bomber_GUI.Forms
                     }
 
 
-                    int betSquare = getNextSquare();
-
+                    //int betSquare = getNextSquare();
+                    if (GameConfig.RandomEveryGameChecked || GameConfig.RandomEveryWinChecked)
+                    {
+                        //stratergyIndex = 0;
+                        GameConfig.StratergySquares = Randomize(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 }).ToList().Take(GameConfig.StratergySquares.Length).ToArray();
+                    }
                     if (running)
                     {
                         CheckWait(GameConfig.GameDelay);
@@ -494,7 +505,15 @@ namespace Bomber_GUI.Forms
             {
 
                 Log("Failed to cashout.");
-                endCashoutResponce();
+                if (running == true)
+                {
+                    await Task.Delay(2000);
+                    endCashoutResponce();
+                }
+                else
+                {
+                    BSta(true);
+                }
             }
         }
 
@@ -631,7 +650,11 @@ namespace Bomber_GUI.Forms
                             running = false;
 
                         }
-
+                        if (GameConfig.RandomEveryGameChecked || GameConfig.RandomEveryLossChecked)
+                        {
+                            //stratergyIndex = 0;
+                            GameConfig.StratergySquares = Randomize(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 }).ToList().Take(GameConfig.StratergySquares.Length).ToArray();
+                        }
                         if (running)
                         {
 
@@ -649,7 +672,7 @@ namespace Bomber_GUI.Forms
                     guesscount++;
                     Log("Found {0} {1}", ((bd.data.minesNext.state.rounds[guesscount - 1].payoutMultiplier * (double)bd.data.minesNext.amount) - (double)bd.data.minesNext.amount).ToString("0.00000000"), GameConfig.ConfigTag);
                     glowSquare(bd.data.minesNext.state.rounds[guesscount - 1].field + 1);
-                    int betSquare = getNextSquare();
+                    //int betSquare = getNextSquare();
                     currentBetStreak++;
                     if (currentBetStreak >= GameConfig.BetAmmount)
                     {
@@ -670,10 +693,17 @@ namespace Bomber_GUI.Forms
             {
 
                 Log("Failed bet.");
-                int betSquare = getNextSquare();
-                EndNewGameResponce();
 
-
+                if (running == true)
+                {
+                    await Task.Delay(2000);
+                    stratergyIndex++;
+                    EndNewGameResponce();
+                }
+                else
+                {
+                    BSta(true);
+                }
             }
         }
 
@@ -684,7 +714,7 @@ namespace Bomber_GUI.Forms
 
                 int betSquare = getNextSquare();
                 Log("betting square {0}", betSquare);
-
+                
                 var mainurl = "https://api." + GameConfig.SiteConfig + "/graphql";
                 var request = new RestRequest(Method.POST);
                 var client = new RestClient(mainurl);
@@ -715,16 +745,18 @@ namespace Bomber_GUI.Forms
 
                     if (running == true)
                     {
-                        await Task.Delay(5000);
+                        await Task.Delay(2000);
+                        stratergyIndex--;
                         EndNewGameResponce();
                     }
                     else
                     {
-                        button1.Text = "Start";
+                        BSta(true);
                     }
                 }
                 else
                 {
+                   
                     EndBetResponce(response);
                 }
 
@@ -733,7 +765,16 @@ namespace Bomber_GUI.Forms
             {
 
                 Log("Failed to guess.");
-                EndNewGameResponce();
+                if (running == true)
+                {
+                    await Task.Delay(2000);
+                    stratergyIndex--;
+                    EndNewGameResponce();
+                }
+                else
+                {
+                    BSta(true);
+                }
             }
         }
 
@@ -762,16 +803,20 @@ namespace Bomber_GUI.Forms
             }
             catch { }
         }
-        public string LiveBitsLabel
+        public static int[] Randomize(int[] items)
         {
-            get
+            Random rand = new Random();
+
+            // For each spot in the array, pick
+            // a random item to swap into that spot.
+            for (int i = 0; i < items.Length - 1; i++)
             {
-                return liveBitsBox.Text;
+                int j = rand.Next(i, items.Length);
+                int temp = items[i];
+                items[i] = items[j];
+                items[j] = temp;
             }
-            set
-            {
-                liveBitsBox.Text = value;
-            }
+            return items;
         }
 
     }

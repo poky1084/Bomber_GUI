@@ -36,5 +36,8 @@ namespace Bomber_GUI
         public int GameDelay { get; set; }
         public bool CheckboxStopAbove { get; set; }
         public bool CheckboxStopBelow { get; set; }
+        public bool RandomEveryGameChecked { get; set; }
+        public bool RandomEveryWinChecked { get; set; }
+        public bool RandomEveryLossChecked { get; set; }
     }
 }

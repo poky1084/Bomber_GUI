@@ -310,5 +310,41 @@ namespace Bomber_GUI.Properties {
                 this["CheckboxStopBelow"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RandomEveryGameChecked {
+            get {
+                return ((bool)(this["RandomEveryGameChecked"]));
+            }
+            set {
+                this["RandomEveryGameChecked"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RandomEveryWinChecked {
+            get {
+                return ((bool)(this["RandomEveryWinChecked"]));
+            }
+            set {
+                this["RandomEveryWinChecked"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RandomEveryLossChecked {
+            get {
+                return ((bool)(this["RandomEveryLossChecked"]));
+            }
+            set {
+                this["RandomEveryLossChecked"] = value;
+            }
+        }
     }
 }

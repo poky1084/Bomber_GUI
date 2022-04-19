@@ -76,6 +76,10 @@
             this.cfgTag = new System.Windows.Forms.ComboBox();
             this.SiteLabel = new System.Windows.Forms.Label();
             this.SiteConfig = new System.Windows.Forms.ComboBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.RandomEveryLossChecked = new System.Windows.Forms.CheckBox();
+            this.RandomEveryWinChecked = new System.Windows.Forms.CheckBox();
+            this.RandomEveryGameChecked = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numberofBets)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.betCostNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.precentOnLoss)).BeginInit();
@@ -92,6 +96,7 @@
             this.metaBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PercentOnLossResetGames)).BeginInit();
             this.proxyGroup.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -270,7 +275,7 @@
             this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.groupBox2.Size = new System.Drawing.Size(182, 153);
+            this.groupBox2.Size = new System.Drawing.Size(182, 165);
             this.groupBox2.TabIndex = 18;
             this.groupBox2.TabStop = false;
             // 
@@ -501,7 +506,7 @@
             this.balanceStopperGroup.Controls.Add(this.balanceStopOverChecked);
             this.balanceStopperGroup.Controls.Add(this.balanceStopUnder);
             this.balanceStopperGroup.Controls.Add(this.balanceStopUnderChecked);
-            this.balanceStopperGroup.Location = new System.Drawing.Point(8, 327);
+            this.balanceStopperGroup.Location = new System.Drawing.Point(8, 311);
             this.balanceStopperGroup.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.balanceStopperGroup.Name = "balanceStopperGroup";
             this.balanceStopperGroup.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -605,7 +610,7 @@
             this.metaBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.metaBox.Name = "metaBox";
             this.metaBox.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.metaBox.Size = new System.Drawing.Size(210, 81);
+            this.metaBox.Size = new System.Drawing.Size(210, 86);
             this.metaBox.TabIndex = 31;
             this.metaBox.TabStop = false;
             // 
@@ -761,11 +766,57 @@
             this.SiteConfig.TabIndex = 37;
             this.SiteConfig.Text = "stake.com";
             // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.RandomEveryLossChecked);
+            this.groupBox5.Controls.Add(this.RandomEveryWinChecked);
+            this.groupBox5.Controls.Add(this.RandomEveryGameChecked);
+            this.groupBox5.Location = new System.Drawing.Point(8, 399);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(272, 74);
+            this.groupBox5.TabIndex = 38;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Random Tiles";
+            // 
+            // RandomEveryLossChecked
+            // 
+            this.RandomEveryLossChecked.AutoSize = true;
+            this.RandomEveryLossChecked.Location = new System.Drawing.Point(133, 25);
+            this.RandomEveryLossChecked.Name = "RandomEveryLossChecked";
+            this.RandomEveryLossChecked.Size = new System.Drawing.Size(77, 19);
+            this.RandomEveryLossChecked.TabIndex = 2;
+            this.RandomEveryLossChecked.Text = "Every loss";
+            this.RandomEveryLossChecked.UseVisualStyleBackColor = true;
+            this.RandomEveryLossChecked.CheckedChanged += new System.EventHandler(this.RandomEveryLossChecked_CheckedChanged);
+            // 
+            // RandomEveryWinChecked
+            // 
+            this.RandomEveryWinChecked.AutoSize = true;
+            this.RandomEveryWinChecked.Location = new System.Drawing.Point(9, 50);
+            this.RandomEveryWinChecked.Name = "RandomEveryWinChecked";
+            this.RandomEveryWinChecked.Size = new System.Drawing.Size(76, 19);
+            this.RandomEveryWinChecked.TabIndex = 1;
+            this.RandomEveryWinChecked.Text = "Every win";
+            this.RandomEveryWinChecked.UseVisualStyleBackColor = true;
+            this.RandomEveryWinChecked.CheckedChanged += new System.EventHandler(this.RandomEveryWinChecked_CheckedChanged);
+            // 
+            // RandomEveryGameChecked
+            // 
+            this.RandomEveryGameChecked.AutoSize = true;
+            this.RandomEveryGameChecked.Location = new System.Drawing.Point(9, 25);
+            this.RandomEveryGameChecked.Name = "RandomEveryGameChecked";
+            this.RandomEveryGameChecked.Size = new System.Drawing.Size(87, 19);
+            this.RandomEveryGameChecked.TabIndex = 0;
+            this.RandomEveryGameChecked.Text = "Every game";
+            this.RandomEveryGameChecked.UseVisualStyleBackColor = true;
+            this.RandomEveryGameChecked.CheckedChanged += new System.EventHandler(this.RandomEveryGameChecked_CheckedChanged);
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(504, 507);
+            this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.SiteConfig);
             this.Controls.Add(this.SiteLabel);
             this.Controls.Add(this.cfgTag);
@@ -809,6 +860,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.PercentOnLossResetGames)).EndInit();
             this.proxyGroup.ResumeLayout(false);
             this.proxyGroup.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -863,5 +916,9 @@
         private System.Windows.Forms.ComboBox SiteConfig;
         private System.Windows.Forms.NumericUpDown BombCountBox;
         private Button CheckBal;
+        private GroupBox groupBox5;
+        private CheckBox RandomEveryLossChecked;
+        private CheckBox RandomEveryWinChecked;
+        private CheckBox RandomEveryGameChecked;
     }
 }
