@@ -177,6 +177,8 @@ namespace Bomber_GUI.Forms
             GameConfig.RandomEveryWinChecked = Properties.Settings.Default.RandomEveryWinChecked;
             GameConfig.RandomEveryLossChecked = Properties.Settings.Default.RandomEveryLossChecked;
 
+            GameConfig.RestartOnCrashChecked = Properties.Settings.Default.RestartOnCrashChecked;
+
             GameConfig.MetaSettings = Properties.Settings.Default.MetaSettings;
             if (GameConfig.MetaSettings)
             {
@@ -235,7 +237,9 @@ namespace Bomber_GUI.Forms
             RandomEveryGameChecked.Checked = Properties.Settings.Default.RandomEveryGameChecked;
             RandomEveryWinChecked.Checked = Properties.Settings.Default.RandomEveryWinChecked;
             RandomEveryLossChecked.Checked = Properties.Settings.Default.RandomEveryLossChecked;
-            
+
+            RestartOnCrashChecked.Checked = Properties.Settings.Default.RestartOnCrashChecked;
+
             nudDelay.Value = Properties.Settings.Default.GameDelay;
 
             //BalanceStopCheck.Checked = Properties.Settings.Default.CheckBalance;
@@ -314,6 +318,8 @@ namespace Bomber_GUI.Forms
             GameConfig.RandomEveryWinChecked = RandomEveryWinChecked.Checked;
             GameConfig.RandomEveryLossChecked = RandomEveryLossChecked.Checked;
 
+            GameConfig.RestartOnCrashChecked = RestartOnCrashChecked.Checked;
+
             GameConfig.MetaSettings = metaChecked.Checked;
             if (GameConfig.MetaSettings)
             {
@@ -367,6 +373,8 @@ namespace Bomber_GUI.Forms
             Properties.Settings.Default.RandomEveryGameChecked = RandomEveryGameChecked.Checked;
             Properties.Settings.Default.RandomEveryWinChecked = RandomEveryWinChecked.Checked;
             Properties.Settings.Default.RandomEveryLossChecked = RandomEveryLossChecked.Checked;
+
+            Properties.Settings.Default.RestartOnCrashChecked = RestartOnCrashChecked.Checked;
 
             if (GameConfig.MetaSettings)
             {

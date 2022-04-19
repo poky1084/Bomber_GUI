@@ -227,8 +227,22 @@ namespace Bomber_GUI.Forms
 
                     if (running == true)
                     {
-                        await Task.Delay(2000);
-                        PrepRequest();
+                        if(response.errors[0].errorType == "insufficientBalance")
+                        {
+                            if (GameConfig.RestartOnCrashChecked)
+                            {
+                                GameConfig.BetCost = BasebetCost;
+                                await Task.Delay(2000);
+                                PrepRequest();
+                            }
+                                
+                        } 
+                        else
+                        {
+                            await Task.Delay(2000);
+                            PrepRequest();
+                        }
+                        
                     }
                     else
                     {

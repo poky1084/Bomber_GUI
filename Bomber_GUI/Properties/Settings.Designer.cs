@@ -346,5 +346,17 @@ namespace Bomber_GUI.Properties {
                 this["RandomEveryLossChecked"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RestartOnCrashChecked {
+            get {
+                return ((bool)(this["RestartOnCrashChecked"]));
+            }
+            set {
+                this["RestartOnCrashChecked"] = value;
+            }
+        }
     }
 }

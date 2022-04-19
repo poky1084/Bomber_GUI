@@ -39,5 +39,6 @@ namespace Bomber_GUI
         public bool RandomEveryGameChecked { get; set; }
         public bool RandomEveryWinChecked { get; set; }
         public bool RandomEveryLossChecked { get; set; }
+        public bool RestartOnCrashChecked { get; set; }
     }
 }

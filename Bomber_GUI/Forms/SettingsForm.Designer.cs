@@ -80,6 +80,7 @@
             this.RandomEveryLossChecked = new System.Windows.Forms.CheckBox();
             this.RandomEveryWinChecked = new System.Windows.Forms.CheckBox();
             this.RandomEveryGameChecked = new System.Windows.Forms.CheckBox();
+            this.RestartOnCrashChecked = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numberofBets)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.betCostNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.precentOnLoss)).BeginInit();
@@ -394,6 +395,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.RestartOnCrashChecked);
             this.groupBox1.Controls.Add(this.stopAfterWinCheck);
             this.groupBox1.Controls.Add(this.stopAfterLossCheck);
             this.groupBox1.Controls.Add(this.label7);
@@ -811,6 +813,16 @@
             this.RandomEveryGameChecked.UseVisualStyleBackColor = true;
             this.RandomEveryGameChecked.CheckedChanged += new System.EventHandler(this.RandomEveryGameChecked_CheckedChanged);
             // 
+            // RestartOnCrashChecked
+            // 
+            this.RestartOnCrashChecked.AutoSize = true;
+            this.RestartOnCrashChecked.Location = new System.Drawing.Point(133, 31);
+            this.RestartOnCrashChecked.Name = "RestartOnCrashChecked";
+            this.RestartOnCrashChecked.Size = new System.Drawing.Size(110, 19);
+            this.RestartOnCrashChecked.TabIndex = 27;
+            this.RestartOnCrashChecked.Text = "Restart on crash";
+            this.RestartOnCrashChecked.UseVisualStyleBackColor = true;
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -920,5 +932,6 @@
         private CheckBox RandomEveryLossChecked;
         private CheckBox RandomEveryWinChecked;
         private CheckBox RandomEveryGameChecked;
+        private CheckBox RestartOnCrashChecked;
     }
 }
