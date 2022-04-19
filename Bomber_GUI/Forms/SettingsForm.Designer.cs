@@ -42,6 +42,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.useStratCheck = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.stratDisplay = new Bomber_GUI.Forms.SatoshiGrid();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.showGBombsCheck = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -51,7 +52,6 @@
             this.stopAfterGamesNum = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.RestartOnCrashChecked = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label12 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
@@ -80,9 +80,11 @@
             this.RandomEveryLossChecked = new System.Windows.Forms.CheckBox();
             this.RandomEveryWinChecked = new System.Windows.Forms.CheckBox();
             this.RandomEveryGameChecked = new System.Windows.Forms.CheckBox();
+            this.RestartOnCrashChecked = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numberofBets)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.betCostNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.precentOnLoss)).BeginInit();
+            this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.stopAfterGamesNum)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -115,7 +117,6 @@
             this.pHash.Name = "pHash";
             this.pHash.Size = new System.Drawing.Size(391, 23);
             this.pHash.TabIndex = 1;
-            this.pHash.UseSystemPasswordChar = true;
             // 
             // label2
             // 
@@ -270,6 +271,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.stratDisplay);
             this.groupBox2.Location = new System.Drawing.Point(304, 209);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.groupBox2.Name = "groupBox2";
@@ -277,6 +279,17 @@
             this.groupBox2.Size = new System.Drawing.Size(182, 165);
             this.groupBox2.TabIndex = 18;
             this.groupBox2.TabStop = false;
+            // 
+            // stratDisplay
+            // 
+            this.stratDisplay.GridBorder = false;
+            this.stratDisplay.Location = new System.Drawing.Point(21, 22);
+            this.stratDisplay.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.stratDisplay.Name = "stratDisplay";
+            this.stratDisplay.Size = new System.Drawing.Size(132, 132);
+            this.stratDisplay.SquareBorder = true;
+            this.stratDisplay.TabIndex = 18;
+            this.stratDisplay.Text = "satoshiGrid1";
             // 
             // checkBox1
             // 
@@ -396,16 +409,6 @@
             this.groupBox1.TabIndex = 27;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Stops";
-            // 
-            // RestartOnCrashChecked
-            // 
-            this.RestartOnCrashChecked.AutoSize = true;
-            this.RestartOnCrashChecked.Location = new System.Drawing.Point(133, 31);
-            this.RestartOnCrashChecked.Name = "RestartOnCrashChecked";
-            this.RestartOnCrashChecked.Size = new System.Drawing.Size(110, 19);
-            this.RestartOnCrashChecked.TabIndex = 27;
-            this.RestartOnCrashChecked.Text = "Restart on crash";
-            this.RestartOnCrashChecked.UseVisualStyleBackColor = true;
             // 
             // groupBox3
             // 
@@ -810,6 +813,16 @@
             this.RandomEveryGameChecked.UseVisualStyleBackColor = true;
             this.RandomEveryGameChecked.CheckedChanged += new System.EventHandler(this.RandomEveryGameChecked_CheckedChanged);
             // 
+            // RestartOnCrashChecked
+            // 
+            this.RestartOnCrashChecked.AutoSize = true;
+            this.RestartOnCrashChecked.Location = new System.Drawing.Point(133, 31);
+            this.RestartOnCrashChecked.Name = "RestartOnCrashChecked";
+            this.RestartOnCrashChecked.Size = new System.Drawing.Size(110, 19);
+            this.RestartOnCrashChecked.TabIndex = 27;
+            this.RestartOnCrashChecked.Text = "Restart on crash";
+            this.RestartOnCrashChecked.UseVisualStyleBackColor = true;
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -840,6 +853,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numberofBets)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.betCostNUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.precentOnLoss)).EndInit();
+            this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.stopAfterGamesNum)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
