@@ -75,8 +75,11 @@ namespace Bomber_GUI.Forms
         private void useStratCheck_CheckedChanged(object sender, EventArgs e)
         {
             groupBox5.Enabled = useStratCheck.Checked;
+
             if (useStratCheck.Checked)
             {
+                OppositeTileChecked.CheckState = CheckState.Unchecked;
+                OppositeTileChecked.Enabled = false;
                 if (LoadingDefaults)
                     return;
                 using (StratergyForm sf = new StratergyForm())
@@ -115,6 +118,10 @@ namespace Bomber_GUI.Forms
             }
             else
             {
+                if (numberofBets.Value < 2 && BombCountBox.Value < 2)
+                {
+                    OppositeTileChecked.Enabled = true;
+                }
                 GameConfig.UseStrat = false;
                 stratDisplay.Reset();
             }
