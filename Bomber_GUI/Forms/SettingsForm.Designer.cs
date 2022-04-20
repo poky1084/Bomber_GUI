@@ -52,6 +52,7 @@
             this.stopAfterGamesNum = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.StickyTilesChecked = new System.Windows.Forms.CheckBox();
             this.OppositeTileChecked = new System.Windows.Forms.CheckBox();
             this.RestartOnCrashChecked = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -217,7 +218,7 @@
             // stopAfterWinCheck
             // 
             this.stopAfterWinCheck.AutoSize = true;
-            this.stopAfterWinCheck.Location = new System.Drawing.Point(12, 31);
+            this.stopAfterWinCheck.Location = new System.Drawing.Point(12, 15);
             this.stopAfterWinCheck.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.stopAfterWinCheck.Name = "stopAfterWinCheck";
             this.stopAfterWinCheck.Size = new System.Drawing.Size(99, 19);
@@ -352,7 +353,7 @@
             // stopAfterLossCheck
             // 
             this.stopAfterLossCheck.AutoSize = true;
-            this.stopAfterLossCheck.Location = new System.Drawing.Point(12, 56);
+            this.stopAfterLossCheck.Location = new System.Drawing.Point(12, 38);
             this.stopAfterLossCheck.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.stopAfterLossCheck.Name = "stopAfterLossCheck";
             this.stopAfterLossCheck.Size = new System.Drawing.Size(100, 19);
@@ -363,7 +364,7 @@
             // stopAfterGamesChecked
             // 
             this.stopAfterGamesChecked.AutoSize = true;
-            this.stopAfterGamesChecked.Location = new System.Drawing.Point(12, 82);
+            this.stopAfterGamesChecked.Location = new System.Drawing.Point(12, 89);
             this.stopAfterGamesChecked.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.stopAfterGamesChecked.Name = "stopAfterGamesChecked";
             this.stopAfterGamesChecked.Size = new System.Drawing.Size(80, 19);
@@ -375,7 +376,7 @@
             // stopAfterGamesNum
             // 
             this.stopAfterGamesNum.Enabled = false;
-            this.stopAfterGamesNum.Location = new System.Drawing.Point(106, 81);
+            this.stopAfterGamesNum.Location = new System.Drawing.Point(106, 87);
             this.stopAfterGamesNum.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.stopAfterGamesNum.Maximum = new decimal(new int[] {
             1000000,
@@ -399,7 +400,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(206, 83);
+            this.label7.Location = new System.Drawing.Point(206, 89);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(43, 15);
@@ -408,6 +409,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.StickyTilesChecked);
             this.groupBox1.Controls.Add(this.OppositeTileChecked);
             this.groupBox1.Controls.Add(this.RestartOnCrashChecked);
             this.groupBox1.Controls.Add(this.stopAfterWinCheck);
@@ -424,11 +426,22 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Stops";
             // 
+            // StickyTilesChecked
+            // 
+            this.StickyTilesChecked.AutoSize = true;
+            this.StickyTilesChecked.Enabled = false;
+            this.StickyTilesChecked.Location = new System.Drawing.Point(133, 61);
+            this.StickyTilesChecked.Name = "StickyTilesChecked";
+            this.StickyTilesChecked.Size = new System.Drawing.Size(83, 19);
+            this.StickyTilesChecked.TabIndex = 29;
+            this.StickyTilesChecked.Text = "Sticky Tiles";
+            this.StickyTilesChecked.UseVisualStyleBackColor = true;
+            // 
             // OppositeTileChecked
             // 
             this.OppositeTileChecked.AutoSize = true;
             this.OppositeTileChecked.Enabled = false;
-            this.OppositeTileChecked.Location = new System.Drawing.Point(133, 56);
+            this.OppositeTileChecked.Location = new System.Drawing.Point(133, 38);
             this.OppositeTileChecked.Name = "OppositeTileChecked";
             this.OppositeTileChecked.Size = new System.Drawing.Size(95, 19);
             this.OppositeTileChecked.TabIndex = 28;
@@ -438,7 +451,7 @@
             // RestartOnCrashChecked
             // 
             this.RestartOnCrashChecked.AutoSize = true;
-            this.RestartOnCrashChecked.Location = new System.Drawing.Point(133, 31);
+            this.RestartOnCrashChecked.Location = new System.Drawing.Point(133, 15);
             this.RestartOnCrashChecked.Name = "RestartOnCrashChecked";
             this.RestartOnCrashChecked.Size = new System.Drawing.Size(110, 19);
             this.RestartOnCrashChecked.TabIndex = 27;
@@ -1100,5 +1113,6 @@
         private NumericUpDown ResetBaseWinCount;
         private CheckBox ResetBaseWinsChecked;
         private CheckBox OppositeTileChecked;
+        private CheckBox StickyTilesChecked;
     }
 }

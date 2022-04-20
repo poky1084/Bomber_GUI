@@ -430,5 +430,17 @@ namespace Bomber_GUI.Properties {
                 this["OppositeTileChecked"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool StickyTilesChecked {
+            get {
+                return ((bool)(this["StickyTilesChecked"]));
+            }
+            set {
+                this["StickyTilesChecked"] = value;
+            }
+        }
     }
 }

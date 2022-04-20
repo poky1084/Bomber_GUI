@@ -52,6 +52,7 @@ namespace Bomber_GUI
         public int ResetBaseWinCount { get; set; }
 
         public bool OppositeTileChecked { get; set; }
+        public bool StickyTilesChecked { get; set; }
         public DefaultSettings()
         {
             BetCost = 30;
