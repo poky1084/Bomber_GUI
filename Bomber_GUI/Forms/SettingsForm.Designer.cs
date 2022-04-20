@@ -52,6 +52,8 @@
             this.stopAfterGamesNum = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.OppositeTileChecked = new System.Windows.Forms.CheckBox();
+            this.RestartOnCrashChecked = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label12 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
@@ -65,14 +67,22 @@
             this.balanceStopUnder = new System.Windows.Forms.NumericUpDown();
             this.balanceStopUnderChecked = new System.Windows.Forms.CheckBox();
             this.metaBox = new System.Windows.Forms.GroupBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.ResetBaseWinCount = new System.Windows.Forms.NumericUpDown();
+            this.ResetBaseWinsChecked = new System.Windows.Forms.CheckBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.PercentOnWinResetGames = new System.Windows.Forms.NumericUpDown();
+            this.percentOnWinResetChecked = new System.Windows.Forms.CheckBox();
+            this.precentOnWin = new System.Windows.Forms.NumericUpDown();
+            this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.PercentOnLossResetGames = new System.Windows.Forms.NumericUpDown();
             this.percentOnLossReset = new System.Windows.Forms.CheckBox();
+            this.metaChecked = new System.Windows.Forms.CheckBox();
             this.proxyGroup = new System.Windows.Forms.GroupBox();
             this.button2 = new System.Windows.Forms.Button();
             this.proxyBox = new System.Windows.Forms.TextBox();
             this.useProxy = new System.Windows.Forms.CheckBox();
-            this.metaChecked = new System.Windows.Forms.CheckBox();
             this.cfgTag = new System.Windows.Forms.ComboBox();
             this.SiteLabel = new System.Windows.Forms.Label();
             this.SiteConfig = new System.Windows.Forms.ComboBox();
@@ -80,7 +90,6 @@
             this.RandomEveryLossChecked = new System.Windows.Forms.CheckBox();
             this.RandomEveryWinChecked = new System.Windows.Forms.CheckBox();
             this.RandomEveryGameChecked = new System.Windows.Forms.CheckBox();
-            this.RestartOnCrashChecked = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numberofBets)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.betCostNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.precentOnLoss)).BeginInit();
@@ -95,6 +104,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.balanceStopOver)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.balanceStopUnder)).BeginInit();
             this.metaBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ResetBaseWinCount)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PercentOnWinResetGames)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.precentOnWin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PercentOnLossResetGames)).BeginInit();
             this.proxyGroup.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -160,6 +172,7 @@
             0,
             0,
             0});
+            this.numberofBets.ValueChanged += new System.EventHandler(this.numberofBets_ValueChanged);
             // 
             // button1
             // 
@@ -260,7 +273,7 @@
             // useStratCheck
             // 
             this.useStratCheck.AutoSize = true;
-            this.useStratCheck.Location = new System.Drawing.Point(312, 205);
+            this.useStratCheck.Location = new System.Drawing.Point(312, 138);
             this.useStratCheck.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.useStratCheck.Name = "useStratCheck";
             this.useStratCheck.Size = new System.Drawing.Size(91, 19);
@@ -272,7 +285,7 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.stratDisplay);
-            this.groupBox2.Location = new System.Drawing.Point(304, 209);
+            this.groupBox2.Location = new System.Drawing.Point(308, 138);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -295,7 +308,7 @@
             // 
             this.checkBox1.AutoSize = true;
             this.checkBox1.Enabled = false;
-            this.checkBox1.Location = new System.Drawing.Point(6, 22);
+            this.checkBox1.Location = new System.Drawing.Point(230, 22);
             this.checkBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(147, 19);
@@ -306,7 +319,7 @@
             // showGBombsCheck
             // 
             this.showGBombsCheck.AutoSize = true;
-            this.showGBombsCheck.Location = new System.Drawing.Point(7, 75);
+            this.showGBombsCheck.Location = new System.Drawing.Point(7, 17);
             this.showGBombsCheck.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.showGBombsCheck.Name = "showGBombsCheck";
             this.showGBombsCheck.Size = new System.Drawing.Size(129, 19);
@@ -328,7 +341,7 @@
             // 
             this.saveLog.AutoSize = true;
             this.saveLog.Enabled = false;
-            this.saveLog.Location = new System.Drawing.Point(6, 48);
+            this.saveLog.Location = new System.Drawing.Point(214, 48);
             this.saveLog.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.saveLog.Name = "saveLog";
             this.saveLog.Size = new System.Drawing.Size(103, 19);
@@ -395,6 +408,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.OppositeTileChecked);
             this.groupBox1.Controls.Add(this.RestartOnCrashChecked);
             this.groupBox1.Controls.Add(this.stopAfterWinCheck);
             this.groupBox1.Controls.Add(this.stopAfterLossCheck);
@@ -410,6 +424,27 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Stops";
             // 
+            // OppositeTileChecked
+            // 
+            this.OppositeTileChecked.AutoSize = true;
+            this.OppositeTileChecked.Enabled = false;
+            this.OppositeTileChecked.Location = new System.Drawing.Point(133, 56);
+            this.OppositeTileChecked.Name = "OppositeTileChecked";
+            this.OppositeTileChecked.Size = new System.Drawing.Size(95, 19);
+            this.OppositeTileChecked.TabIndex = 28;
+            this.OppositeTileChecked.Text = "Opposite Tile";
+            this.OppositeTileChecked.UseVisualStyleBackColor = true;
+            // 
+            // RestartOnCrashChecked
+            // 
+            this.RestartOnCrashChecked.AutoSize = true;
+            this.RestartOnCrashChecked.Location = new System.Drawing.Point(133, 31);
+            this.RestartOnCrashChecked.Name = "RestartOnCrashChecked";
+            this.RestartOnCrashChecked.Size = new System.Drawing.Size(110, 19);
+            this.RestartOnCrashChecked.TabIndex = 27;
+            this.RestartOnCrashChecked.Text = "Restart on crash";
+            this.RestartOnCrashChecked.UseVisualStyleBackColor = true;
+            // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.label12);
@@ -423,7 +458,7 @@
             this.groupBox3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.groupBox3.Size = new System.Drawing.Size(198, 140);
+            this.groupBox3.Size = new System.Drawing.Size(198, 78);
             this.groupBox3.TabIndex = 28;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Extra";
@@ -431,7 +466,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(140, 104);
+            this.label12.Location = new System.Drawing.Point(140, 46);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(23, 15);
@@ -441,7 +476,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(4, 104);
+            this.label11.Location = new System.Drawing.Point(4, 46);
             this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(39, 15);
@@ -450,7 +485,7 @@
             // 
             // nudDelay
             // 
-            this.nudDelay.Location = new System.Drawing.Point(54, 102);
+            this.nudDelay.Location = new System.Drawing.Point(54, 44);
             this.nudDelay.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.nudDelay.Maximum = new decimal(new int[] {
             5000,
@@ -500,6 +535,7 @@
             0,
             0,
             0});
+            this.BombCountBox.ValueChanged += new System.EventHandler(this.BombCountBox_ValueChanged);
             // 
             // balanceStopperGroup
             // 
@@ -602,19 +638,147 @@
             // 
             // metaBox
             // 
+            this.metaBox.Controls.Add(this.label13);
+            this.metaBox.Controls.Add(this.ResetBaseWinCount);
+            this.metaBox.Controls.Add(this.ResetBaseWinsChecked);
+            this.metaBox.Controls.Add(this.label8);
+            this.metaBox.Controls.Add(this.PercentOnWinResetGames);
+            this.metaBox.Controls.Add(this.percentOnWinResetChecked);
+            this.metaBox.Controls.Add(this.precentOnWin);
+            this.metaBox.Controls.Add(this.label9);
             this.metaBox.Controls.Add(this.label10);
             this.metaBox.Controls.Add(this.PercentOnLossResetGames);
             this.metaBox.Controls.Add(this.percentOnLossReset);
             this.metaBox.Controls.Add(this.precentOnLoss);
             this.metaBox.Controls.Add(this.label5);
             this.metaBox.Enabled = false;
-            this.metaBox.Location = new System.Drawing.Point(287, 387);
+            this.metaBox.Location = new System.Drawing.Point(286, 315);
             this.metaBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.metaBox.Name = "metaBox";
             this.metaBox.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.metaBox.Size = new System.Drawing.Size(210, 86);
+            this.metaBox.Size = new System.Drawing.Size(210, 158);
             this.metaBox.TabIndex = 31;
             this.metaBox.TabStop = false;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(165, 131);
+            this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(28, 15);
+            this.label13.TabIndex = 26;
+            this.label13.Text = "Win";
+            // 
+            // ResetBaseWinCount
+            // 
+            this.ResetBaseWinCount.Location = new System.Drawing.Point(114, 128);
+            this.ResetBaseWinCount.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.ResetBaseWinCount.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.ResetBaseWinCount.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.ResetBaseWinCount.Name = "ResetBaseWinCount";
+            this.ResetBaseWinCount.Size = new System.Drawing.Size(47, 23);
+            this.ResetBaseWinCount.TabIndex = 25;
+            this.ResetBaseWinCount.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // ResetBaseWinsChecked
+            // 
+            this.ResetBaseWinsChecked.AutoSize = true;
+            this.ResetBaseWinsChecked.Location = new System.Drawing.Point(12, 130);
+            this.ResetBaseWinsChecked.Name = "ResetBaseWinsChecked";
+            this.ResetBaseWinsChecked.Size = new System.Drawing.Size(103, 19);
+            this.ResetBaseWinsChecked.TabIndex = 24;
+            this.ResetBaseWinsChecked.Text = "Reset Bet After";
+            this.ResetBaseWinsChecked.UseVisualStyleBackColor = true;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(163, 102);
+            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(38, 15);
+            this.label8.TabIndex = 19;
+            this.label8.Text = "Game";
+            // 
+            // PercentOnWinResetGames
+            // 
+            this.PercentOnWinResetGames.Location = new System.Drawing.Point(105, 96);
+            this.PercentOnWinResetGames.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.PercentOnWinResetGames.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.PercentOnWinResetGames.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.PercentOnWinResetGames.Name = "PercentOnWinResetGames";
+            this.PercentOnWinResetGames.Size = new System.Drawing.Size(56, 23);
+            this.PercentOnWinResetGames.TabIndex = 23;
+            this.PercentOnWinResetGames.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            // 
+            // percentOnWinResetChecked
+            // 
+            this.percentOnWinResetChecked.AutoSize = true;
+            this.percentOnWinResetChecked.Location = new System.Drawing.Point(12, 97);
+            this.percentOnWinResetChecked.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.percentOnWinResetChecked.Name = "percentOnWinResetChecked";
+            this.percentOnWinResetChecked.Size = new System.Drawing.Size(83, 19);
+            this.percentOnWinResetChecked.TabIndex = 22;
+            this.percentOnWinResetChecked.Text = "Reset After";
+            this.percentOnWinResetChecked.UseVisualStyleBackColor = true;
+            // 
+            // precentOnWin
+            // 
+            this.precentOnWin.Location = new System.Drawing.Point(105, 72);
+            this.precentOnWin.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.precentOnWin.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.precentOnWin.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.precentOnWin.Name = "precentOnWin";
+            this.precentOnWin.Size = new System.Drawing.Size(98, 23);
+            this.precentOnWin.TabIndex = 20;
+            this.precentOnWin.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(7, 74);
+            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(89, 15);
+            this.label9.TabIndex = 21;
+            this.label9.Text = "Percent on win:";
             // 
             // label10
             // 
@@ -644,7 +808,7 @@
             this.PercentOnLossResetGames.Size = new System.Drawing.Size(56, 23);
             this.PercentOnLossResetGames.TabIndex = 18;
             this.PercentOnLossResetGames.Value = new decimal(new int[] {
-            3,
+            2,
             0,
             0,
             0});
@@ -659,6 +823,18 @@
             this.percentOnLossReset.TabIndex = 17;
             this.percentOnLossReset.Text = "Reset After";
             this.percentOnLossReset.UseVisualStyleBackColor = true;
+            // 
+            // metaChecked
+            // 
+            this.metaChecked.AutoSize = true;
+            this.metaChecked.Location = new System.Drawing.Point(298, 311);
+            this.metaChecked.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.metaChecked.Name = "metaChecked";
+            this.metaChecked.Size = new System.Drawing.Size(53, 19);
+            this.metaChecked.TabIndex = 34;
+            this.metaChecked.Text = "Meta";
+            this.metaChecked.UseVisualStyleBackColor = true;
+            this.metaChecked.CheckedChanged += new System.EventHandler(this.metaChecked_CheckedChanged);
             // 
             // proxyGroup
             // 
@@ -704,18 +880,6 @@
             this.useProxy.UseVisualStyleBackColor = true;
             this.useProxy.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged_1);
             // 
-            // metaChecked
-            // 
-            this.metaChecked.AutoSize = true;
-            this.metaChecked.Location = new System.Drawing.Point(301, 383);
-            this.metaChecked.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.metaChecked.Name = "metaChecked";
-            this.metaChecked.Size = new System.Drawing.Size(53, 19);
-            this.metaChecked.TabIndex = 34;
-            this.metaChecked.Text = "Meta";
-            this.metaChecked.UseVisualStyleBackColor = true;
-            this.metaChecked.CheckedChanged += new System.EventHandler(this.metaChecked_CheckedChanged);
-            // 
             // cfgTag
             // 
             this.cfgTag.FormattingEnabled = true;
@@ -724,6 +888,7 @@
             "Eth",
             "Ltc",
             "Doge",
+            "Xrp",
             "Bch",
             "Trx",
             "Eos"});
@@ -775,7 +940,7 @@
             this.groupBox5.Controls.Add(this.RandomEveryGameChecked);
             this.groupBox5.Location = new System.Drawing.Point(8, 399);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(272, 74);
+            this.groupBox5.Size = new System.Drawing.Size(274, 74);
             this.groupBox5.TabIndex = 38;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Random Tiles";
@@ -813,27 +978,17 @@
             this.RandomEveryGameChecked.UseVisualStyleBackColor = true;
             this.RandomEveryGameChecked.CheckedChanged += new System.EventHandler(this.RandomEveryGameChecked_CheckedChanged);
             // 
-            // RestartOnCrashChecked
-            // 
-            this.RestartOnCrashChecked.AutoSize = true;
-            this.RestartOnCrashChecked.Location = new System.Drawing.Point(133, 31);
-            this.RestartOnCrashChecked.Name = "RestartOnCrashChecked";
-            this.RestartOnCrashChecked.Size = new System.Drawing.Size(110, 19);
-            this.RestartOnCrashChecked.TabIndex = 27;
-            this.RestartOnCrashChecked.Text = "Restart on crash";
-            this.RestartOnCrashChecked.UseVisualStyleBackColor = true;
-            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(504, 507);
+            this.Controls.Add(this.metaChecked);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.SiteConfig);
             this.Controls.Add(this.SiteLabel);
             this.Controls.Add(this.cfgTag);
             this.Controls.Add(this.useStratCheck);
-            this.Controls.Add(this.metaChecked);
             this.Controls.Add(this.proxyGroup);
             this.Controls.Add(this.metaBox);
             this.Controls.Add(this.balanceStopperGroup);
@@ -869,6 +1024,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.balanceStopUnder)).EndInit();
             this.metaBox.ResumeLayout(false);
             this.metaBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ResetBaseWinCount)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PercentOnWinResetGames)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.precentOnWin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PercentOnLossResetGames)).EndInit();
             this.proxyGroup.ResumeLayout(false);
             this.proxyGroup.PerformLayout();
@@ -933,5 +1091,14 @@
         private CheckBox RandomEveryWinChecked;
         private CheckBox RandomEveryGameChecked;
         private CheckBox RestartOnCrashChecked;
+        private Label label8;
+        private NumericUpDown PercentOnWinResetGames;
+        private CheckBox percentOnWinResetChecked;
+        private NumericUpDown precentOnWin;
+        private Label label9;
+        private Label label13;
+        private NumericUpDown ResetBaseWinCount;
+        private CheckBox ResetBaseWinsChecked;
+        private CheckBox OppositeTileChecked;
     }
 }

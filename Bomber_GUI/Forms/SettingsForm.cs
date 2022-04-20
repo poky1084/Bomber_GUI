@@ -179,6 +179,14 @@ namespace Bomber_GUI.Forms
 
             GameConfig.RestartOnCrashChecked = Properties.Settings.Default.RestartOnCrashChecked;
 
+            GameConfig.ResetBaseWinsChecked = Properties.Settings.Default.ResetBaseWinsChecked;
+            GameConfig.ResetBaseWinCount = Properties.Settings.Default.ResetBaseWinCount;
+            GameConfig.percentOnWinResetChecked = Properties.Settings.Default.percentOnWinResetChecked;
+            GameConfig.PercentOnWinResetGames = Properties.Settings.Default.PercentOnWinResetGames;
+            GameConfig.precentOnWin = Properties.Settings.Default.precentOnWin;
+
+            GameConfig.OppositeTileChecked = Properties.Settings.Default.OppositeTileChecked;
+
             GameConfig.MetaSettings = Properties.Settings.Default.MetaSettings;
             if (GameConfig.MetaSettings)
             {
@@ -239,6 +247,14 @@ namespace Bomber_GUI.Forms
             RandomEveryLossChecked.Checked = Properties.Settings.Default.RandomEveryLossChecked;
 
             RestartOnCrashChecked.Checked = Properties.Settings.Default.RestartOnCrashChecked;
+
+            ResetBaseWinCount.Value = Properties.Settings.Default.ResetBaseWinCount;
+            ResetBaseWinsChecked.Checked = Properties.Settings.Default.ResetBaseWinsChecked;
+            percentOnWinResetChecked.Checked = Properties.Settings.Default.percentOnWinResetChecked;
+            PercentOnWinResetGames.Value = Properties.Settings.Default.PercentOnWinResetGames;
+            precentOnWin.Value = Properties.Settings.Default.precentOnWin;
+
+            OppositeTileChecked.Checked = Properties.Settings.Default.OppositeTileChecked;
 
             nudDelay.Value = Properties.Settings.Default.GameDelay;
 
@@ -320,6 +336,14 @@ namespace Bomber_GUI.Forms
 
             GameConfig.RestartOnCrashChecked = RestartOnCrashChecked.Checked;
 
+            GameConfig.ResetBaseWinsChecked = ResetBaseWinsChecked.Checked;
+            GameConfig.ResetBaseWinCount = (int)ResetBaseWinCount.Value;
+            GameConfig.percentOnWinResetChecked = percentOnWinResetChecked.Checked;
+            GameConfig.PercentOnWinResetGames = (int)PercentOnWinResetGames.Value;
+            GameConfig.precentOnWin = precentOnWin.Value;
+
+            GameConfig.OppositeTileChecked = OppositeTileChecked.Checked;
+
             GameConfig.MetaSettings = metaChecked.Checked;
             if (GameConfig.MetaSettings)
             {
@@ -375,6 +399,14 @@ namespace Bomber_GUI.Forms
             Properties.Settings.Default.RandomEveryLossChecked = RandomEveryLossChecked.Checked;
 
             Properties.Settings.Default.RestartOnCrashChecked = RestartOnCrashChecked.Checked;
+
+            Properties.Settings.Default.ResetBaseWinsChecked = ResetBaseWinsChecked.Checked;
+            Properties.Settings.Default.ResetBaseWinCount = (int)ResetBaseWinCount.Value;
+            Properties.Settings.Default.percentOnWinResetChecked = percentOnWinResetChecked.Checked;
+            Properties.Settings.Default.PercentOnWinResetGames = (int)PercentOnWinResetGames.Value;
+            Properties.Settings.Default.precentOnWin = precentOnWin.Value;
+
+            Properties.Settings.Default.OppositeTileChecked = OppositeTileChecked.Checked;
 
             if (GameConfig.MetaSettings)
             {
@@ -484,6 +516,32 @@ namespace Bomber_GUI.Forms
             {
                 RandomEveryLossChecked.CheckState = CheckState.Unchecked;
                 RandomEveryGameChecked.CheckState = CheckState.Unchecked;
+            }
+        }
+
+        private void BombCountBox_ValueChanged(object sender, EventArgs e)
+        {
+            if(numberofBets.Value < 2 && BombCountBox.Value < 2)
+            {
+                OppositeTileChecked.Enabled = true;
+            } 
+            else
+            {
+                OppositeTileChecked.Enabled = false;
+                OppositeTileChecked.CheckState = CheckState.Unchecked;
+            }
+        }
+
+        private void numberofBets_ValueChanged(object sender, EventArgs e)
+        {
+            if (numberofBets.Value < 2 && BombCountBox.Value < 2)
+            {
+                OppositeTileChecked.Enabled = true;
+            }
+            else
+            {
+                OppositeTileChecked.Enabled = false;
+                OppositeTileChecked.CheckState = CheckState.Unchecked;
             }
         }
     }

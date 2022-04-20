@@ -358,5 +358,77 @@ namespace Bomber_GUI.Properties {
                 this["RestartOnCrashChecked"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public decimal precentOnWin {
+            get {
+                return ((decimal)(this["precentOnWin"]));
+            }
+            set {
+                this["precentOnWin"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int PercentOnWinResetGames {
+            get {
+                return ((int)(this["PercentOnWinResetGames"]));
+            }
+            set {
+                this["PercentOnWinResetGames"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int ResetBaseWinCount {
+            get {
+                return ((int)(this["ResetBaseWinCount"]));
+            }
+            set {
+                this["ResetBaseWinCount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool percentOnWinResetChecked {
+            get {
+                return ((bool)(this["percentOnWinResetChecked"]));
+            }
+            set {
+                this["percentOnWinResetChecked"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ResetBaseWinsChecked {
+            get {
+                return ((bool)(this["ResetBaseWinsChecked"]));
+            }
+            set {
+                this["ResetBaseWinsChecked"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool OppositeTileChecked {
+            get {
+                return ((bool)(this["OppositeTileChecked"]));
+            }
+            set {
+                this["OppositeTileChecked"] = value;
+            }
+        }
     }
 }

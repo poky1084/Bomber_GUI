@@ -31,12 +31,16 @@ namespace Bomber_GUI.Forms
         //private GameData Data;
         private Random r = new Random();
 
+        public int currentWinStreak = 0;
+        public decimal multiplyOnWin = 1;
         private decimal multiplyOnLoss = 1;
         private int stratergyIndex = 0;
         private bool notFirstClear = false;
         private bool IsWaiting = false;
 
         private int[] SquareRepeatData = null;
+        public int[] LatestBombs = new int[] {1};
+
         public gamePanel()
         {
             GameConfig = new GameSettings();
@@ -90,6 +94,7 @@ namespace Bomber_GUI.Forms
                     BasebetCost = GameConfig.BetCost;
                     GameConfig.BetCost = BasebetCost;
                     multiplyOnLoss = GameConfig.PercentOnLoss / 100;
+                    multiplyOnWin = GameConfig.precentOnWin / 100;
                     stratergyIndex = 0;
                     
                     //gameGroupBox.Text = GameConfig.ConfigTag;
@@ -234,6 +239,10 @@ namespace Bomber_GUI.Forms
                                 GameConfig.BetCost = BasebetCost;
                                 await Task.Delay(2000);
                                 PrepRequest();
+                            } 
+                            else
+                            {
+                                BSta(true);
                             }
                                 
                         } 
@@ -349,6 +358,10 @@ namespace Bomber_GUI.Forms
                     return GameConfig.StratergySquares[stratergyIndex] + 1;
                 }
             }
+            else if(GameConfig.OppositeTileChecked)
+            {
+                return 25 - LatestBombs[0];
+            }
             int i = r.Next(1, 26);
             try
             {
@@ -450,10 +463,11 @@ namespace Bomber_GUI.Forms
                 }
                 else
                 {
-
+                    LatestBombs = cd.data.minesCashout.state.mines.ToArray();
                     if (GameConfig.ShowGameBombs)
                     {
                         List<int> bmbz = cd.data.minesCashout.state.mines;
+                        
                         foreach (int s in bmbz)
                         {
                             FadebombSquare(s + 1);
@@ -481,6 +495,29 @@ namespace Bomber_GUI.Forms
                         notFirstClear = false;
                         running = false;
                     }
+
+                    if(multiplyOnWin != 1)
+                    {
+                        Log("Betting increced from {0} to {1}", GameConfig.BetCost, GameConfig.BetCost * multiplyOnWin);
+                        GameConfig.BetCost = GameConfig.BetCost * multiplyOnWin;
+                    }
+
+                    currentWinStreak++;
+                    if (GameConfig.ResetBaseWinsChecked && currentWinStreak >= GameConfig.ResetBaseWinCount)
+                    {
+                        GameConfig.BetCost = BasebetCost;
+                       currentWinStreak = 0;
+                       // Log("Bet has been reset. ResetBaseWinsChecked");
+                    }
+
+                    if (currentWinStreak >= GameConfig.PercentOnWinResetGames && GameConfig.percentOnWinResetChecked)
+                    {
+                        GameConfig.BetCost = BasebetCost;
+                        currentWinStreak = 0;
+                        //Log("Bet has been reset. PercentOnWinResetGames");
+
+                    }
+
 
                     CheckLastGame();
                     await CheckBalance(GameConfig.SiteConfig, GameConfig.PlayerHash, GameConfig.ConfigTag);
@@ -555,7 +592,9 @@ namespace Bomber_GUI.Forms
                 if (bd.data.minesNext.state.mines != null)
                 {
                     guesscount++;
+                    currentWinStreak = 0;
                     bombSquare(bd.data.minesNext.state.rounds[guesscount - 1].field + 1);
+                    LatestBombs = bd.data.minesNext.state.mines.ToArray();
                     AddLoss();
                     Log("Bomb. Loss: {0} {1}", bd.data.minesNext.amount, GameConfig.ConfigTag);
 
@@ -690,7 +729,6 @@ namespace Bomber_GUI.Forms
                     currentBetStreak++;
                     if (currentBetStreak >= GameConfig.BetAmmount)
                     {
-                        GameConfig.BetCost = BasebetCost;
                         MultiplyDeadlineTracker = 0;
                         //Log("");
                         endCashoutResponce();
