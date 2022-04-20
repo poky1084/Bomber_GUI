@@ -39,14 +39,14 @@ namespace Bomber_GUI.Forms
         private bool IsWaiting = false;
 
         private int[] SquareRepeatData = null;
-        public int[] LatestBombs = new int[] { 1 };
+        public int[] LatestBombs = new int[] {1};
 
         public gamePanel()
         {
             GameConfig = new GameSettings();
             InitializeComponent();
             Log("Welcome to Bomber Bot");
-
+            
         }
         public gamePanel(bool hideStop)
         {
@@ -61,7 +61,7 @@ namespace Bomber_GUI.Forms
                 // button1.Width = 307;
             }
         }
-
+        
         public void StopRunning()
         {
             running = false;
@@ -83,7 +83,7 @@ namespace Bomber_GUI.Forms
         }
         private void button1_Click_1(object sender, EventArgs e)
         {
-
+            
             if (!running)
             {
                 currentPlayStreak = 0;
@@ -96,7 +96,7 @@ namespace Bomber_GUI.Forms
                     multiplyOnLoss = GameConfig.PercentOnLoss / 100;
                     multiplyOnWin = GameConfig.precentOnWin / 100;
                     stratergyIndex = 0;
-
+                    
                     //gameGroupBox.Text = GameConfig.ConfigTag;
                 }
                 // button1.Enabled = false;
@@ -115,7 +115,7 @@ namespace Bomber_GUI.Forms
                 }
                 running = true;
                 PrepRequest();
-
+                
             }
             else
             {
@@ -136,21 +136,21 @@ namespace Bomber_GUI.Forms
                 BetQuery payload = new BetQuery();
                 payload.operationName = "UserBalances";
                 payload.query = "query UserBalances {\n  user {\n    id\n    balances {\n      available {\n        amount\n        currency\n        __typename\n      }\n      vault {\n        amount\n        currency\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n";
-
+                
                 request.AddHeader("Content-Type", "application/json");
                 request.AddHeader("x-access-token", phash);
 
                 request.AddParameter("application/json", JsonConvert.SerializeObject(payload), ParameterType.RequestBody);
-
-
+                
+                
 
                 var restResponse =
                     await client.ExecuteAsync(request);
 
-
+               
                 //Debug.WriteLine(restResponse.Content);
                 BalancesData response = JsonConvert.DeserializeObject<BalancesData>(restResponse.Content);
-
+               
 
                 if (response.errors != null)
                 {
@@ -166,7 +166,7 @@ namespace Bomber_GUI.Forms
                             {
                                 liveBitsBox.Text = String.Format("{0} | {1}", currency, response.data.user.balances[i].available.amount.ToString("0.00000000"));
                                 currentBal = response.data.user.balances[i].available.amount;
-
+                                
                             }
 
                         }
@@ -232,26 +232,26 @@ namespace Bomber_GUI.Forms
 
                     if (running == true)
                     {
-                        if (response.errors[0].errorType == "insufficientBalance")
+                        if(response.errors[0].errorType == "insufficientBalance")
                         {
-                            if (GameConfig.RestartOnCrashChecked && currentBal >= BasebetCost)
+                            if (GameConfig.RestartOnCrashChecked)
                             {
                                 GameConfig.BetCost = BasebetCost;
-                                await Task.Delay(1000);
+                                await Task.Delay(2000);
                                 PrepRequest();
-                            }
+                            } 
                             else
                             {
                                 BSta(true);
                             }
-
-                        }
+                                
+                        } 
                         else
                         {
                             await Task.Delay(2000);
                             PrepRequest();
                         }
-
+                        
                     }
                     else
                     {
@@ -270,7 +270,7 @@ namespace Bomber_GUI.Forms
                     Log("Name: {0} | Bombs: {1}", response.data.minesBet.user.name, response.data.minesBet.state.minesCount);
                     EndNewGameResponce();
                 }
-
+                   
 
             }
             catch (Exception ex)
@@ -286,7 +286,7 @@ namespace Bomber_GUI.Forms
                     BSta(true);
                 }
             }
-
+            
         }
 
         private void AddWin()
@@ -358,7 +358,7 @@ namespace Bomber_GUI.Forms
                     return GameConfig.StratergySquares[stratergyIndex] + 1;
                 }
             }
-            else if (GameConfig.OppositeTileChecked)
+            else if(GameConfig.OppositeTileChecked)
             {
                 return 25 - LatestBombs[0];
             }
@@ -442,7 +442,7 @@ namespace Bomber_GUI.Forms
                 var restResponse =
                     await client.ExecuteAsync(request);
 
-
+               
                 //Debug.WriteLine(restResponse.Content);
                 Data cd = JsonConvert.DeserializeObject<Data>(restResponse.Content);
 
@@ -467,7 +467,7 @@ namespace Bomber_GUI.Forms
                     if (GameConfig.ShowGameBombs)
                     {
                         List<int> bmbz = cd.data.minesCashout.state.mines;
-
+                        
                         foreach (int s in bmbz)
                         {
                             FadebombSquare(s + 1);
@@ -496,7 +496,7 @@ namespace Bomber_GUI.Forms
                         running = false;
                     }
 
-                    if (multiplyOnWin != 1)
+                    if(multiplyOnWin != 1)
                     {
                         Log("Betting increced from {0} to {1}", GameConfig.BetCost, GameConfig.BetCost * multiplyOnWin);
                         GameConfig.BetCost = GameConfig.BetCost * multiplyOnWin;
@@ -506,8 +506,8 @@ namespace Bomber_GUI.Forms
                     if (GameConfig.ResetBaseWinsChecked && currentWinStreak >= GameConfig.ResetBaseWinCount)
                     {
                         GameConfig.BetCost = BasebetCost;
-                        currentWinStreak = 0;
-                        // Log("Bet has been reset. ResetBaseWinsChecked");
+                       currentWinStreak = 0;
+                       // Log("Bet has been reset. ResetBaseWinsChecked");
                     }
 
                     if (currentWinStreak >= GameConfig.PercentOnWinResetGames && GameConfig.percentOnWinResetChecked)
@@ -540,14 +540,7 @@ namespace Bomber_GUI.Forms
                     {
                         //stratergyIndex = 0;
                         GameConfig.StratergySquares = Randomize(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 }).ToList().Take(GameConfig.StratergySquares.Length).ToArray();
-
-                        if (GameConfig.StickyTilesChecked)
-                        {
-                            GameConfig.StratergySquares = StickyRandom(GameConfig.StratergySquares.Length);
-                        }
                     }
-
-
                     if (running)
                     {
                         CheckWait(GameConfig.GameDelay);
@@ -613,7 +606,7 @@ namespace Bomber_GUI.Forms
                             FadebombSquare(s + 1);
                         }
                     }
-
+                   
                     CheckWait(GameConfig.GameDelay * 2);
                     if (GameConfig.CheckForSquareRepeat)
                     {
@@ -699,7 +692,7 @@ namespace Bomber_GUI.Forms
                         //Log("");
 
                         await CheckBalance(GameConfig.SiteConfig, GameConfig.PlayerHash, GameConfig.ConfigTag);
-                        if (GameConfig.CheckboxStopAbove && currentBal >= GameConfig.BalanceStopAbove)
+                        if (GameConfig.CheckboxStopAbove &&  currentBal >= GameConfig.BalanceStopAbove)
                         {
                             Log("Balance is over " + GameConfig.BalanceStopAbove.ToString("0.00000000"));
                             running = false;
@@ -714,14 +707,7 @@ namespace Bomber_GUI.Forms
                         {
                             //stratergyIndex = 0;
                             GameConfig.StratergySquares = Randomize(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 }).ToList().Take(GameConfig.StratergySquares.Length).ToArray();
-                            if (GameConfig.StickyTilesChecked)
-                            {
-                                GameConfig.StratergySquares = StickyRandom(GameConfig.StratergySquares.Length);
-                            }
                         }
-
- 
-
                         if (running)
                         {
 
@@ -759,7 +745,7 @@ namespace Bomber_GUI.Forms
             {
 
                 Log("Failed bet.");
-                Log(string.Join("-", GameConfig.StratergySquares));
+
                 if (running == true)
                 {
                     await Task.Delay(2000);
@@ -780,7 +766,7 @@ namespace Bomber_GUI.Forms
 
                 int betSquare = getNextSquare();
                 Log("betting square {0}", betSquare);
-                Log(string.Join("-", GameConfig.StratergySquares));
+                
                 var mainurl = "https://api." + GameConfig.SiteConfig + "/graphql";
                 var request = new RestRequest(Method.POST);
                 var client = new RestClient(mainurl);
@@ -808,7 +794,7 @@ namespace Bomber_GUI.Forms
                 if (response.errors != null)
                 {
                     Log(response.errors[0].message);
-                    
+
                     if (running == true)
                     {
                         await Task.Delay(2000);
@@ -822,7 +808,7 @@ namespace Bomber_GUI.Forms
                 }
                 else
                 {
-
+                   
                     EndBetResponce(response);
                 }
 
@@ -883,19 +869,6 @@ namespace Bomber_GUI.Forms
                 items[j] = temp;
             }
             return items;
-        }
-        public int[] f(int X)
-        {
-            int rnd = r.Next(0, 24 - X);
-
-            int[] a = new int[X];
-            for (int i = rnd; i < (a.Length + rnd); i++)
-                a[i - rnd] = i;
-            return a;
-        }
-        public int[] StickyRandom(int size)
-        {
-            return f(size);
         }
 
     }

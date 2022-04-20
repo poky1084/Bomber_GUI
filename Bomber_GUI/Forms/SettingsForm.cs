@@ -75,8 +75,7 @@ namespace Bomber_GUI.Forms
         private void useStratCheck_CheckedChanged(object sender, EventArgs e)
         {
             groupBox5.Enabled = useStratCheck.Checked;
-            StickyTilesChecked.Enabled = useStratCheck.Checked;
-            
+
             if (useStratCheck.Checked)
             {
                 OppositeTileChecked.CheckState = CheckState.Unchecked;
@@ -123,7 +122,6 @@ namespace Bomber_GUI.Forms
                 {
                     OppositeTileChecked.Enabled = true;
                 }
-                StickyTilesChecked.CheckState = CheckState.Unchecked;
                 GameConfig.UseStrat = false;
                 stratDisplay.Reset();
             }
@@ -195,7 +193,6 @@ namespace Bomber_GUI.Forms
             GameConfig.precentOnWin = Properties.Settings.Default.precentOnWin;
 
             GameConfig.OppositeTileChecked = Properties.Settings.Default.OppositeTileChecked;
-            GameConfig.StickyTilesChecked = Properties.Settings.Default.StickyTilesChecked;
 
             GameConfig.MetaSettings = Properties.Settings.Default.MetaSettings;
             if (GameConfig.MetaSettings)
@@ -265,7 +262,6 @@ namespace Bomber_GUI.Forms
             precentOnWin.Value = Properties.Settings.Default.precentOnWin;
 
             OppositeTileChecked.Checked = Properties.Settings.Default.OppositeTileChecked;
-            StickyTilesChecked.Checked = Properties.Settings.Default.StickyTilesChecked;
 
             nudDelay.Value = Properties.Settings.Default.GameDelay;
 
@@ -354,7 +350,6 @@ namespace Bomber_GUI.Forms
             GameConfig.precentOnWin = precentOnWin.Value;
 
             GameConfig.OppositeTileChecked = OppositeTileChecked.Checked;
-            GameConfig.StickyTilesChecked = StickyTilesChecked.Checked;
 
             GameConfig.MetaSettings = metaChecked.Checked;
             if (GameConfig.MetaSettings)
@@ -419,7 +414,6 @@ namespace Bomber_GUI.Forms
             Properties.Settings.Default.precentOnWin = precentOnWin.Value;
 
             Properties.Settings.Default.OppositeTileChecked = OppositeTileChecked.Checked;
-            Properties.Settings.Default.StickyTilesChecked = StickyTilesChecked.Checked;
 
             if (GameConfig.MetaSettings)
             {
