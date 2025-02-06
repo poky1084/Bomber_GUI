@@ -4,7 +4,12 @@ To run need .NET Desktop Runtime 6.0.4 and SDK : https://dotnet.microsoft.com/en
 <br />
 How to get clearance cookie and User-agent:<br />
 https://helpdesk.qbot.gg/hc/340888169/121/how-to-set-the-cloudflare-cf-clearance-cookie?category_id=30
-
+<br />
+<br />
+If you have missing cf_clearance cookie, then i suggest using another Stake mirror site.
+List of Stake mirrors: https://playstake.club/
+<br />
+<br />
 <b>Discord</b>: fisk_992 <br />
 <b>Stake</b>: poky1084 <br />
 <b>Telegram:</b>: @poky_1084
