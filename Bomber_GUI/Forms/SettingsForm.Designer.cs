@@ -28,1013 +28,943 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.pHash = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.numberofBets = new System.Windows.Forms.NumericUpDown();
-            this.button1 = new System.Windows.Forms.Button();
-            this.betCostNUD = new System.Windows.Forms.NumericUpDown();
-            this.label4 = new System.Windows.Forms.Label();
-            this.stopAfterWinCheck = new System.Windows.Forms.CheckBox();
-            this.showExWindow = new System.Windows.Forms.CheckBox();
-            this.precentOnLoss = new System.Windows.Forms.NumericUpDown();
-            this.label5 = new System.Windows.Forms.Label();
-            this.useStratCheck = new System.Windows.Forms.CheckBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.stratDisplay = new Bomber_GUI.Forms.SatoshiGrid();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.showGBombsCheck = new System.Windows.Forms.CheckBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.saveLog = new System.Windows.Forms.CheckBox();
-            this.stopAfterLossCheck = new System.Windows.Forms.CheckBox();
-            this.stopAfterGamesChecked = new System.Windows.Forms.CheckBox();
-            this.stopAfterGamesNum = new System.Windows.Forms.NumericUpDown();
-            this.label7 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.OppositeTileChecked = new System.Windows.Forms.CheckBox();
-            this.RestartOnCrashChecked = new System.Windows.Forms.CheckBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.nudDelay = new System.Windows.Forms.NumericUpDown();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.BombCountBox = new System.Windows.Forms.NumericUpDown();
-            this.balanceStopperGroup = new System.Windows.Forms.GroupBox();
-            this.CheckBal = new System.Windows.Forms.Button();
-            this.balanceStopOver = new System.Windows.Forms.NumericUpDown();
-            this.balanceStopOverChecked = new System.Windows.Forms.CheckBox();
-            this.balanceStopUnder = new System.Windows.Forms.NumericUpDown();
-            this.balanceStopUnderChecked = new System.Windows.Forms.CheckBox();
-            this.metaBox = new System.Windows.Forms.GroupBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.ResetBaseWinCount = new System.Windows.Forms.NumericUpDown();
-            this.ResetBaseWinsChecked = new System.Windows.Forms.CheckBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.PercentOnWinResetGames = new System.Windows.Forms.NumericUpDown();
-            this.percentOnWinResetChecked = new System.Windows.Forms.CheckBox();
-            this.precentOnWin = new System.Windows.Forms.NumericUpDown();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.PercentOnLossResetGames = new System.Windows.Forms.NumericUpDown();
-            this.percentOnLossReset = new System.Windows.Forms.CheckBox();
-            this.metaChecked = new System.Windows.Forms.CheckBox();
-            this.proxyGroup = new System.Windows.Forms.GroupBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.proxyBox = new System.Windows.Forms.TextBox();
-            this.useProxy = new System.Windows.Forms.CheckBox();
-            this.cfgTag = new System.Windows.Forms.ComboBox();
-            this.SiteLabel = new System.Windows.Forms.Label();
-            this.SiteConfig = new System.Windows.Forms.ComboBox();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.RandomEveryLossChecked = new System.Windows.Forms.CheckBox();
-            this.RandomEveryWinChecked = new System.Windows.Forms.CheckBox();
-            this.RandomEveryGameChecked = new System.Windows.Forms.CheckBox();
-            ((System.ComponentModel.ISupportInitialize)(this.numberofBets)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.betCostNUD)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.precentOnLoss)).BeginInit();
-            this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.stopAfterGamesNum)).BeginInit();
-            this.groupBox1.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudDelay)).BeginInit();
-            this.groupBox4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.BombCountBox)).BeginInit();
-            this.balanceStopperGroup.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.balanceStopOver)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.balanceStopUnder)).BeginInit();
-            this.metaBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ResetBaseWinCount)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.PercentOnWinResetGames)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.precentOnWin)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.PercentOnLossResetGames)).BeginInit();
-            this.proxyGroup.SuspendLayout();
-            this.groupBox5.SuspendLayout();
-            this.SuspendLayout();
+            label1 = new Label();
+            pHash = new TextBox();
+            label2 = new Label();
+            label3 = new Label();
+            numberofBets = new NumericUpDown();
+            button1 = new Button();
+            betCostNUD = new NumericUpDown();
+            label4 = new Label();
+            stopAfterWinCheck = new CheckBox();
+            showExWindow = new CheckBox();
+            precentOnLoss = new NumericUpDown();
+            label5 = new Label();
+            useStratCheck = new CheckBox();
+            groupBox2 = new GroupBox();
+            stratDisplay = new SatoshiGrid();
+            checkBox1 = new CheckBox();
+            showGBombsCheck = new CheckBox();
+            label6 = new Label();
+            saveLog = new CheckBox();
+            stopAfterLossCheck = new CheckBox();
+            stopAfterGamesChecked = new CheckBox();
+            stopAfterGamesNum = new NumericUpDown();
+            label7 = new Label();
+            groupBox1 = new GroupBox();
+            OppositeTileChecked = new CheckBox();
+            RestartOnCrashChecked = new CheckBox();
+            groupBox3 = new GroupBox();
+            checkInstant = new CheckBox();
+            label12 = new Label();
+            label11 = new Label();
+            nudDelay = new NumericUpDown();
+            groupBox4 = new GroupBox();
+            BombCountBox = new NumericUpDown();
+            balanceStopperGroup = new GroupBox();
+            CheckBal = new Button();
+            balanceStopOver = new NumericUpDown();
+            balanceStopOverChecked = new CheckBox();
+            balanceStopUnder = new NumericUpDown();
+            balanceStopUnderChecked = new CheckBox();
+            metaBox = new GroupBox();
+            label13 = new Label();
+            ResetBaseWinCount = new NumericUpDown();
+            ResetBaseWinsChecked = new CheckBox();
+            label8 = new Label();
+            PercentOnWinResetGames = new NumericUpDown();
+            percentOnWinResetChecked = new CheckBox();
+            precentOnWin = new NumericUpDown();
+            label9 = new Label();
+            label10 = new Label();
+            PercentOnLossResetGames = new NumericUpDown();
+            percentOnLossReset = new CheckBox();
+            metaChecked = new CheckBox();
+            proxyGroup = new GroupBox();
+            button2 = new Button();
+            proxyBox = new TextBox();
+            useProxy = new CheckBox();
+            cfgTag = new ComboBox();
+            SiteLabel = new Label();
+            SiteConfig = new ComboBox();
+            groupBox5 = new GroupBox();
+            RandomEveryLossChecked = new CheckBox();
+            RandomEveryWinChecked = new CheckBox();
+            RandomEveryGameChecked = new CheckBox();
+            label14 = new Label();
+            textBox1 = new TextBox();
+            label15 = new Label();
+            textBox2 = new TextBox();
+            button3 = new Button();
+            ((System.ComponentModel.ISupportInitialize)numberofBets).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)betCostNUD).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)precentOnLoss).BeginInit();
+            groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)stopAfterGamesNum).BeginInit();
+            groupBox1.SuspendLayout();
+            groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)nudDelay).BeginInit();
+            groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)BombCountBox).BeginInit();
+            balanceStopperGroup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)balanceStopOver).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)balanceStopUnder).BeginInit();
+            metaBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)ResetBaseWinCount).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)PercentOnWinResetGames).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)precentOnWin).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)PercentOnLossResetGames).BeginInit();
+            proxyGroup.SuspendLayout();
+            groupBox5.SuspendLayout();
+            SuspendLayout();
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(5, 7);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(72, 15);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Player Hash:";
+            label1.AutoSize = true;
+            label1.Location = new Point(7, 12);
+            label1.Margin = new Padding(6, 0, 6, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(75, 25);
+            label1.TabIndex = 0;
+            label1.Text = "Api key:";
             // 
             // pHash
             // 
-            this.pHash.Location = new System.Drawing.Point(107, 3);
-            this.pHash.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.pHash.Name = "pHash";
-            this.pHash.Size = new System.Drawing.Size(391, 23);
-            this.pHash.TabIndex = 1;
+            pHash.Location = new Point(132, 5);
+            pHash.Margin = new Padding(6, 5, 6, 5);
+            pHash.Name = "pHash";
+            pHash.Size = new Size(160, 31);
+            pHash.TabIndex = 1;
+            pHash.TextChanged += pHash_TextChanged;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 27);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(42, 15);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Mines:";
+            label2.AutoSize = true;
+            label2.Location = new Point(9, 45);
+            label2.Margin = new Padding(6, 0, 6, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(63, 25);
+            label2.TabIndex = 2;
+            label2.Text = "Mines:";
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 58);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(101, 15);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "Number of guess:";
+            label3.AutoSize = true;
+            label3.Location = new Point(9, 97);
+            label3.Margin = new Padding(6, 0, 6, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(154, 25);
+            label3.TabIndex = 7;
+            label3.Text = "Number of guess:";
             // 
             // numberofBets
             // 
-            this.numberofBets.Location = new System.Drawing.Point(112, 55);
-            this.numberofBets.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.numberofBets.Maximum = new decimal(new int[] {
-            24,
-            0,
-            0,
-            0});
-            this.numberofBets.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numberofBets.Name = "numberofBets";
-            this.numberofBets.Size = new System.Drawing.Size(162, 23);
-            this.numberofBets.TabIndex = 8;
-            this.numberofBets.Value = new decimal(new int[] {
-            3,
-            0,
-            0,
-            0});
-            this.numberofBets.ValueChanged += new System.EventHandler(this.numberofBets_ValueChanged);
+            numberofBets.Location = new Point(160, 92);
+            numberofBets.Margin = new Padding(6, 5, 6, 5);
+            numberofBets.Maximum = new decimal(new int[] { 24, 0, 0, 0 });
+            numberofBets.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numberofBets.Name = "numberofBets";
+            numberofBets.Size = new Size(231, 31);
+            numberofBets.TabIndex = 8;
+            numberofBets.Value = new decimal(new int[] { 3, 0, 0, 0 });
+            numberofBets.ValueChanged += numberofBets_ValueChanged;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(8, 477);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(491, 27);
-            this.button1.TabIndex = 9;
-            this.button1.Text = "Go";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            button1.Location = new Point(11, 795);
+            button1.Margin = new Padding(6, 5, 6, 5);
+            button1.Name = "button1";
+            button1.Size = new Size(701, 45);
+            button1.TabIndex = 9;
+            button1.Text = "Go";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // betCostNUD
             // 
-            this.betCostNUD.DecimalPlaces = 8;
-            this.betCostNUD.Increment = new decimal(new int[] {
-            10,
-            0,
-            0,
-            524288});
-            this.betCostNUD.Location = new System.Drawing.Point(112, 85);
-            this.betCostNUD.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.betCostNUD.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.betCostNUD.Name = "betCostNUD";
-            this.betCostNUD.Size = new System.Drawing.Size(162, 23);
-            this.betCostNUD.TabIndex = 11;
+            betCostNUD.DecimalPlaces = 8;
+            betCostNUD.Increment = new decimal(new int[] { 10, 0, 0, 524288 });
+            betCostNUD.Location = new Point(160, 142);
+            betCostNUD.Margin = new Padding(6, 5, 6, 5);
+            betCostNUD.Maximum = new decimal(new int[] { 1000000000, 0, 0, 0 });
+            betCostNUD.Name = "betCostNUD";
+            betCostNUD.Size = new Size(231, 31);
+            betCostNUD.TabIndex = 11;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 88);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(54, 15);
-            this.label4.TabIndex = 10;
-            this.label4.Text = "Bet Cost:";
+            label4.AutoSize = true;
+            label4.Location = new Point(9, 147);
+            label4.Margin = new Padding(6, 0, 6, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(82, 25);
+            label4.TabIndex = 10;
+            label4.Text = "Bet Cost:";
             // 
             // stopAfterWinCheck
             // 
-            this.stopAfterWinCheck.AutoSize = true;
-            this.stopAfterWinCheck.Location = new System.Drawing.Point(12, 31);
-            this.stopAfterWinCheck.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.stopAfterWinCheck.Name = "stopAfterWinCheck";
-            this.stopAfterWinCheck.Size = new System.Drawing.Size(99, 19);
-            this.stopAfterWinCheck.TabIndex = 13;
-            this.stopAfterWinCheck.Text = "Stop after win";
-            this.stopAfterWinCheck.UseVisualStyleBackColor = true;
+            stopAfterWinCheck.AutoSize = true;
+            stopAfterWinCheck.Location = new Point(17, 52);
+            stopAfterWinCheck.Margin = new Padding(6, 5, 6, 5);
+            stopAfterWinCheck.Name = "stopAfterWinCheck";
+            stopAfterWinCheck.Size = new Size(148, 29);
+            stopAfterWinCheck.TabIndex = 13;
+            stopAfterWinCheck.Text = "Stop after win";
+            stopAfterWinCheck.UseVisualStyleBackColor = true;
             // 
             // showExWindow
             // 
-            this.showExWindow.AutoSize = true;
-            this.showExWindow.Enabled = false;
-            this.showExWindow.Location = new System.Drawing.Point(228, 23);
-            this.showExWindow.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.showExWindow.Name = "showExWindow";
-            this.showExWindow.Size = new System.Drawing.Size(155, 19);
-            this.showExWindow.TabIndex = 14;
-            this.showExWindow.Text = "Show exception window";
-            this.showExWindow.UseVisualStyleBackColor = true;
+            showExWindow.AutoSize = true;
+            showExWindow.Enabled = false;
+            showExWindow.Location = new Point(326, 38);
+            showExWindow.Margin = new Padding(6, 5, 6, 5);
+            showExWindow.Name = "showExWindow";
+            showExWindow.Size = new Size(230, 29);
+            showExWindow.TabIndex = 14;
+            showExWindow.Text = "Show exception window";
+            showExWindow.UseVisualStyleBackColor = true;
             // 
             // precentOnLoss
             // 
-            this.precentOnLoss.Location = new System.Drawing.Point(105, 22);
-            this.precentOnLoss.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.precentOnLoss.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.precentOnLoss.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.precentOnLoss.Name = "precentOnLoss";
-            this.precentOnLoss.Size = new System.Drawing.Size(98, 23);
-            this.precentOnLoss.TabIndex = 15;
-            this.precentOnLoss.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
+            precentOnLoss.Location = new Point(150, 37);
+            precentOnLoss.Margin = new Padding(6, 5, 6, 5);
+            precentOnLoss.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
+            precentOnLoss.Minimum = new decimal(new int[] { 10, 0, 0, 0 });
+            precentOnLoss.Name = "precentOnLoss";
+            precentOnLoss.Size = new Size(140, 31);
+            precentOnLoss.TabIndex = 15;
+            precentOnLoss.Value = new decimal(new int[] { 100, 0, 0, 0 });
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(7, 24);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(90, 15);
-            this.label5.TabIndex = 16;
-            this.label5.Text = "Percent on loss:";
+            label5.AutoSize = true;
+            label5.Location = new Point(10, 40);
+            label5.Margin = new Padding(6, 0, 6, 0);
+            label5.Name = "label5";
+            label5.Size = new Size(135, 25);
+            label5.TabIndex = 16;
+            label5.Text = "Percent on loss:";
             // 
             // useStratCheck
             // 
-            this.useStratCheck.AutoSize = true;
-            this.useStratCheck.Location = new System.Drawing.Point(312, 138);
-            this.useStratCheck.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.useStratCheck.Name = "useStratCheck";
-            this.useStratCheck.Size = new System.Drawing.Size(91, 19);
-            this.useStratCheck.TabIndex = 17;
-            this.useStratCheck.Text = "Use Strategy";
-            this.useStratCheck.UseVisualStyleBackColor = true;
-            this.useStratCheck.CheckedChanged += new System.EventHandler(this.useStratCheck_CheckedChanged);
+            useStratCheck.AutoSize = true;
+            useStratCheck.Location = new Point(446, 230);
+            useStratCheck.Margin = new Padding(6, 5, 6, 5);
+            useStratCheck.Name = "useStratCheck";
+            useStratCheck.Size = new Size(137, 29);
+            useStratCheck.TabIndex = 17;
+            useStratCheck.Text = "Use Strategy";
+            useStratCheck.UseVisualStyleBackColor = true;
+            useStratCheck.CheckedChanged += useStratCheck_CheckedChanged;
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.stratDisplay);
-            this.groupBox2.Location = new System.Drawing.Point(308, 138);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.groupBox2.Size = new System.Drawing.Size(182, 165);
-            this.groupBox2.TabIndex = 18;
-            this.groupBox2.TabStop = false;
+            groupBox2.Controls.Add(stratDisplay);
+            groupBox2.Location = new Point(440, 230);
+            groupBox2.Margin = new Padding(6, 5, 6, 5);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Padding = new Padding(6, 5, 6, 5);
+            groupBox2.Size = new Size(260, 275);
+            groupBox2.TabIndex = 18;
+            groupBox2.TabStop = false;
             // 
             // stratDisplay
             // 
-            this.stratDisplay.GridBorder = false;
-            this.stratDisplay.Location = new System.Drawing.Point(21, 22);
-            this.stratDisplay.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.stratDisplay.Name = "stratDisplay";
-            this.stratDisplay.Size = new System.Drawing.Size(132, 132);
-            this.stratDisplay.SquareBorder = true;
-            this.stratDisplay.TabIndex = 18;
-            this.stratDisplay.Text = "satoshiGrid1";
+            stratDisplay.GridBorder = false;
+            stratDisplay.Location = new Point(30, 37);
+            stratDisplay.Margin = new Padding(6, 5, 6, 5);
+            stratDisplay.Name = "stratDisplay";
+            stratDisplay.Size = new Size(189, 189);
+            stratDisplay.SquareBorder = true;
+            stratDisplay.TabIndex = 18;
+            stratDisplay.Text = "satoshiGrid1";
             // 
             // checkBox1
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Enabled = false;
-            this.checkBox1.Location = new System.Drawing.Point(230, 22);
-            this.checkBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(147, 19);
-            this.checkBox1.TabIndex = 19;
-            this.checkBox1.Text = "Use Advanced Startegy";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            checkBox1.AutoSize = true;
+            checkBox1.Enabled = false;
+            checkBox1.Location = new Point(329, 37);
+            checkBox1.Margin = new Padding(6, 5, 6, 5);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(221, 29);
+            checkBox1.TabIndex = 19;
+            checkBox1.Text = "Use Advanced Startegy";
+            checkBox1.UseVisualStyleBackColor = true;
             // 
             // showGBombsCheck
             // 
-            this.showGBombsCheck.AutoSize = true;
-            this.showGBombsCheck.Location = new System.Drawing.Point(7, 17);
-            this.showGBombsCheck.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.showGBombsCheck.Name = "showGBombsCheck";
-            this.showGBombsCheck.Size = new System.Drawing.Size(129, 19);
-            this.showGBombsCheck.TabIndex = 19;
-            this.showGBombsCheck.Text = "Show Game Bombs";
-            this.showGBombsCheck.UseVisualStyleBackColor = true;
+            showGBombsCheck.AutoSize = true;
+            showGBombsCheck.Location = new Point(10, 28);
+            showGBombsCheck.Margin = new Padding(6, 5, 6, 5);
+            showGBombsCheck.Name = "showGBombsCheck";
+            showGBombsCheck.Size = new Size(194, 29);
+            showGBombsCheck.TabIndex = 19;
+            showGBombsCheck.Text = "Show Game Bombs";
+            showGBombsCheck.UseVisualStyleBackColor = true;
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(5, 35);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(35, 15);
-            this.label6.TabIndex = 20;
-            this.label6.Text = "Coin:";
+            label6.AutoSize = true;
+            label6.Location = new Point(7, 58);
+            label6.Margin = new Padding(6, 0, 6, 0);
+            label6.Name = "label6";
+            label6.Size = new Size(52, 25);
+            label6.TabIndex = 20;
+            label6.Text = "Coin:";
             // 
             // saveLog
             // 
-            this.saveLog.AutoSize = true;
-            this.saveLog.Enabled = false;
-            this.saveLog.Location = new System.Drawing.Point(214, 48);
-            this.saveLog.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.saveLog.Name = "saveLog";
-            this.saveLog.Size = new System.Drawing.Size(103, 19);
-            this.saveLog.TabIndex = 22;
-            this.saveLog.Text = "Save log to file";
-            this.saveLog.UseVisualStyleBackColor = true;
+            saveLog.AutoSize = true;
+            saveLog.Enabled = false;
+            saveLog.Location = new Point(306, 80);
+            saveLog.Margin = new Padding(6, 5, 6, 5);
+            saveLog.Name = "saveLog";
+            saveLog.Size = new Size(156, 29);
+            saveLog.TabIndex = 22;
+            saveLog.Text = "Save log to file";
+            saveLog.UseVisualStyleBackColor = true;
             // 
             // stopAfterLossCheck
             // 
-            this.stopAfterLossCheck.AutoSize = true;
-            this.stopAfterLossCheck.Location = new System.Drawing.Point(12, 56);
-            this.stopAfterLossCheck.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.stopAfterLossCheck.Name = "stopAfterLossCheck";
-            this.stopAfterLossCheck.Size = new System.Drawing.Size(100, 19);
-            this.stopAfterLossCheck.TabIndex = 23;
-            this.stopAfterLossCheck.Text = "Stop after loss";
-            this.stopAfterLossCheck.UseVisualStyleBackColor = true;
+            stopAfterLossCheck.AutoSize = true;
+            stopAfterLossCheck.Location = new Point(17, 93);
+            stopAfterLossCheck.Margin = new Padding(6, 5, 6, 5);
+            stopAfterLossCheck.Name = "stopAfterLossCheck";
+            stopAfterLossCheck.Size = new Size(152, 29);
+            stopAfterLossCheck.TabIndex = 23;
+            stopAfterLossCheck.Text = "Stop after loss";
+            stopAfterLossCheck.UseVisualStyleBackColor = true;
             // 
             // stopAfterGamesChecked
             // 
-            this.stopAfterGamesChecked.AutoSize = true;
-            this.stopAfterGamesChecked.Location = new System.Drawing.Point(12, 82);
-            this.stopAfterGamesChecked.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.stopAfterGamesChecked.Name = "stopAfterGamesChecked";
-            this.stopAfterGamesChecked.Size = new System.Drawing.Size(80, 19);
-            this.stopAfterGamesChecked.TabIndex = 24;
-            this.stopAfterGamesChecked.Text = "Stop after:";
-            this.stopAfterGamesChecked.UseVisualStyleBackColor = true;
-            this.stopAfterGamesChecked.CheckedChanged += new System.EventHandler(this.stopAfterGamesChecked_CheckedChanged);
+            stopAfterGamesChecked.AutoSize = true;
+            stopAfterGamesChecked.Location = new Point(17, 137);
+            stopAfterGamesChecked.Margin = new Padding(6, 5, 6, 5);
+            stopAfterGamesChecked.Name = "stopAfterGamesChecked";
+            stopAfterGamesChecked.Size = new Size(120, 29);
+            stopAfterGamesChecked.TabIndex = 24;
+            stopAfterGamesChecked.Text = "Stop after:";
+            stopAfterGamesChecked.UseVisualStyleBackColor = true;
+            stopAfterGamesChecked.CheckedChanged += stopAfterGamesChecked_CheckedChanged;
             // 
             // stopAfterGamesNum
             // 
-            this.stopAfterGamesNum.Enabled = false;
-            this.stopAfterGamesNum.Location = new System.Drawing.Point(106, 81);
-            this.stopAfterGamesNum.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.stopAfterGamesNum.Maximum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            0});
-            this.stopAfterGamesNum.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.stopAfterGamesNum.Name = "stopAfterGamesNum";
-            this.stopAfterGamesNum.Size = new System.Drawing.Size(93, 23);
-            this.stopAfterGamesNum.TabIndex = 25;
-            this.stopAfterGamesNum.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
+            stopAfterGamesNum.Enabled = false;
+            stopAfterGamesNum.Location = new Point(151, 135);
+            stopAfterGamesNum.Margin = new Padding(6, 5, 6, 5);
+            stopAfterGamesNum.Maximum = new decimal(new int[] { 1000000, 0, 0, 0 });
+            stopAfterGamesNum.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            stopAfterGamesNum.Name = "stopAfterGamesNum";
+            stopAfterGamesNum.Size = new Size(133, 31);
+            stopAfterGamesNum.TabIndex = 25;
+            stopAfterGamesNum.Value = new decimal(new int[] { 10, 0, 0, 0 });
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(206, 83);
-            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(43, 15);
-            this.label7.TabIndex = 26;
-            this.label7.Text = "Games";
+            label7.AutoSize = true;
+            label7.Location = new Point(294, 138);
+            label7.Margin = new Padding(6, 0, 6, 0);
+            label7.Name = "label7";
+            label7.Size = new Size(66, 25);
+            label7.TabIndex = 26;
+            label7.Text = "Games";
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.OppositeTileChecked);
-            this.groupBox1.Controls.Add(this.RestartOnCrashChecked);
-            this.groupBox1.Controls.Add(this.stopAfterWinCheck);
-            this.groupBox1.Controls.Add(this.stopAfterLossCheck);
-            this.groupBox1.Controls.Add(this.label7);
-            this.groupBox1.Controls.Add(this.stopAfterGamesNum);
-            this.groupBox1.Controls.Add(this.stopAfterGamesChecked);
-            this.groupBox1.Location = new System.Drawing.Point(8, 189);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.groupBox1.Size = new System.Drawing.Size(286, 120);
-            this.groupBox1.TabIndex = 27;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Stops";
+            groupBox1.Controls.Add(OppositeTileChecked);
+            groupBox1.Controls.Add(RestartOnCrashChecked);
+            groupBox1.Controls.Add(stopAfterWinCheck);
+            groupBox1.Controls.Add(stopAfterLossCheck);
+            groupBox1.Controls.Add(label7);
+            groupBox1.Controls.Add(stopAfterGamesNum);
+            groupBox1.Controls.Add(stopAfterGamesChecked);
+            groupBox1.Location = new Point(11, 315);
+            groupBox1.Margin = new Padding(6, 5, 6, 5);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Padding = new Padding(6, 5, 6, 5);
+            groupBox1.Size = new Size(409, 200);
+            groupBox1.TabIndex = 27;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Stops";
             // 
             // OppositeTileChecked
             // 
-            this.OppositeTileChecked.AutoSize = true;
-            this.OppositeTileChecked.Enabled = false;
-            this.OppositeTileChecked.Location = new System.Drawing.Point(133, 56);
-            this.OppositeTileChecked.Name = "OppositeTileChecked";
-            this.OppositeTileChecked.Size = new System.Drawing.Size(95, 19);
-            this.OppositeTileChecked.TabIndex = 28;
-            this.OppositeTileChecked.Text = "Opposite Tile";
-            this.OppositeTileChecked.UseVisualStyleBackColor = true;
+            OppositeTileChecked.AutoSize = true;
+            OppositeTileChecked.Enabled = false;
+            OppositeTileChecked.Location = new Point(190, 93);
+            OppositeTileChecked.Margin = new Padding(4, 5, 4, 5);
+            OppositeTileChecked.Name = "OppositeTileChecked";
+            OppositeTileChecked.Size = new Size(143, 29);
+            OppositeTileChecked.TabIndex = 28;
+            OppositeTileChecked.Text = "Opposite Tile";
+            OppositeTileChecked.UseVisualStyleBackColor = true;
             // 
             // RestartOnCrashChecked
             // 
-            this.RestartOnCrashChecked.AutoSize = true;
-            this.RestartOnCrashChecked.Location = new System.Drawing.Point(133, 31);
-            this.RestartOnCrashChecked.Name = "RestartOnCrashChecked";
-            this.RestartOnCrashChecked.Size = new System.Drawing.Size(110, 19);
-            this.RestartOnCrashChecked.TabIndex = 27;
-            this.RestartOnCrashChecked.Text = "Restart on crash";
-            this.RestartOnCrashChecked.UseVisualStyleBackColor = true;
+            RestartOnCrashChecked.AutoSize = true;
+            RestartOnCrashChecked.Location = new Point(190, 52);
+            RestartOnCrashChecked.Margin = new Padding(4, 5, 4, 5);
+            RestartOnCrashChecked.Name = "RestartOnCrashChecked";
+            RestartOnCrashChecked.Size = new Size(164, 29);
+            RestartOnCrashChecked.TabIndex = 27;
+            RestartOnCrashChecked.Text = "Restart on crash";
+            RestartOnCrashChecked.UseVisualStyleBackColor = true;
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.label12);
-            this.groupBox3.Controls.Add(this.label11);
-            this.groupBox3.Controls.Add(this.nudDelay);
-            this.groupBox3.Controls.Add(this.checkBox1);
-            this.groupBox3.Controls.Add(this.showExWindow);
-            this.groupBox3.Controls.Add(this.saveLog);
-            this.groupBox3.Controls.Add(this.showGBombsCheck);
-            this.groupBox3.Location = new System.Drawing.Point(301, 62);
-            this.groupBox3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.groupBox3.Size = new System.Drawing.Size(198, 78);
-            this.groupBox3.TabIndex = 28;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Extra";
+            groupBox3.Controls.Add(checkInstant);
+            groupBox3.Controls.Add(label12);
+            groupBox3.Controls.Add(label11);
+            groupBox3.Controls.Add(nudDelay);
+            groupBox3.Controls.Add(checkBox1);
+            groupBox3.Controls.Add(showExWindow);
+            groupBox3.Controls.Add(saveLog);
+            groupBox3.Controls.Add(showGBombsCheck);
+            groupBox3.Location = new Point(430, 103);
+            groupBox3.Margin = new Padding(6, 5, 6, 5);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Padding = new Padding(6, 5, 6, 5);
+            groupBox3.Size = new Size(283, 130);
+            groupBox3.TabIndex = 28;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "Extra";
+            // 
+            // checkInstant
+            // 
+            checkInstant.AutoSize = true;
+            checkInstant.Enabled = false;
+            checkInstant.Location = new Point(10, 56);
+            checkInstant.Margin = new Padding(6, 5, 6, 5);
+            checkInstant.Name = "checkInstant";
+            checkInstant.Size = new Size(154, 29);
+            checkInstant.TabIndex = 26;
+            checkInstant.Text = "Instant betting";
+            checkInstant.UseVisualStyleBackColor = true;
+            checkInstant.CheckedChanged += checkInstant_CheckedChanged;
             // 
             // label12
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(140, 46);
-            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(23, 15);
-            this.label12.TabIndex = 25;
-            this.label12.Text = "ms";
+            label12.AutoSize = true;
+            label12.Location = new Point(200, 90);
+            label12.Margin = new Padding(6, 0, 6, 0);
+            label12.Name = "label12";
+            label12.Size = new Size(36, 25);
+            label12.TabIndex = 25;
+            label12.Text = "ms";
             // 
             // label11
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(4, 46);
-            this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(39, 15);
-            this.label11.TabIndex = 24;
-            this.label11.Text = "Delay:";
+            label11.AutoSize = true;
+            label11.Location = new Point(6, 90);
+            label11.Margin = new Padding(6, 0, 6, 0);
+            label11.Name = "label11";
+            label11.Size = new Size(60, 25);
+            label11.TabIndex = 24;
+            label11.Text = "Delay:";
             // 
             // nudDelay
             // 
-            this.nudDelay.Location = new System.Drawing.Point(54, 44);
-            this.nudDelay.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.nudDelay.Maximum = new decimal(new int[] {
-            5000,
-            0,
-            0,
-            0});
-            this.nudDelay.Name = "nudDelay";
-            this.nudDelay.Size = new System.Drawing.Size(79, 23);
-            this.nudDelay.TabIndex = 23;
+            nudDelay.Location = new Point(77, 86);
+            nudDelay.Margin = new Padding(6, 5, 6, 5);
+            nudDelay.Maximum = new decimal(new int[] { 5000, 0, 0, 0 });
+            nudDelay.Name = "nudDelay";
+            nudDelay.Size = new Size(113, 31);
+            nudDelay.TabIndex = 23;
+            nudDelay.ValueChanged += nudDelay_ValueChanged;
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.BombCountBox);
-            this.groupBox4.Controls.Add(this.label2);
-            this.groupBox4.Controls.Add(this.label3);
-            this.groupBox4.Controls.Add(this.numberofBets);
-            this.groupBox4.Controls.Add(this.betCostNUD);
-            this.groupBox4.Controls.Add(this.label4);
-            this.groupBox4.Location = new System.Drawing.Point(8, 62);
-            this.groupBox4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.groupBox4.Size = new System.Drawing.Size(286, 122);
-            this.groupBox4.TabIndex = 29;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "General";
+            groupBox4.Controls.Add(BombCountBox);
+            groupBox4.Controls.Add(label2);
+            groupBox4.Controls.Add(label3);
+            groupBox4.Controls.Add(numberofBets);
+            groupBox4.Controls.Add(betCostNUD);
+            groupBox4.Controls.Add(label4);
+            groupBox4.Location = new Point(11, 103);
+            groupBox4.Margin = new Padding(6, 5, 6, 5);
+            groupBox4.Name = "groupBox4";
+            groupBox4.Padding = new Padding(6, 5, 6, 5);
+            groupBox4.Size = new Size(409, 203);
+            groupBox4.TabIndex = 29;
+            groupBox4.TabStop = false;
+            groupBox4.Text = "General";
             // 
             // BombCountBox
             // 
-            this.BombCountBox.Location = new System.Drawing.Point(112, 22);
-            this.BombCountBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.BombCountBox.Maximum = new decimal(new int[] {
-            24,
-            0,
-            0,
-            0});
-            this.BombCountBox.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.BombCountBox.Name = "BombCountBox";
-            this.BombCountBox.Size = new System.Drawing.Size(162, 23);
-            this.BombCountBox.TabIndex = 12;
-            this.BombCountBox.Value = new decimal(new int[] {
-            3,
-            0,
-            0,
-            0});
-            this.BombCountBox.ValueChanged += new System.EventHandler(this.BombCountBox_ValueChanged);
+            BombCountBox.Location = new Point(160, 37);
+            BombCountBox.Margin = new Padding(6, 5, 6, 5);
+            BombCountBox.Maximum = new decimal(new int[] { 24, 0, 0, 0 });
+            BombCountBox.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            BombCountBox.Name = "BombCountBox";
+            BombCountBox.Size = new Size(231, 31);
+            BombCountBox.TabIndex = 12;
+            BombCountBox.Value = new decimal(new int[] { 3, 0, 0, 0 });
+            BombCountBox.ValueChanged += BombCountBox_ValueChanged;
             // 
             // balanceStopperGroup
             // 
-            this.balanceStopperGroup.Controls.Add(this.CheckBal);
-            this.balanceStopperGroup.Controls.Add(this.balanceStopOver);
-            this.balanceStopperGroup.Controls.Add(this.balanceStopOverChecked);
-            this.balanceStopperGroup.Controls.Add(this.balanceStopUnder);
-            this.balanceStopperGroup.Controls.Add(this.balanceStopUnderChecked);
-            this.balanceStopperGroup.Location = new System.Drawing.Point(8, 311);
-            this.balanceStopperGroup.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.balanceStopperGroup.Name = "balanceStopperGroup";
-            this.balanceStopperGroup.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.balanceStopperGroup.Size = new System.Drawing.Size(274, 84);
-            this.balanceStopperGroup.TabIndex = 30;
-            this.balanceStopperGroup.TabStop = false;
-            this.balanceStopperGroup.Text = "Balance Check";
+            balanceStopperGroup.Controls.Add(CheckBal);
+            balanceStopperGroup.Controls.Add(balanceStopOver);
+            balanceStopperGroup.Controls.Add(balanceStopOverChecked);
+            balanceStopperGroup.Controls.Add(balanceStopUnder);
+            balanceStopperGroup.Controls.Add(balanceStopUnderChecked);
+            balanceStopperGroup.Location = new Point(11, 518);
+            balanceStopperGroup.Margin = new Padding(6, 5, 6, 5);
+            balanceStopperGroup.Name = "balanceStopperGroup";
+            balanceStopperGroup.Padding = new Padding(6, 5, 6, 5);
+            balanceStopperGroup.Size = new Size(391, 140);
+            balanceStopperGroup.TabIndex = 30;
+            balanceStopperGroup.TabStop = false;
+            balanceStopperGroup.Text = "Balance Check";
             // 
             // CheckBal
             // 
-            this.CheckBal.Location = new System.Drawing.Point(220, 36);
-            this.CheckBal.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.CheckBal.Name = "CheckBal";
-            this.CheckBal.Size = new System.Drawing.Size(50, 27);
-            this.CheckBal.TabIndex = 35;
-            this.CheckBal.Text = "Check";
-            this.CheckBal.UseVisualStyleBackColor = true;
-            this.CheckBal.Click += new System.EventHandler(this.CheckBal_Click);
+            CheckBal.Location = new Point(314, 60);
+            CheckBal.Margin = new Padding(6, 5, 6, 5);
+            CheckBal.Name = "CheckBal";
+            CheckBal.Size = new Size(71, 45);
+            CheckBal.TabIndex = 35;
+            CheckBal.Text = "Check";
+            CheckBal.UseVisualStyleBackColor = true;
+            CheckBal.Click += CheckBal_Click;
             // 
             // balanceStopOver
             // 
-            this.balanceStopOver.DecimalPlaces = 8;
-            this.balanceStopOver.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            262144});
-            this.balanceStopOver.Location = new System.Drawing.Point(94, 26);
-            this.balanceStopOver.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.balanceStopOver.Maximum = new decimal(new int[] {
-            1215752192,
-            23,
-            0,
-            0});
-            this.balanceStopOver.Name = "balanceStopOver";
-            this.balanceStopOver.Size = new System.Drawing.Size(122, 23);
-            this.balanceStopOver.TabIndex = 4;
-            this.balanceStopOver.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            balanceStopOver.DecimalPlaces = 8;
+            balanceStopOver.Increment = new decimal(new int[] { 1, 0, 0, 262144 });
+            balanceStopOver.Location = new Point(134, 43);
+            balanceStopOver.Margin = new Padding(6, 5, 6, 5);
+            balanceStopOver.Maximum = new decimal(new int[] { 1215752192, 23, 0, 0 });
+            balanceStopOver.Name = "balanceStopOver";
+            balanceStopOver.Size = new Size(174, 31);
+            balanceStopOver.TabIndex = 4;
+            balanceStopOver.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // balanceStopOverChecked
             // 
-            this.balanceStopOverChecked.AutoSize = true;
-            this.balanceStopOverChecked.Location = new System.Drawing.Point(8, 27);
-            this.balanceStopOverChecked.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.balanceStopOverChecked.Name = "balanceStopOverChecked";
-            this.balanceStopOverChecked.Size = new System.Drawing.Size(78, 19);
-            this.balanceStopOverChecked.TabIndex = 3;
-            this.balanceStopOverChecked.Text = "Stop Over";
-            this.balanceStopOverChecked.UseVisualStyleBackColor = true;
-            this.balanceStopOverChecked.CheckedChanged += new System.EventHandler(this.balanceStopOverChecked_CheckedChanged);
+            balanceStopOverChecked.AutoSize = true;
+            balanceStopOverChecked.Location = new Point(11, 45);
+            balanceStopOverChecked.Margin = new Padding(6, 5, 6, 5);
+            balanceStopOverChecked.Name = "balanceStopOverChecked";
+            balanceStopOverChecked.Size = new Size(118, 29);
+            balanceStopOverChecked.TabIndex = 3;
+            balanceStopOverChecked.Text = "Stop Over";
+            balanceStopOverChecked.UseVisualStyleBackColor = true;
+            balanceStopOverChecked.CheckedChanged += balanceStopOverChecked_CheckedChanged;
             // 
             // balanceStopUnder
             // 
-            this.balanceStopUnder.DecimalPlaces = 8;
-            this.balanceStopUnder.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            262144});
-            this.balanceStopUnder.Location = new System.Drawing.Point(94, 52);
-            this.balanceStopUnder.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.balanceStopUnder.Maximum = new decimal(new int[] {
-            1215752192,
-            23,
-            0,
-            0});
-            this.balanceStopUnder.Name = "balanceStopUnder";
-            this.balanceStopUnder.Size = new System.Drawing.Size(122, 23);
-            this.balanceStopUnder.TabIndex = 1;
-            this.balanceStopUnder.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            balanceStopUnder.DecimalPlaces = 8;
+            balanceStopUnder.Increment = new decimal(new int[] { 1, 0, 0, 262144 });
+            balanceStopUnder.Location = new Point(134, 87);
+            balanceStopUnder.Margin = new Padding(6, 5, 6, 5);
+            balanceStopUnder.Maximum = new decimal(new int[] { 1215752192, 23, 0, 0 });
+            balanceStopUnder.Name = "balanceStopUnder";
+            balanceStopUnder.Size = new Size(174, 31);
+            balanceStopUnder.TabIndex = 1;
+            balanceStopUnder.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // balanceStopUnderChecked
             // 
-            this.balanceStopUnderChecked.AutoSize = true;
-            this.balanceStopUnderChecked.Location = new System.Drawing.Point(8, 53);
-            this.balanceStopUnderChecked.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.balanceStopUnderChecked.Name = "balanceStopUnderChecked";
-            this.balanceStopUnderChecked.Size = new System.Drawing.Size(85, 19);
-            this.balanceStopUnderChecked.TabIndex = 0;
-            this.balanceStopUnderChecked.Text = "Stop Under";
-            this.balanceStopUnderChecked.UseVisualStyleBackColor = true;
-            this.balanceStopUnderChecked.CheckedChanged += new System.EventHandler(this.balanceStopUnderChecked_CheckedChanged);
+            balanceStopUnderChecked.AutoSize = true;
+            balanceStopUnderChecked.Location = new Point(11, 88);
+            balanceStopUnderChecked.Margin = new Padding(6, 5, 6, 5);
+            balanceStopUnderChecked.Name = "balanceStopUnderChecked";
+            balanceStopUnderChecked.Size = new Size(128, 29);
+            balanceStopUnderChecked.TabIndex = 0;
+            balanceStopUnderChecked.Text = "Stop Under";
+            balanceStopUnderChecked.UseVisualStyleBackColor = true;
+            balanceStopUnderChecked.CheckedChanged += balanceStopUnderChecked_CheckedChanged;
             // 
             // metaBox
             // 
-            this.metaBox.Controls.Add(this.label13);
-            this.metaBox.Controls.Add(this.ResetBaseWinCount);
-            this.metaBox.Controls.Add(this.ResetBaseWinsChecked);
-            this.metaBox.Controls.Add(this.label8);
-            this.metaBox.Controls.Add(this.PercentOnWinResetGames);
-            this.metaBox.Controls.Add(this.percentOnWinResetChecked);
-            this.metaBox.Controls.Add(this.precentOnWin);
-            this.metaBox.Controls.Add(this.label9);
-            this.metaBox.Controls.Add(this.label10);
-            this.metaBox.Controls.Add(this.PercentOnLossResetGames);
-            this.metaBox.Controls.Add(this.percentOnLossReset);
-            this.metaBox.Controls.Add(this.precentOnLoss);
-            this.metaBox.Controls.Add(this.label5);
-            this.metaBox.Enabled = false;
-            this.metaBox.Location = new System.Drawing.Point(286, 315);
-            this.metaBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.metaBox.Name = "metaBox";
-            this.metaBox.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.metaBox.Size = new System.Drawing.Size(210, 158);
-            this.metaBox.TabIndex = 31;
-            this.metaBox.TabStop = false;
+            metaBox.Controls.Add(label13);
+            metaBox.Controls.Add(ResetBaseWinCount);
+            metaBox.Controls.Add(ResetBaseWinsChecked);
+            metaBox.Controls.Add(label8);
+            metaBox.Controls.Add(PercentOnWinResetGames);
+            metaBox.Controls.Add(percentOnWinResetChecked);
+            metaBox.Controls.Add(precentOnWin);
+            metaBox.Controls.Add(label9);
+            metaBox.Controls.Add(label10);
+            metaBox.Controls.Add(PercentOnLossResetGames);
+            metaBox.Controls.Add(percentOnLossReset);
+            metaBox.Controls.Add(precentOnLoss);
+            metaBox.Controls.Add(label5);
+            metaBox.Enabled = false;
+            metaBox.Location = new Point(409, 525);
+            metaBox.Margin = new Padding(6, 5, 6, 5);
+            metaBox.Name = "metaBox";
+            metaBox.Padding = new Padding(6, 5, 6, 5);
+            metaBox.Size = new Size(300, 263);
+            metaBox.TabIndex = 31;
+            metaBox.TabStop = false;
             // 
             // label13
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(165, 131);
-            this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(28, 15);
-            this.label13.TabIndex = 26;
-            this.label13.Text = "Win";
+            label13.AutoSize = true;
+            label13.Location = new Point(236, 218);
+            label13.Margin = new Padding(6, 0, 6, 0);
+            label13.Name = "label13";
+            label13.Size = new Size(43, 25);
+            label13.TabIndex = 26;
+            label13.Text = "Win";
             // 
             // ResetBaseWinCount
             // 
-            this.ResetBaseWinCount.Location = new System.Drawing.Point(114, 128);
-            this.ResetBaseWinCount.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.ResetBaseWinCount.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.ResetBaseWinCount.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.ResetBaseWinCount.Name = "ResetBaseWinCount";
-            this.ResetBaseWinCount.Size = new System.Drawing.Size(47, 23);
-            this.ResetBaseWinCount.TabIndex = 25;
-            this.ResetBaseWinCount.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            ResetBaseWinCount.Location = new Point(163, 213);
+            ResetBaseWinCount.Margin = new Padding(6, 5, 6, 5);
+            ResetBaseWinCount.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
+            ResetBaseWinCount.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            ResetBaseWinCount.Name = "ResetBaseWinCount";
+            ResetBaseWinCount.Size = new Size(67, 31);
+            ResetBaseWinCount.TabIndex = 25;
+            ResetBaseWinCount.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // ResetBaseWinsChecked
             // 
-            this.ResetBaseWinsChecked.AutoSize = true;
-            this.ResetBaseWinsChecked.Location = new System.Drawing.Point(12, 130);
-            this.ResetBaseWinsChecked.Name = "ResetBaseWinsChecked";
-            this.ResetBaseWinsChecked.Size = new System.Drawing.Size(103, 19);
-            this.ResetBaseWinsChecked.TabIndex = 24;
-            this.ResetBaseWinsChecked.Text = "Reset Bet After";
-            this.ResetBaseWinsChecked.UseVisualStyleBackColor = true;
+            ResetBaseWinsChecked.AutoSize = true;
+            ResetBaseWinsChecked.Location = new Point(17, 217);
+            ResetBaseWinsChecked.Margin = new Padding(4, 5, 4, 5);
+            ResetBaseWinsChecked.Name = "ResetBaseWinsChecked";
+            ResetBaseWinsChecked.Size = new Size(154, 29);
+            ResetBaseWinsChecked.TabIndex = 24;
+            ResetBaseWinsChecked.Text = "Reset Bet After";
+            ResetBaseWinsChecked.UseVisualStyleBackColor = true;
             // 
             // label8
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(163, 102);
-            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(38, 15);
-            this.label8.TabIndex = 19;
-            this.label8.Text = "Game";
+            label8.AutoSize = true;
+            label8.Location = new Point(233, 170);
+            label8.Margin = new Padding(6, 0, 6, 0);
+            label8.Name = "label8";
+            label8.Size = new Size(58, 25);
+            label8.TabIndex = 19;
+            label8.Text = "Game";
             // 
             // PercentOnWinResetGames
             // 
-            this.PercentOnWinResetGames.Location = new System.Drawing.Point(105, 96);
-            this.PercentOnWinResetGames.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.PercentOnWinResetGames.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.PercentOnWinResetGames.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.PercentOnWinResetGames.Name = "PercentOnWinResetGames";
-            this.PercentOnWinResetGames.Size = new System.Drawing.Size(56, 23);
-            this.PercentOnWinResetGames.TabIndex = 23;
-            this.PercentOnWinResetGames.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
+            PercentOnWinResetGames.Location = new Point(150, 160);
+            PercentOnWinResetGames.Margin = new Padding(6, 5, 6, 5);
+            PercentOnWinResetGames.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
+            PercentOnWinResetGames.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            PercentOnWinResetGames.Name = "PercentOnWinResetGames";
+            PercentOnWinResetGames.Size = new Size(80, 31);
+            PercentOnWinResetGames.TabIndex = 23;
+            PercentOnWinResetGames.Value = new decimal(new int[] { 2, 0, 0, 0 });
             // 
             // percentOnWinResetChecked
             // 
-            this.percentOnWinResetChecked.AutoSize = true;
-            this.percentOnWinResetChecked.Location = new System.Drawing.Point(12, 97);
-            this.percentOnWinResetChecked.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.percentOnWinResetChecked.Name = "percentOnWinResetChecked";
-            this.percentOnWinResetChecked.Size = new System.Drawing.Size(83, 19);
-            this.percentOnWinResetChecked.TabIndex = 22;
-            this.percentOnWinResetChecked.Text = "Reset After";
-            this.percentOnWinResetChecked.UseVisualStyleBackColor = true;
+            percentOnWinResetChecked.AutoSize = true;
+            percentOnWinResetChecked.Location = new Point(17, 162);
+            percentOnWinResetChecked.Margin = new Padding(6, 5, 6, 5);
+            percentOnWinResetChecked.Name = "percentOnWinResetChecked";
+            percentOnWinResetChecked.Size = new Size(124, 29);
+            percentOnWinResetChecked.TabIndex = 22;
+            percentOnWinResetChecked.Text = "Reset After";
+            percentOnWinResetChecked.UseVisualStyleBackColor = true;
             // 
             // precentOnWin
             // 
-            this.precentOnWin.Location = new System.Drawing.Point(105, 72);
-            this.precentOnWin.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.precentOnWin.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.precentOnWin.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.precentOnWin.Name = "precentOnWin";
-            this.precentOnWin.Size = new System.Drawing.Size(98, 23);
-            this.precentOnWin.TabIndex = 20;
-            this.precentOnWin.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
+            precentOnWin.Location = new Point(150, 120);
+            precentOnWin.Margin = new Padding(6, 5, 6, 5);
+            precentOnWin.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
+            precentOnWin.Minimum = new decimal(new int[] { 10, 0, 0, 0 });
+            precentOnWin.Name = "precentOnWin";
+            precentOnWin.Size = new Size(140, 31);
+            precentOnWin.TabIndex = 20;
+            precentOnWin.Value = new decimal(new int[] { 100, 0, 0, 0 });
             // 
             // label9
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(7, 74);
-            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(89, 15);
-            this.label9.TabIndex = 21;
-            this.label9.Text = "Percent on win:";
+            label9.AutoSize = true;
+            label9.Location = new Point(10, 123);
+            label9.Margin = new Padding(6, 0, 6, 0);
+            label9.Name = "label9";
+            label9.Size = new Size(131, 25);
+            label9.TabIndex = 21;
+            label9.Text = "Percent on win:";
             // 
             // label10
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(163, 52);
-            this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(38, 15);
-            this.label10.TabIndex = 6;
-            this.label10.Text = "Game";
+            label10.AutoSize = true;
+            label10.Location = new Point(233, 87);
+            label10.Margin = new Padding(6, 0, 6, 0);
+            label10.Name = "label10";
+            label10.Size = new Size(58, 25);
+            label10.TabIndex = 6;
+            label10.Text = "Game";
             // 
             // PercentOnLossResetGames
             // 
-            this.PercentOnLossResetGames.Location = new System.Drawing.Point(105, 46);
-            this.PercentOnLossResetGames.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.PercentOnLossResetGames.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.PercentOnLossResetGames.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.PercentOnLossResetGames.Name = "PercentOnLossResetGames";
-            this.PercentOnLossResetGames.Size = new System.Drawing.Size(56, 23);
-            this.PercentOnLossResetGames.TabIndex = 18;
-            this.PercentOnLossResetGames.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
+            PercentOnLossResetGames.Location = new Point(150, 77);
+            PercentOnLossResetGames.Margin = new Padding(6, 5, 6, 5);
+            PercentOnLossResetGames.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
+            PercentOnLossResetGames.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            PercentOnLossResetGames.Name = "PercentOnLossResetGames";
+            PercentOnLossResetGames.Size = new Size(80, 31);
+            PercentOnLossResetGames.TabIndex = 18;
+            PercentOnLossResetGames.Value = new decimal(new int[] { 2, 0, 0, 0 });
             // 
             // percentOnLossReset
             // 
-            this.percentOnLossReset.AutoSize = true;
-            this.percentOnLossReset.Location = new System.Drawing.Point(12, 47);
-            this.percentOnLossReset.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.percentOnLossReset.Name = "percentOnLossReset";
-            this.percentOnLossReset.Size = new System.Drawing.Size(83, 19);
-            this.percentOnLossReset.TabIndex = 17;
-            this.percentOnLossReset.Text = "Reset After";
-            this.percentOnLossReset.UseVisualStyleBackColor = true;
+            percentOnLossReset.AutoSize = true;
+            percentOnLossReset.Location = new Point(17, 78);
+            percentOnLossReset.Margin = new Padding(6, 5, 6, 5);
+            percentOnLossReset.Name = "percentOnLossReset";
+            percentOnLossReset.Size = new Size(124, 29);
+            percentOnLossReset.TabIndex = 17;
+            percentOnLossReset.Text = "Reset After";
+            percentOnLossReset.UseVisualStyleBackColor = true;
             // 
             // metaChecked
             // 
-            this.metaChecked.AutoSize = true;
-            this.metaChecked.Location = new System.Drawing.Point(298, 311);
-            this.metaChecked.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.metaChecked.Name = "metaChecked";
-            this.metaChecked.Size = new System.Drawing.Size(53, 19);
-            this.metaChecked.TabIndex = 34;
-            this.metaChecked.Text = "Meta";
-            this.metaChecked.UseVisualStyleBackColor = true;
-            this.metaChecked.CheckedChanged += new System.EventHandler(this.metaChecked_CheckedChanged);
+            metaChecked.AutoSize = true;
+            metaChecked.Location = new Point(426, 518);
+            metaChecked.Margin = new Padding(6, 5, 6, 5);
+            metaChecked.Name = "metaChecked";
+            metaChecked.Size = new Size(78, 29);
+            metaChecked.TabIndex = 34;
+            metaChecked.Text = "Meta";
+            metaChecked.UseVisualStyleBackColor = true;
+            metaChecked.CheckedChanged += metaChecked_CheckedChanged;
             // 
             // proxyGroup
             // 
-            this.proxyGroup.Controls.Add(this.button2);
-            this.proxyGroup.Controls.Add(this.proxyBox);
-            this.proxyGroup.Controls.Add(this.useProxy);
-            this.proxyGroup.Enabled = false;
-            this.proxyGroup.Location = new System.Drawing.Point(515, 412);
-            this.proxyGroup.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.proxyGroup.Name = "proxyGroup";
-            this.proxyGroup.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.proxyGroup.Size = new System.Drawing.Size(274, 60);
-            this.proxyGroup.TabIndex = 32;
-            this.proxyGroup.TabStop = false;
+            proxyGroup.Controls.Add(button2);
+            proxyGroup.Controls.Add(proxyBox);
+            proxyGroup.Controls.Add(useProxy);
+            proxyGroup.Enabled = false;
+            proxyGroup.Location = new Point(736, 687);
+            proxyGroup.Margin = new Padding(6, 5, 6, 5);
+            proxyGroup.Name = "proxyGroup";
+            proxyGroup.Padding = new Padding(6, 5, 6, 5);
+            proxyGroup.Size = new Size(391, 100);
+            proxyGroup.TabIndex = 32;
+            proxyGroup.TabStop = false;
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(240, 20);
-            this.button2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(26, 27);
-            this.button2.TabIndex = 34;
-            this.button2.Text = "C";
-            this.button2.UseVisualStyleBackColor = true;
+            button2.Location = new Point(343, 33);
+            button2.Margin = new Padding(6, 5, 6, 5);
+            button2.Name = "button2";
+            button2.Size = new Size(37, 45);
+            button2.TabIndex = 34;
+            button2.Text = "C";
+            button2.UseVisualStyleBackColor = true;
             // 
             // proxyBox
             // 
-            this.proxyBox.Location = new System.Drawing.Point(6, 23);
-            this.proxyBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.proxyBox.Name = "proxyBox";
-            this.proxyBox.Size = new System.Drawing.Size(228, 23);
-            this.proxyBox.TabIndex = 0;
+            proxyBox.Location = new Point(9, 38);
+            proxyBox.Margin = new Padding(6, 5, 6, 5);
+            proxyBox.Name = "proxyBox";
+            proxyBox.Size = new Size(324, 31);
+            proxyBox.TabIndex = 0;
             // 
             // useProxy
             // 
-            this.useProxy.AutoSize = true;
-            this.useProxy.Location = new System.Drawing.Point(12, 3);
-            this.useProxy.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.useProxy.Name = "useProxy";
-            this.useProxy.Size = new System.Drawing.Size(56, 19);
-            this.useProxy.TabIndex = 33;
-            this.useProxy.Text = "Proxy";
-            this.useProxy.UseVisualStyleBackColor = true;
-            this.useProxy.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged_1);
+            useProxy.AutoSize = true;
+            useProxy.Location = new Point(17, 5);
+            useProxy.Margin = new Padding(6, 5, 6, 5);
+            useProxy.Name = "useProxy";
+            useProxy.Size = new Size(82, 29);
+            useProxy.TabIndex = 33;
+            useProxy.Text = "Proxy";
+            useProxy.UseVisualStyleBackColor = true;
+            useProxy.CheckedChanged += checkBox1_CheckedChanged_1;
             // 
             // cfgTag
             // 
-            this.cfgTag.FormattingEnabled = true;
-            this.cfgTag.Items.AddRange(new object[] {
-            "Btc",
-            "Eth",
-            "Ltc",
-            "Doge",
-            "Xrp",
-            "Bch",
-            "Trx",
-            "Eos"});
-            this.cfgTag.Location = new System.Drawing.Point(107, 31);
-            this.cfgTag.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.cfgTag.Name = "cfgTag";
-            this.cfgTag.Size = new System.Drawing.Size(140, 23);
-            this.cfgTag.TabIndex = 35;
-            this.cfgTag.Text = "Btc";
-            this.cfgTag.SelectedIndexChanged += new System.EventHandler(this.cfgTag_SelectedIndexChanged);
+            cfgTag.DropDownStyle = ComboBoxStyle.DropDownList;
+            cfgTag.FormattingEnabled = true;
+            cfgTag.Location = new Point(131, 52);
+            cfgTag.Margin = new Padding(6, 5, 6, 5);
+            cfgTag.Name = "cfgTag";
+            cfgTag.Size = new Size(198, 33);
+            cfgTag.TabIndex = 35;
+            cfgTag.SelectedIndexChanged += cfgTag_SelectedIndexChanged;
             // 
             // SiteLabel
             // 
-            this.SiteLabel.AutoSize = true;
-            this.SiteLabel.Location = new System.Drawing.Point(284, 36);
-            this.SiteLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.SiteLabel.Name = "SiteLabel";
-            this.SiteLabel.Size = new System.Drawing.Size(29, 15);
-            this.SiteLabel.TabIndex = 36;
-            this.SiteLabel.Text = "Site:";
+            SiteLabel.AutoSize = true;
+            SiteLabel.Location = new Point(425, 56);
+            SiteLabel.Margin = new Padding(6, 0, 6, 0);
+            SiteLabel.Name = "SiteLabel";
+            SiteLabel.Size = new Size(45, 25);
+            SiteLabel.TabIndex = 36;
+            SiteLabel.Text = "Site:";
             // 
             // SiteConfig
             // 
-            this.SiteConfig.FormattingEnabled = true;
-            this.SiteConfig.Items.AddRange(new object[] {
-            "stake.com",
-            "stake.bet",
-            "stake.games",
-            "staketr.com",
-            "staketr2.com",
-            "staketr3.com",
-            "staketr4.com",
-            "staketr5.com",
-            "stake.bz",
-            "stake.jp",
-            "stake.ac",
-            "stake.icu"});
-            this.SiteConfig.Location = new System.Drawing.Point(326, 31);
-            this.SiteConfig.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.SiteConfig.Name = "SiteConfig";
-            this.SiteConfig.Size = new System.Drawing.Size(173, 23);
-            this.SiteConfig.TabIndex = 37;
-            this.SiteConfig.Text = "stake.com";
+            SiteConfig.FormattingEnabled = true;
+            SiteConfig.Items.AddRange(new object[] { "stake.com", "stake.bet", "stake.games", "staketr.com", "staketr2.com", "staketr3.com", "staketr4.com", "staketr5.com", "stake.bz", "stake.jp", "stake.ac", "stake.icu" });
+            SiteConfig.Location = new Point(466, 52);
+            SiteConfig.Margin = new Padding(6, 5, 6, 5);
+            SiteConfig.Name = "SiteConfig";
+            SiteConfig.Size = new Size(245, 33);
+            SiteConfig.TabIndex = 37;
+            SiteConfig.Text = "stake.com";
             // 
             // groupBox5
             // 
-            this.groupBox5.Controls.Add(this.RandomEveryLossChecked);
-            this.groupBox5.Controls.Add(this.RandomEveryWinChecked);
-            this.groupBox5.Controls.Add(this.RandomEveryGameChecked);
-            this.groupBox5.Location = new System.Drawing.Point(8, 399);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(274, 74);
-            this.groupBox5.TabIndex = 38;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Random Tiles";
+            groupBox5.Controls.Add(RandomEveryLossChecked);
+            groupBox5.Controls.Add(RandomEveryWinChecked);
+            groupBox5.Controls.Add(RandomEveryGameChecked);
+            groupBox5.Location = new Point(11, 665);
+            groupBox5.Margin = new Padding(4, 5, 4, 5);
+            groupBox5.Name = "groupBox5";
+            groupBox5.Padding = new Padding(4, 5, 4, 5);
+            groupBox5.Size = new Size(391, 123);
+            groupBox5.TabIndex = 38;
+            groupBox5.TabStop = false;
+            groupBox5.Text = "Random Tiles";
             // 
             // RandomEveryLossChecked
             // 
-            this.RandomEveryLossChecked.AutoSize = true;
-            this.RandomEveryLossChecked.Location = new System.Drawing.Point(133, 25);
-            this.RandomEveryLossChecked.Name = "RandomEveryLossChecked";
-            this.RandomEveryLossChecked.Size = new System.Drawing.Size(77, 19);
-            this.RandomEveryLossChecked.TabIndex = 2;
-            this.RandomEveryLossChecked.Text = "Every loss";
-            this.RandomEveryLossChecked.UseVisualStyleBackColor = true;
-            this.RandomEveryLossChecked.CheckedChanged += new System.EventHandler(this.RandomEveryLossChecked_CheckedChanged);
+            RandomEveryLossChecked.AutoSize = true;
+            RandomEveryLossChecked.Location = new Point(190, 42);
+            RandomEveryLossChecked.Margin = new Padding(4, 5, 4, 5);
+            RandomEveryLossChecked.Name = "RandomEveryLossChecked";
+            RandomEveryLossChecked.Size = new Size(116, 29);
+            RandomEveryLossChecked.TabIndex = 2;
+            RandomEveryLossChecked.Text = "Every loss";
+            RandomEveryLossChecked.UseVisualStyleBackColor = true;
+            RandomEveryLossChecked.CheckedChanged += RandomEveryLossChecked_CheckedChanged;
             // 
             // RandomEveryWinChecked
             // 
-            this.RandomEveryWinChecked.AutoSize = true;
-            this.RandomEveryWinChecked.Location = new System.Drawing.Point(9, 50);
-            this.RandomEveryWinChecked.Name = "RandomEveryWinChecked";
-            this.RandomEveryWinChecked.Size = new System.Drawing.Size(76, 19);
-            this.RandomEveryWinChecked.TabIndex = 1;
-            this.RandomEveryWinChecked.Text = "Every win";
-            this.RandomEveryWinChecked.UseVisualStyleBackColor = true;
-            this.RandomEveryWinChecked.CheckedChanged += new System.EventHandler(this.RandomEveryWinChecked_CheckedChanged);
+            RandomEveryWinChecked.AutoSize = true;
+            RandomEveryWinChecked.Location = new Point(13, 83);
+            RandomEveryWinChecked.Margin = new Padding(4, 5, 4, 5);
+            RandomEveryWinChecked.Name = "RandomEveryWinChecked";
+            RandomEveryWinChecked.Size = new Size(112, 29);
+            RandomEveryWinChecked.TabIndex = 1;
+            RandomEveryWinChecked.Text = "Every win";
+            RandomEveryWinChecked.UseVisualStyleBackColor = true;
+            RandomEveryWinChecked.CheckedChanged += RandomEveryWinChecked_CheckedChanged;
             // 
             // RandomEveryGameChecked
             // 
-            this.RandomEveryGameChecked.AutoSize = true;
-            this.RandomEveryGameChecked.Location = new System.Drawing.Point(9, 25);
-            this.RandomEveryGameChecked.Name = "RandomEveryGameChecked";
-            this.RandomEveryGameChecked.Size = new System.Drawing.Size(87, 19);
-            this.RandomEveryGameChecked.TabIndex = 0;
-            this.RandomEveryGameChecked.Text = "Every game";
-            this.RandomEveryGameChecked.UseVisualStyleBackColor = true;
-            this.RandomEveryGameChecked.CheckedChanged += new System.EventHandler(this.RandomEveryGameChecked_CheckedChanged);
+            RandomEveryGameChecked.AutoSize = true;
+            RandomEveryGameChecked.Location = new Point(13, 42);
+            RandomEveryGameChecked.Margin = new Padding(4, 5, 4, 5);
+            RandomEveryGameChecked.Name = "RandomEveryGameChecked";
+            RandomEveryGameChecked.Size = new Size(130, 29);
+            RandomEveryGameChecked.TabIndex = 0;
+            RandomEveryGameChecked.Text = "Every game";
+            RandomEveryGameChecked.UseVisualStyleBackColor = true;
+            RandomEveryGameChecked.CheckedChanged += RandomEveryGameChecked_CheckedChanged;
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new Point(325, 5);
+            label14.Margin = new Padding(6, 0, 6, 0);
+            label14.Name = "label14";
+            label14.Size = new Size(71, 25);
+            label14.TabIndex = 39;
+            label14.Text = "Cookie:";
+            // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(399, 4);
+            textBox1.Margin = new Padding(6, 5, 6, 5);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(106, 31);
+            textBox1.TabIndex = 40;
+            textBox1.TextChanged += textBox1_TextChanged;
+            // 
+            // label15
+            // 
+            label15.AutoSize = true;
+            label15.Location = new Point(510, 6);
+            label15.Margin = new Padding(6, 0, 6, 0);
+            label15.Name = "label15";
+            label15.Size = new Size(64, 25);
+            label15.TabIndex = 41;
+            label15.Text = "Agent:";
+            // 
+            // textBox2
+            // 
+            textBox2.Location = new Point(572, 5);
+            textBox2.Margin = new Padding(6, 5, 6, 5);
+            textBox2.Name = "textBox2";
+            textBox2.Size = new Size(137, 31);
+            textBox2.TabIndex = 42;
+            textBox2.TextChanged += textBox2_TextChanged;
+            // 
+            // button3
+            // 
+            button3.Location = new Point(331, 45);
+            button3.Margin = new Padding(6, 5, 6, 5);
+            button3.Name = "button3";
+            button3.Size = new Size(74, 45);
+            button3.TabIndex = 36;
+            button3.Text = "Get";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
             // 
             // SettingsForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(504, 507);
-            this.Controls.Add(this.metaChecked);
-            this.Controls.Add(this.groupBox5);
-            this.Controls.Add(this.SiteConfig);
-            this.Controls.Add(this.SiteLabel);
-            this.Controls.Add(this.cfgTag);
-            this.Controls.Add(this.useStratCheck);
-            this.Controls.Add(this.proxyGroup);
-            this.Controls.Add(this.metaBox);
-            this.Controls.Add(this.balanceStopperGroup);
-            this.Controls.Add(this.groupBox4);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.pHash);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.groupBox1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.Name = "SettingsForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Settings";
-            ((System.ComponentModel.ISupportInitialize)(this.numberofBets)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.betCostNUD)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.precentOnLoss)).EndInit();
-            this.groupBox2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.stopAfterGamesNum)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudDelay)).EndInit();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.BombCountBox)).EndInit();
-            this.balanceStopperGroup.ResumeLayout(false);
-            this.balanceStopperGroup.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.balanceStopOver)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.balanceStopUnder)).EndInit();
-            this.metaBox.ResumeLayout(false);
-            this.metaBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ResetBaseWinCount)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.PercentOnWinResetGames)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.precentOnWin)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.PercentOnLossResetGames)).EndInit();
-            this.proxyGroup.ResumeLayout(false);
-            this.proxyGroup.PerformLayout();
-            this.groupBox5.ResumeLayout(false);
-            this.groupBox5.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(720, 845);
+            Controls.Add(button3);
+            Controls.Add(textBox2);
+            Controls.Add(label15);
+            Controls.Add(textBox1);
+            Controls.Add(label14);
+            Controls.Add(metaChecked);
+            Controls.Add(groupBox5);
+            Controls.Add(SiteConfig);
+            Controls.Add(SiteLabel);
+            Controls.Add(cfgTag);
+            Controls.Add(useStratCheck);
+            Controls.Add(proxyGroup);
+            Controls.Add(metaBox);
+            Controls.Add(balanceStopperGroup);
+            Controls.Add(groupBox4);
+            Controls.Add(groupBox3);
+            Controls.Add(label6);
+            Controls.Add(groupBox2);
+            Controls.Add(button1);
+            Controls.Add(pHash);
+            Controls.Add(label1);
+            Controls.Add(groupBox1);
+            FormBorderStyle = FormBorderStyle.FixedToolWindow;
+            Margin = new Padding(6, 5, 6, 5);
+            Name = "SettingsForm";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Settings";
+            ((System.ComponentModel.ISupportInitialize)numberofBets).EndInit();
+            ((System.ComponentModel.ISupportInitialize)betCostNUD).EndInit();
+            ((System.ComponentModel.ISupportInitialize)precentOnLoss).EndInit();
+            groupBox2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)stopAfterGamesNum).EndInit();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            groupBox3.ResumeLayout(false);
+            groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)nudDelay).EndInit();
+            groupBox4.ResumeLayout(false);
+            groupBox4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)BombCountBox).EndInit();
+            balanceStopperGroup.ResumeLayout(false);
+            balanceStopperGroup.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)balanceStopOver).EndInit();
+            ((System.ComponentModel.ISupportInitialize)balanceStopUnder).EndInit();
+            metaBox.ResumeLayout(false);
+            metaBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)ResetBaseWinCount).EndInit();
+            ((System.ComponentModel.ISupportInitialize)PercentOnWinResetGames).EndInit();
+            ((System.ComponentModel.ISupportInitialize)precentOnWin).EndInit();
+            ((System.ComponentModel.ISupportInitialize)PercentOnLossResetGames).EndInit();
+            proxyGroup.ResumeLayout(false);
+            proxyGroup.PerformLayout();
+            groupBox5.ResumeLayout(false);
+            groupBox5.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -1100,5 +1030,11 @@
         private NumericUpDown ResetBaseWinCount;
         private CheckBox ResetBaseWinsChecked;
         private CheckBox OppositeTileChecked;
+        private Label label14;
+        private TextBox textBox1;
+        private Label label15;
+        private TextBox textBox2;
+        private Button button3;
+        private CheckBox checkInstant;
     }
 }

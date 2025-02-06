@@ -15,6 +15,7 @@ namespace Bomber_GUI.Forms
     public delegate void OnRemoveCallback(gamePanel sender);
     public partial class gamePanel : UserControl
     {
+        CookieContainer cc = new CookieContainer();
         private int guesscount = 0;
         private double wins = 0;
         private double loss = 0;
@@ -24,6 +25,7 @@ namespace Bomber_GUI.Forms
         private int MultiplyDeadlineTracker = 0;
         private bool running = false;
         private decimal currentBal = 0;
+        private bool fastmode = false;
 
         public event OnRemoveCallback OnRemove;
 
@@ -114,7 +116,16 @@ namespace Bomber_GUI.Forms
                     //Proxy = null;
                 }
                 running = true;
-                PrepRequest();
+                if (GameConfig.Instant)
+                {
+                    PrepRequest();
+                }
+                else
+                {
+                    PrepRequest();
+                }
+                
+                
                 
             }
             else
@@ -130,9 +141,12 @@ namespace Bomber_GUI.Forms
         {
             try
             {
-                var mainurl = "https://api." + site + "/graphql";
+                var mainurl = "https://" + site + "/_api/graphql";
                 var request = new RestRequest(Method.POST);
                 var client = new RestClient(mainurl);
+                client.CookieContainer = cc;
+                client.UserAgent = GameConfig.Agent;
+                client.CookieContainer.Add(new Cookie("cf_clearance", GameConfig.Cookie, "/", GameConfig.SiteConfig));
                 BetQuery payload = new BetQuery();
                 payload.operationName = "UserBalances";
                 payload.query = "query UserBalances {\n  user {\n    id\n    balances {\n      available {\n        amount\n        currency\n        __typename\n      }\n      vault {\n        amount\n        currency\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n";
@@ -185,7 +199,114 @@ namespace Bomber_GUI.Forms
 
         }
 
+        async void fastRequest()
+        {
+            try
+            {
 
+
+                guesscount = 0;
+
+                button1.Text = "Stop after game.";
+                button1.Enabled = true;
+                //CheckBalance(GameConfig.SiteConfig, GameConfig.PlayerHash, GameConfig.ConfigTag);
+
+
+                var mainurl = "https://" + GameConfig.SiteConfig + "/_api/graphql";
+                var request = new RestRequest(Method.POST);
+                var client = new RestClient(mainurl);
+                client.CookieContainer = cc;
+                client.UserAgent = GameConfig.Agent;
+                client.CookieContainer.Add(new Cookie("cf_clearance", GameConfig.Cookie, "/", GameConfig.SiteConfig));
+                Guid guid = Guid.NewGuid();
+                BetQuery payload = new BetQuery();
+                payload.variables = new BetClass()
+                {
+                    identifier = guid.ToString(),
+                    currency = GameConfig.ConfigTag.ToLower(),
+                    amount = GameConfig.BetCost,
+                    minesCount = GameConfig.BombCount,
+                    fields = new List<int> { 0, 1 }
+
+                };
+
+                payload.query = "mutation MinesBet($amount: Float!, $currency: CurrencyEnum!, $minesCount: Int!, $fields: [Int!], $identifier: String) {\n  minesBet(\n    amount: $amount\n    currency: $currency\n    minesCount: $minesCount\n    fields: $fields\n    identifier: $identifier\n  ) {\n    ...CasinoBet\n    state {\n      ...CasinoGameMines\n    }\n  }\n}\n\nfragment CasinoBet on CasinoBet {\n  id\n  active\n  payoutMultiplier\n  amountMultiplier\n  amount\n  payout\n  updatedAt\n  currency\n  game\n  user {\n    id\n    name\n  }\n}\n\nfragment CasinoGameMines on CasinoGameMines {\n  mines\n  minesCount\n  rounds {\n    field\n    payoutMultiplier\n  }\n}\n";
+
+                request.AddHeader("Content-Type", "application/json");
+                request.AddHeader("x-access-token", GameConfig.PlayerHash);
+
+                request.AddParameter("application/json", JsonConvert.SerializeObject(payload), ParameterType.RequestBody);
+
+
+                var restResponse =
+                    await client.ExecuteAsync(request);
+
+
+                //Debug.WriteLine(restResponse.Content);
+                Data response = JsonConvert.DeserializeObject<Data>(restResponse.Content);
+
+                if (response.errors != null)
+                {
+                    Log(response.errors[0].message);
+
+                    if (running == true)
+                    {
+                        if (response.errors[0].errorType == "insufficientBalance")
+                        {
+                            if (GameConfig.RestartOnCrashChecked)
+                            {
+                                GameConfig.BetCost = BasebetCost;
+                                await Task.Delay(2000);
+                                fastRequest();
+                            }
+                            else
+                            {
+                                BSta(true);
+                            }
+
+                        }
+                        else
+                        {
+                            await Task.Delay(2000);
+                            fastRequest(); 
+                        }
+
+                    }
+                    else
+                    {
+                        BSta(true);
+                    }
+                }
+                else
+                {
+                    clearSquares();
+                    currentBetStreak = 0;
+                    stratergyIndex = 0;
+
+                    ClearLog(notFirstClear);
+                    notFirstClear = true;
+                    Log("=[Game Started]=");
+                    Log("Name: {0} | Bombs: {1}", response.data.minesBet.user.name, response.data.minesBet.state.minesCount);
+                    //EndNewGameResponce();
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                Log("Failed to start new game.");
+                if (running == true)
+                {
+                    await Task.Delay(2000);
+                    PrepRequest();
+                }
+                else
+                {
+                    BSta(true);
+                }
+            }
+
+        }
         async void PrepRequest()
         {
             try
@@ -199,9 +320,12 @@ namespace Bomber_GUI.Forms
                 //CheckBalance(GameConfig.SiteConfig, GameConfig.PlayerHash, GameConfig.ConfigTag);
 
 
-                var mainurl = "https://api." + GameConfig.SiteConfig + "/graphql";
+                var mainurl = "https://" + GameConfig.SiteConfig + "/_api/graphql";
                 var request = new RestRequest(Method.POST);
                 var client = new RestClient(mainurl);
+                client.CookieContainer = cc;
+                client.UserAgent = GameConfig.Agent;
+                client.CookieContainer.Add(new Cookie("cf_clearance", GameConfig.Cookie, "/", GameConfig.SiteConfig));
                 BetQuery payload = new BetQuery();
                 payload.variables = new BetClass()
                 {
@@ -422,10 +546,13 @@ namespace Bomber_GUI.Forms
         private async void endCashoutResponce()
         {
             try
-            {
-                var mainurl = "https://api." + GameConfig.SiteConfig + "/graphql";
+            {   
+                var mainurl = "https://" + GameConfig.SiteConfig + "/_api/graphql";
                 var request = new RestRequest(Method.POST);
                 var client = new RestClient(mainurl);
+                client.CookieContainer = cc;
+                client.UserAgent = GameConfig.Agent;
+                client.CookieContainer.Add(new Cookie("cf_clearance", GameConfig.Cookie, "/", GameConfig.SiteConfig));
                 BetQuery payload = new BetQuery();
                 Guid guid = Guid.NewGuid();
                 payload.variables = new BetClass()
@@ -767,9 +894,12 @@ namespace Bomber_GUI.Forms
                 int betSquare = getNextSquare();
                 Log("betting square {0}", betSquare);
                 
-                var mainurl = "https://api." + GameConfig.SiteConfig + "/graphql";
+                var mainurl = "https://" + GameConfig.SiteConfig + "/_api/graphql";
                 var request = new RestRequest(Method.POST);
                 var client = new RestClient(mainurl);
+                client.CookieContainer = cc;
+                client.UserAgent = GameConfig.Agent;
+                client.CookieContainer.Add(new Cookie("cf_clearance", GameConfig.Cookie, "/", GameConfig.SiteConfig));
                 BetQuery payload = new BetQuery();
                 payload.variables = new BetClass()
                 {
@@ -835,7 +965,7 @@ namespace Bomber_GUI.Forms
             if (GameConfig.GameDelay != 0 && running)
             {
                 //Log("Waiting {0}ms...", Delay);
-                await Task.Delay(Delay);
+                await Task.Delay(Delay * 1000);
             }
         }
 

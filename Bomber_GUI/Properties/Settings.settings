@@ -33,7 +33,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="ConfigTag" Type="System.String" Scope="User">
-      <Value Profile="(Default)">btc</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="StopAfterGames" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -102,6 +102,15 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="OppositeTileChecked" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Cookie" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Agent" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Instant" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>

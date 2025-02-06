@@ -12,6 +12,9 @@ namespace Bomber_GUI
     }
     public class DefaultSettings
     {
+        public bool Instant { get; set; }
+        public string Cookie { get; set; }
+        public string Agent { get; set; }
         public int BombCount { get; set; }
         public string PlayerHash { get; set; }
         public int BetAmmount { get; set; }

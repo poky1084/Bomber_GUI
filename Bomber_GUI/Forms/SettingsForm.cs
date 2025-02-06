@@ -6,23 +6,31 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Menu;
 
 namespace Bomber_GUI.Forms
 {
     public partial class SettingsForm : Form
     {
+        CookieContainer cc = new CookieContainer();
         public GameSettings GameConfig { get; set; }
         private bool settingDefaults = false;
         private bool LoadingDefaults = false;
+
+        public List<string> coinList = new List<string>();
+        public int coinIndex = 0;
+
         public SettingsForm()
         {
             GameConfig = new GameSettings();
             InitializeComponent();
             GameConfig.BombCount = 3;
             LoadDefaultSettings();
+            //button3.PerformClick();
         }
         public SettingsForm(DefaultSettings ds)
         {
@@ -153,11 +161,16 @@ namespace Bomber_GUI.Forms
 
         public void loadConfigSettings()
         {
+
             int BetAmmount = (int)Properties.Settings.Default.BetAmmount;
             if (GameConfig.UseStrat)
                 BetAmmount = Properties.Settings.Default.StratergySquares.Split('-').Select(n => Convert.ToInt32(n)).ToArray().Length;
             //GameConfig.UseProxy = useProxy.Checked;
             //GameConfig.Proxy = proxyBox.Text;
+            GameConfig.Agent = Properties.Settings.Default.Agent;
+            GameConfig.Cookie = Properties.Settings.Default.Cookie;
+            GameConfig.Instant = Properties.Settings.Default.Instant;
+
             GameConfig.PlayerHash = Properties.Settings.Default.PlayerHash;
             GameConfig.BetAmmount = BetAmmount;
             GameConfig.BetCost = Properties.Settings.Default.BetCost;
@@ -214,12 +227,17 @@ namespace Bomber_GUI.Forms
             //if (ds == null)
             //return;
             LoadingDefaults = true;
+
+            textBox1.Text = Properties.Settings.Default.Cookie;
+            textBox2.Text = Properties.Settings.Default.Agent;
+
+            checkInstant.Checked = Properties.Settings.Default.Instant;
             pHash.Text = Properties.Settings.Default.PlayerHash;
             numberofBets.Value = Properties.Settings.Default.BetAmmount;
             GameConfig.UseStrat = Properties.Settings.Default.UseStrat;
             GameConfig.ResetBetMultiplyer = Properties.Settings.Default.ResetBetMultiplyer;
             GameConfig.ResetBetMultiplyerDeadline = Properties.Settings.Default.ResetBetMultiplyerDeadline;
-            
+
             useStratCheck.Checked = GameConfig.UseStrat;
             groupBox5.Enabled = useStratCheck.Checked;
             GameConfig.StratergySquares = Properties.Settings.Default.StratergySquares.Split('-').Select(n => Convert.ToInt32(n)).ToArray();
@@ -239,7 +257,7 @@ namespace Bomber_GUI.Forms
             precentOnLoss.Value = Properties.Settings.Default.PercentOnLoss;
             showGBombsCheck.Checked = Properties.Settings.Default.ShowGameBombs;
             //saveLog.Checked = Properties.Settings.Default.SaveLogToFile;
-            cfgTag.Text = Properties.Settings.Default.ConfigTag;
+            //cfgTag.Text = Properties.Settings.Default.ConfigTag;
             SiteConfig.Text = Properties.Settings.Default.SiteConfig;
             BombCountBox.Value = Properties.Settings.Default.BombCount;
             stopAfterGamesChecked.Checked = Properties.Settings.Default.StopAfterGames;
@@ -266,13 +284,13 @@ namespace Bomber_GUI.Forms
             nudDelay.Value = Properties.Settings.Default.GameDelay;
 
             //BalanceStopCheck.Checked = Properties.Settings.Default.CheckBalance;
-            if(Properties.Settings.Default.BalanceStopAbove == -1)
+            if (Properties.Settings.Default.BalanceStopAbove == -1)
             {
                 balanceStopOverChecked.Checked = false;
             }
             else
             {
-                if(Properties.Settings.Default.BalanceStopAbove > balanceStopOver.Minimum && Properties.Settings.Default.BalanceStopAbove < balanceStopOver.Maximum)
+                if (Properties.Settings.Default.BalanceStopAbove > balanceStopOver.Minimum && Properties.Settings.Default.BalanceStopAbove < balanceStopOver.Maximum)
                     balanceStopOver.Value = Properties.Settings.Default.BalanceStopAbove;
                 balanceStopOverChecked.Checked = true;
             }
@@ -282,7 +300,7 @@ namespace Bomber_GUI.Forms
             }
             else
             {
-                if(Properties.Settings.Default.BalanceStopBelow > balanceStopUnder.Minimum && Properties.Settings.Default.BalanceStopBelow < balanceStopUnder.Maximum)
+                if (Properties.Settings.Default.BalanceStopBelow > balanceStopUnder.Minimum && Properties.Settings.Default.BalanceStopBelow < balanceStopUnder.Maximum)
                     balanceStopUnder.Value = Properties.Settings.Default.BalanceStopBelow;
                 balanceStopUnderChecked.Checked = true;
             }
@@ -296,9 +314,9 @@ namespace Bomber_GUI.Forms
             balanceStopOverChecked.Checked = Properties.Settings.Default.CheckboxStopAbove;
             balanceStopUnderChecked.Checked = Properties.Settings.Default.CheckboxStopBelow;
             numberofBets.Enabled = !GameConfig.UseStrat;
-            
+
             LoadingDefaults = false;
-           
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -310,11 +328,18 @@ namespace Bomber_GUI.Forms
 
         public void initSettings()
         {
+            
+                    
+            GameConfig.ConfigTag = coinList[coinIndex];
             int BetAmmount = (int)numberofBets.Value;
             if (GameConfig.UseStrat)
                 BetAmmount = GameConfig.StratergySquares.Length;
             GameConfig.UseProxy = useProxy.Checked;
             GameConfig.Proxy = proxyBox.Text;
+
+            GameConfig.Instant = checkInstant.Checked;
+            GameConfig.Agent = textBox2.Text;
+            GameConfig.Cookie = textBox1.Text;
             GameConfig.PlayerHash = pHash.Text;
             GameConfig.BetAmmount = BetAmmount;
             GameConfig.BetCost = betCostNUD.Value;
@@ -326,7 +351,8 @@ namespace Bomber_GUI.Forms
             GameConfig.BombCount = (int)BombCountBox.Value;
             GameConfig.ShowGameBombs = showGBombsCheck.Checked;
             GameConfig.SaveLogToFile = saveLog.Checked;
-            GameConfig.ConfigTag = cfgTag.Text;
+    
+            
             GameConfig.SiteConfig = SiteConfig.Text;
             GameConfig.StopAfterGamesAmmount = (int)stopAfterGamesNum.Value;
             GameConfig.StopAfterGames = stopAfterGamesChecked.Checked;
@@ -375,6 +401,9 @@ namespace Bomber_GUI.Forms
                 BetAmmount = GameConfig.StratergySquares.Length;
             //Properties.Settings.Default.UseProxy = GameConfig.UseProxy;
             //GameConfig.Proxy = proxyBox.Text;
+            Properties.Settings.Default.Instant = checkInstant.Checked;
+            Properties.Settings.Default.Agent = textBox2.Text;
+            Properties.Settings.Default.Cookie = textBox1.Text;
             Properties.Settings.Default.PlayerHash = pHash.Text;
             Properties.Settings.Default.BetAmmount = BetAmmount;
             Properties.Settings.Default.BetCost = betCostNUD.Value;
@@ -383,14 +412,15 @@ namespace Bomber_GUI.Forms
             //Properties.Settings.Default.ShowExceptionWindow = showExWindow.Checked;
 
             Properties.Settings.Default.UseStrat = useStratCheck.Checked;
-            if (GameConfig.StratergySquares != null) { 
+            if (GameConfig.StratergySquares != null)
+            {
                 Properties.Settings.Default.StratergySquares = string.Join("-", GameConfig.StratergySquares);
             }
             Properties.Settings.Default.GameDelay = (int)nudDelay.Value;
             Properties.Settings.Default.BombCount = (int)BombCountBox.Value;
             Properties.Settings.Default.ShowGameBombs = showGBombsCheck.Checked;
             //Properties.Settings.Default.SaveLogToFile = saveLog.Checked;
-            Properties.Settings.Default.ConfigTag = cfgTag.Text;
+            Properties.Settings.Default.ConfigTag = coinList[coinIndex];
             Properties.Settings.Default.SiteConfig = SiteConfig.Text;
             Properties.Settings.Default.StopAfterGamesAmmount = (int)stopAfterGamesNum.Value;
             Properties.Settings.Default.StopAfterGames = stopAfterGamesChecked.Checked;
@@ -433,16 +463,19 @@ namespace Bomber_GUI.Forms
 
         private void CheckBal_Click(object sender, EventArgs e)
         {
-            PutBalance();
+            PutBalance(false);
         }
 
-        public async void PutBalance()
+        public async void PutBalance(bool sign)
         {
             try
             {
-                var mainurl = "https://api." + SiteConfig.Text + "/graphql";
+                var mainurl = "https://" + SiteConfig.Text + "/_api/graphql";
                 var request = new RestRequest(Method.POST);
                 var client = new RestClient(mainurl);
+                client.CookieContainer = cc;
+                client.UserAgent = textBox2.Text; ;
+                client.CookieContainer.Add(new Cookie("cf_clearance", textBox1.Text, "/", SiteConfig.Text));
                 BetQuery payload = new BetQuery();
                 payload.operationName = "UserBalances";
                 payload.query = "query UserBalances {\n  user {\n    id\n    balances {\n      available {\n        amount\n        currency\n        __typename\n      }\n      vault {\n        amount\n        currency\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n";
@@ -471,9 +504,25 @@ namespace Bomber_GUI.Forms
                 {
                     if (response.data != null)
                     {
+
+                        if (sign)
+                        {
+                            button3.Enabled = false;
+                            coinList.Clear();
+                            cfgTag.Items.Clear();
+                        }
+
                         for (var i = 0; i < response.data.user.balances.Count; i++)
                         {
-                            if (response.data.user.balances[i].available.currency == cfgTag.Text.ToLower())
+                            if (sign)
+                            {
+                                coinList.Add(response.data.user.balances[i].available.currency);
+
+                                cfgTag.Items.Add(response.data.user.balances[i].available.currency + " - " + response.data.user.balances[i].available.amount.ToString("N8"));
+                                cfgTag.SelectedIndex = coinIndex;
+                            }
+
+                            if (response.data.user.balances[i].available.currency == coinList[coinIndex].ToLower())
                             {
                                 balanceStopOver.Value = response.data.user.balances[i].available.amount;
                                 balanceStopUnder.Value = response.data.user.balances[i].available.amount;
@@ -495,31 +544,31 @@ namespace Bomber_GUI.Forms
 
         private void cfgTag_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
+            coinIndex = cfgTag.SelectedIndex;
         }
 
         private void RandomEveryGameChecked_CheckedChanged(object sender, EventArgs e)
         {
-            if(RandomEveryGameChecked.CheckState == CheckState.Checked) 
+            if (RandomEveryGameChecked.CheckState == CheckState.Checked)
             {
                 RandomEveryLossChecked.CheckState = CheckState.Unchecked;
                 RandomEveryWinChecked.CheckState = CheckState.Unchecked;
 
-            }   
+            }
         }
 
         private void RandomEveryLossChecked_CheckedChanged(object sender, EventArgs e)
         {
-            if(RandomEveryLossChecked.CheckState == CheckState.Checked)
+            if (RandomEveryLossChecked.CheckState == CheckState.Checked)
             {
                 RandomEveryGameChecked.CheckState = CheckState.Unchecked;
                 RandomEveryWinChecked.CheckState = CheckState.Unchecked;
-            } 
+            }
         }
 
         private void RandomEveryWinChecked_CheckedChanged(object sender, EventArgs e)
         {
-            if(RandomEveryWinChecked.CheckState == CheckState.Checked)
+            if (RandomEveryWinChecked.CheckState == CheckState.Checked)
             {
                 RandomEveryLossChecked.CheckState = CheckState.Unchecked;
                 RandomEveryGameChecked.CheckState = CheckState.Unchecked;
@@ -528,10 +577,10 @@ namespace Bomber_GUI.Forms
 
         private void BombCountBox_ValueChanged(object sender, EventArgs e)
         {
-            if(numberofBets.Value < 2 && BombCountBox.Value < 2)
+            if (numberofBets.Value < 2 && BombCountBox.Value < 2)
             {
                 OppositeTileChecked.Enabled = true;
-            } 
+            }
             else
             {
                 OppositeTileChecked.Enabled = false;
@@ -550,6 +599,37 @@ namespace Bomber_GUI.Forms
                 OppositeTileChecked.Enabled = false;
                 OppositeTileChecked.CheckState = CheckState.Unchecked;
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            PutBalance(true);
+        }
+
+        private void pHash_TextChanged(object sender, EventArgs e)
+        {
+            //button3.Enabled = true;
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            //button3.Enabled = true;
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            //button3.Enabled = true;
+        }
+
+        private void checkInstant_CheckedChanged(object sender, EventArgs e)
+        {
+            GameConfig.Instant = checkInstant.Checked;
+
+        }
+
+        private void nudDelay_ValueChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
