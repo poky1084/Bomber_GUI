@@ -31,12 +31,14 @@ namespace Bomber_GUI.Forms
             GameConfig.BombCount = 3;
             LoadDefaultSettings();
             //button3.PerformClick();
+            this.Load += SettingsForm_Load;
         }
         public SettingsForm(DefaultSettings ds)
         {
             GameConfig = new GameSettings();
             InitializeComponent();
             LoadDefaultSettings();
+            this.Load += SettingsForm_Load;
         }
 
         public SettingsForm(DefaultSettings ds, bool settingDef)
@@ -44,11 +46,16 @@ namespace Bomber_GUI.Forms
             GameConfig = new GameSettings();
             InitializeComponent();
             LoadDefaultSettings();
+            this.Load += SettingsForm_Load;
             if (settingDef)
             {
                 settingDefaults = true;
                 this.Text = "Default settings";
             }
+        }
+        private void SettingsForm_Load(object sender, EventArgs e)
+        {
+            PutBalance(true);
         }
         private void metaChecked_CheckedChanged(object sender, EventArgs e)
         {
@@ -495,16 +502,11 @@ namespace Bomber_GUI.Forms
             try
             {
                 var json = await GraphQL(
-             "UserBalances",
-             "query UserBalances {\n  user {\n    id\n    balances {\n      available {\n        amount\n        currency\n        __typename\n      }\n      vault {\n        amount\n        currency\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n"
-                 );
-               
+                    "UserBalances",
+                    "query UserBalances {\n  user {\n    id\n    balances {\n      available {\n        amount\n        currency\n        __typename\n      }\n      vault {\n        amount\n        currency\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n"
+                );
 
-                // Will output the HTML contents of the requested page
-                //Debug.WriteLine(restResponse.Content);
-                //Debug.WriteLine(GameConfig.BombCount);
                 BalancesData response = JsonConvert.DeserializeObject<BalancesData>(json);
-                //Log(response.data.minesBet.user.name); ;
 
                 if (response.errors != null)
                 {
@@ -514,10 +516,12 @@ namespace Bomber_GUI.Forms
                 {
                     if (response.data != null)
                     {
+                        // *** Save current selection before clearing ***
+                        string currentSelected = coinList.Count > 0 ? coinList[coinIndex] : Properties.Settings.Default.ConfigTag;
 
                         if (sign)
                         {
-                            button3.Enabled = false;
+                            //button3.Enabled = false;
                             coinList.Clear();
                             cfgTag.Items.Clear();
                         }
@@ -527,29 +531,31 @@ namespace Bomber_GUI.Forms
                             if (sign)
                             {
                                 coinList.Add(response.data.user.balances[i].available.currency);
-
                                 cfgTag.Items.Add(response.data.user.balances[i].available.currency + " - " + response.data.user.balances[i].available.amount.ToString("N8"));
-                                cfgTag.SelectedIndex = coinIndex;
                             }
 
-                            if (response.data.user.balances[i].available.currency == coinList[coinIndex].ToLower())
+                            if (response.data.user.balances[i].available.currency == currentSelected.ToLower())
                             {
                                 balanceStopOver.Value = response.data.user.balances[i].available.amount;
                                 balanceStopUnder.Value = response.data.user.balances[i].available.amount;
                             }
-
                         }
 
+                        if (sign)
+                        {
+                            // *** Restore previously selected currency ***
+                            int savedIndex = coinList.FindIndex(c => c.Equals(currentSelected, StringComparison.OrdinalIgnoreCase));
+                            coinIndex = savedIndex >= 0 ? savedIndex : 0;
+                            cfgTag.SelectedIndex = coinIndex;
+                            button3.Enabled = true;
+                        }
                     }
-
-
                 }
             }
             catch (Exception ex)
             {
-
+                if (sign) button3.Enabled = true;
             }
-
         }
 
         private void cfgTag_SelectedIndexChanged(object sender, EventArgs e)
