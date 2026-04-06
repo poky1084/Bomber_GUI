@@ -228,8 +228,8 @@ namespace Bomber_GUI.Forms
             //return;
             LoadingDefaults = true;
 
-            textBox1.Text = Properties.Settings.Default.Cookie;
-            textBox2.Text = Properties.Settings.Default.Agent;
+            //textBox1.Text = Properties.Settings.Default.Cookie;
+            //textBox2.Text = Properties.Settings.Default.Agent;
 
             checkInstant.Checked = Properties.Settings.Default.Instant;
             pHash.Text = Properties.Settings.Default.PlayerHash;
@@ -338,8 +338,8 @@ namespace Bomber_GUI.Forms
             GameConfig.Proxy = proxyBox.Text;
 
             GameConfig.Instant = checkInstant.Checked;
-            GameConfig.Agent = textBox2.Text;
-            GameConfig.Cookie = textBox1.Text;
+            //GameConfig.Agent = textBox2.Text;
+            //GameConfig.Cookie = textBox1.Text;
             GameConfig.PlayerHash = pHash.Text;
             GameConfig.BetAmmount = BetAmmount;
             GameConfig.BetCost = betCostNUD.Value;
@@ -402,8 +402,8 @@ namespace Bomber_GUI.Forms
             //Properties.Settings.Default.UseProxy = GameConfig.UseProxy;
             //GameConfig.Proxy = proxyBox.Text;
             Properties.Settings.Default.Instant = checkInstant.Checked;
-            Properties.Settings.Default.Agent = textBox2.Text;
-            Properties.Settings.Default.Cookie = textBox1.Text;
+           // Properties.Settings.Default.Agent = textBox2.Text;
+           // Properties.Settings.Default.Cookie = textBox1.Text;
             Properties.Settings.Default.PlayerHash = pHash.Text;
             Properties.Settings.Default.BetAmmount = BetAmmount;
             Properties.Settings.Default.BetCost = betCostNUD.Value;
@@ -465,35 +465,45 @@ namespace Bomber_GUI.Forms
         {
             PutBalance(false);
         }
+        private async Task<string> GraphQL(string operationName, string query,
+                                  BetClass variables = null)
+        {
+            var url = "https://" + SiteConfig.Text + "/_api/graphql";
 
+            var body = new BetSend
+            {
+                operationName = operationName,
+                query = query,
+                variables = variables
+            };
+
+            var options = new
+            {
+                method = "POST",
+                headers = new Dictionary<string, string>
+        {
+            { "Content-Type", "application/json" },
+            { "x-access-token", pHash.Text }
+        },
+                body = body
+            };
+
+            return await BrowserFetch.FetchAsync(url, options);
+        }
         public async void PutBalance(bool sign)
         {
             try
             {
-                var mainurl = "https://" + SiteConfig.Text + "/_api/graphql";
-                var request = new RestRequest(Method.POST);
-                var client = new RestClient(mainurl);
-                client.CookieContainer = cc;
-                client.UserAgent = textBox2.Text; ;
-                client.CookieContainer.Add(new Cookie("cf_clearance", textBox1.Text, "/", SiteConfig.Text));
-                BetQuery payload = new BetQuery();
-                payload.operationName = "UserBalances";
-                payload.query = "query UserBalances {\n  user {\n    id\n    balances {\n      available {\n        amount\n        currency\n        __typename\n      }\n      vault {\n        amount\n        currency\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n";
-                //request.RequestFormat = DataFormat.Json;
-                request.AddHeader("Content-Type", "application/json");
-                request.AddHeader("x-access-token", pHash.Text);
-
-                request.AddParameter("application/json", JsonConvert.SerializeObject(payload), ParameterType.RequestBody);
-                //request.AddJsonBody(payload);
-                //IRestResponse response = client.Execute(request);
-
-                var restResponse =
-                    await client.ExecuteAsync(request);
+                var json = await GraphQL(
+             "UserBalances",
+             "query UserBalances {\n  user {\n    id\n    balances {\n      available {\n        amount\n        currency\n        __typename\n      }\n      vault {\n        amount\n        currency\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n"
+                 );
+               
 
                 // Will output the HTML contents of the requested page
                 //Debug.WriteLine(restResponse.Content);
                 //Debug.WriteLine(GameConfig.BombCount);
-                BalancesData response = JsonConvert.DeserializeObject<BalancesData>(restResponse.Content);
+                BalancesData response = JsonConvert.DeserializeObject<BalancesData>(json);
                 //Log(response.data.minesBet.user.name); ;
 
                 if (response.errors != null)
