@@ -147,7 +147,7 @@ namespace Bomber_GUI.Forms
                 running = true;
                 if (GameConfig.Instant)
                 {
-                    PrepRequest();
+                    fastRequest();
                 }
                 else
                 {
@@ -217,37 +217,54 @@ namespace Bomber_GUI.Forms
         {
             try
             {
-
-
                 guesscount = 0;
-
                 button1.Text = "Stop after game.";
                 button1.Enabled = true;
-                //CheckBalance(GameConfig.SiteConfig, GameConfig.PlayerHash, GameConfig.ConfigTag);
 
+                List<int> fieldsToReveal;
+                if (GameConfig.UseStrat && GameConfig.StratergySquares != null && GameConfig.StratergySquares.Length > 0)
+                {
+                    fieldsToReveal = GameConfig.StratergySquares.Take(GameConfig.BetAmmount).ToList();
+                }
+                else
+                {
+                    var allSquares = Randomize(new int[] {
+                0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,
+                15,16,17,18,19,20,21,22,23,24
+            });
+                    fieldsToReveal = allSquares.Take(GameConfig.BetAmmount).ToList();
+                }
 
-                Guid guid = Guid.NewGuid();
+                clearSquares();
+                ClearLog(notFirstClear);
+                notFirstClear = true;
+                Log("=[Instant Bet Started]=");
+                Log("Betting {0} tiles | Bombs: {1} | Amount: {2} {3}",
+                    fieldsToReveal.Count, GameConfig.BombCount,
+                    GameConfig.BetCost.ToString("0.00000000"), GameConfig.ConfigTag);
+
                 var json = await GraphQL(
-           "MinesBet",
-           "mutation MinesBet($amount: Float!, $currency: CurrencyEnum!, $minesCount: Int!, $fields: [Int!], $identifier: String) {\n  minesBet(\n    amount: $amount\n    currency: $currency\n    minesCount: $minesCount\n    fields: $fields\n    identifier: $identifier\n  ) {\n    ...CasinoBet\n    state {\n      ...CasinoGameMines\n    }\n  }\n}\n\nfragment CasinoBet on CasinoBet {\n  id\n  active\n  payoutMultiplier\n  amountMultiplier\n  amount\n  payout\n  updatedAt\n  currency\n  game\n  user {\n    id\n    name\n  }\n}\n\nfragment CasinoGameMines on CasinoGameMines {\n  mines\n  minesCount\n  rounds {\n    field\n    payoutMultiplier\n  }\n}\n",
-           new BetClass
-           {
-               identifier = guid.ToString(),
-               currency = GameConfig.ConfigTag.ToLower(),
-               amount = GameConfig.BetCost,
-               minesCount = GameConfig.BombCount,
-               fields = new List<int> { 0, 1 }
-           }
-            );
+                    "MinesBet",
+                    "mutation MinesBet($amount: Float!, $currency: CurrencyEnum!, $minesCount: Int!, $fields: [Int!], $identifier: String) {\n" +
+                    "  minesBet(\n    amount: $amount\n    currency: $currency\n    minesCount: $minesCount\n    fields: $fields\n    identifier: $identifier\n  ) {\n" +
+                    "    ...CasinoBet\n    state {\n      ...CasinoGameMines\n    }\n  }\n}\n\n" +
+                    "fragment CasinoBet on CasinoBet {\n  id\n  active\n  payoutMultiplier\n  amountMultiplier\n  amount\n  payout\n  updatedAt\n  currency\n  game\n  user {\n    id\n    name\n  }\n}\n\n" +
+                    "fragment CasinoGameMines on CasinoGameMines {\n  mines\n  minesCount\n  rounds {\n    field\n    payoutMultiplier\n  }\n}\n",
+                    new BetClass
+                    {
+                        currency = GameConfig.ConfigTag.ToLower(),
+                        amount = GameConfig.BetCost,
+                        minesCount = GameConfig.BombCount,
+                        fields = fieldsToReveal
+                    }
+                );
 
-                //Debug.WriteLine(restResponse.Content);
                 Data response = JsonConvert.DeserializeObject<Data>(json);
 
                 if (response.errors != null)
                 {
-                    Log(response.errors[0].message);
-
-                    if (running == true)
+                    Log("Error: " + response.errors[0].message);
+                    if (running)
                     {
                         if (response.errors[0].errorType == "insufficientBalance")
                         {
@@ -257,53 +274,202 @@ namespace Bomber_GUI.Forms
                                 await Task.Delay(2000);
                                 fastRequest();
                             }
-                            else
-                            {
-                                BSta(true);
-                            }
-
+                            else BSta(true);
                         }
                         else
                         {
                             await Task.Delay(2000);
-                            fastRequest(); 
+                            fastRequest();
                         }
-
                     }
-                    else
+                    else BSta(true);
+                    return;
+                }
+
+                var state = response.data.minesBet.state;
+                var bet = response.data.minesBet;
+
+                // ── Build set of all picked fields ──────────────────────────────
+                HashSet<int> revealedFields = new HashSet<int>();
+                if (state.rounds != null)
+                    foreach (var round in state.rounds)
+                        revealedFields.Add(round.field);
+
+                // ── Draw all safe (green) picked tiles ──────────────────────────
+                if (state.rounds != null)
+                    foreach (var round in state.rounds)
+                        glowSquare(round.field + 1);
+
+                int lastField = (state.rounds != null && state.rounds.Count > 0)
+    ? state.rounds[state.rounds.Count - 1].field
+    : -1;
+
+                bool hitBomb = state.mines != null
+                               && state.mines.Count > 0
+                               && lastField >= 0
+                               && state.mines.Contains(lastField);
+
+                if (hitBomb)
+                {
+                    // ── LOSS ─────────────────────────────────────────────────────
+                    LatestBombs = state.mines.ToArray();
+
+                    // Only the actually-hit tile goes RED
+                    int hitField = state.rounds != null && state.rounds.Count > 0
+                        ? state.rounds[state.rounds.Count - 1].field
+                        : -1;
+
+                    if (hitField >= 0)
+                        bombSquare(hitField + 1);
+
+                    // All other bombs go ORANGE, skip any green picked tiles
+                    foreach (int b in state.mines)
                     {
+                        if (b != hitField && !revealedFields.Contains(b))
+                            FadebombSquare(b + 1);
+                    }
+
+                    Log("BOMB on tile {0}! Lost {1} {2}",
+                        hitField + 1,
+                        bet.amount.ToString("0.00000000"),
+                        GameConfig.ConfigTag);
+
+                    currentWinStreak = 0;
+                    AddLoss();
+                    CheckLastGame();
+
+                    if (GameConfig.StopAfterLoss && running)
+                    {
+                        Log("Stop After Loss enabled... Stopping...");
+                        notFirstClear = false;
+                        running = false;
                         BSta(true);
+                        return;
+                    }
+
+                    if (GameConfig.ResetBetMultiplyer)
+                    {
+                        if (MultiplyDeadlineTracker >= GameConfig.ResetBetMultiplyerDeadline)
+                        {
+                            Log("Resetting bet to base: {0}", BasebetCost);
+                            GameConfig.BetCost = BasebetCost;
+                            MultiplyDeadlineTracker = 0;
+                        }
+                        else if (multiplyOnLoss != 1)
+                        {
+                            Log("Bet increased: {0} → {1}", GameConfig.BetCost, GameConfig.BetCost * multiplyOnLoss);
+                            GameConfig.BetCost *= multiplyOnLoss;
+                            MultiplyDeadlineTracker++;
+                        }
+                    }
+                    else if (multiplyOnLoss != 1)
+                    {
+                        Log("Bet increased: {0} → {1}", GameConfig.BetCost, GameConfig.BetCost * multiplyOnLoss);
+                        GameConfig.BetCost *= multiplyOnLoss;
                     }
                 }
                 else
                 {
-                    clearSquares();
-                    currentBetStreak = 0;
-                    stratergyIndex = 0;
+                    // ── WIN ───────────────────────────────────────────────────────
+                    decimal profit = bet.payout - bet.amount;
+                    Log("WIN! +{0} {1} | Multiplier: {2}x",
+                        profit.ToString("0.00000000"),
+                        GameConfig.ConfigTag,
+                        bet.payoutMultiplier.ToString("0.00"));
 
-                    ClearLog(notFirstClear);
-                    notFirstClear = true;
-                    Log("=[Game Started]=");
-                    Log("Name: {0} | Bombs: {1}", response.data.minesBet.user.name, response.data.minesBet.state.minesCount);
-                    //EndNewGameResponce();
+                    // Reveal bomb positions in ORANGE, never overwrite green tiles
+                    if (state.mines != null && state.mines.Count > 0)
+                    {
+                        LatestBombs = state.mines.ToArray();
+                        if (GameConfig.ShowGameBombs)
+                        {
+                            foreach (int b in state.mines)
+                            {
+                                if (!revealedFields.Contains(b))
+                                    FadebombSquare(b + 1);
+                            }
+                        }
+                    }
+
+                    currentWinStreak++;
+                    AddWin();
+                    CheckLastGame();
+
+                    if (GameConfig.StopAfterWin && running)
+                    {
+                        Log("Stop After Win enabled... Stopping...");
+                        notFirstClear = false;
+                        running = false;
+                        BSta(true);
+                        return;
+                    }
+
+                    if (multiplyOnWin != 1)
+                    {
+                        Log("Bet increased: {0} → {1}", GameConfig.BetCost, GameConfig.BetCost * multiplyOnWin);
+                        GameConfig.BetCost *= multiplyOnWin;
+                    }
+
+                    if (GameConfig.ResetBaseWinsChecked && currentWinStreak >= GameConfig.ResetBaseWinCount)
+                    {
+                        GameConfig.BetCost = BasebetCost;
+                        currentWinStreak = 0;
+                    }
+
+                    if (GameConfig.percentOnWinResetChecked && currentWinStreak >= GameConfig.PercentOnWinResetGames)
+                    {
+                        GameConfig.BetCost = BasebetCost;
+                        currentWinStreak = 0;
+                    }
                 }
 
+                // ── Balance checks ───────────────────────────────────────────────
+                await CheckBalance(GameConfig.SiteConfig, GameConfig.PlayerHash, GameConfig.ConfigTag);
 
-            }
-            catch (Exception ex)
-            {
-                Log("Failed to start new game.");
-                if (running == true)
+                if (GameConfig.CheckboxStopAbove && currentBal >= GameConfig.BalanceStopAbove)
                 {
-                    await Task.Delay(2000);
-                    PrepRequest();
+                    Log("Balance above limit... Stopping...");
+                    running = false;
+                }
+                if (GameConfig.CheckboxStopBelow && currentBal <= GameConfig.BalanceStopBelow)
+                {
+                    Log("Balance below limit... Stopping...");
+                    running = false;
+                }
+
+                // ── Randomise strategy ───────────────────────────────────────────
+                if (GameConfig.RandomEveryGameChecked ||
+                    (hitBomb && GameConfig.RandomEveryLossChecked) ||
+                    (!hitBomb && GameConfig.RandomEveryWinChecked))
+                {
+                    GameConfig.StratergySquares = Randomize(
+                        new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 })
+                        .Take(GameConfig.StratergySquares.Length).ToArray();
+                }
+
+                // ── Loop ─────────────────────────────────────────────────────────
+                if (running)
+                {
+                    CheckWait(GameConfig.GameDelay);
+                    fastRequest();
                 }
                 else
                 {
                     BSta(true);
                 }
+                //clearSquares();
+                //ClearLog(notFirstClear);
             }
-
+            catch (Exception ex)
+            {
+                Log("Instant bet failed: " + ex.Message);
+                if (running)
+                {
+                    await Task.Delay(2000);
+                    fastRequest();
+                }
+                else BSta(true);
+            }
         }
         async void PrepRequest()
         {

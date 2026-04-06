@@ -428,7 +428,6 @@
             // checkInstant
             // 
             checkInstant.AutoSize = true;
-            checkInstant.Enabled = false;
             checkInstant.Location = new Point(8, 45);
             checkInstant.Margin = new Padding(5, 4, 5, 4);
             checkInstant.Name = "checkInstant";
