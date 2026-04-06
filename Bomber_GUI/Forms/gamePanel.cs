@@ -350,7 +350,7 @@ namespace Bomber_GUI.Forms
                     }
                     if (GameConfig.percentOnWinResetChecked)
                     {
-                        if (MultiplyWinTracker > GameConfig.PercentOnWinResetGames && GameConfig.BetCost > BasebetCost)
+                        if (MultiplyWinTracker >= GameConfig.PercentOnWinResetGames && GameConfig.BetCost > BasebetCost)
                         {
                             Log("Resetting bet cost from {0} to {1}", GameConfig.BetCost, BasebetCost);
                             GameConfig.BetCost = BasebetCost;
@@ -413,7 +413,7 @@ namespace Bomber_GUI.Forms
                     }
                     if (GameConfig.percentOnWinResetChecked)
                     {
-                        if (MultiplyWinTracker > GameConfig.PercentOnWinResetGames && GameConfig.BetCost > BasebetCost)
+                        if (MultiplyWinTracker >= GameConfig.PercentOnWinResetGames && GameConfig.BetCost > BasebetCost)
                         {
                             Log("Resetting bet cost from {0} to {1}", GameConfig.BetCost, BasebetCost);
                             GameConfig.BetCost = BasebetCost;
@@ -812,7 +812,7 @@ namespace Bomber_GUI.Forms
                     }
                     if (GameConfig.percentOnWinResetChecked)
                     {
-                        if (MultiplyWinTracker > GameConfig.PercentOnWinResetGames && GameConfig.BetCost > BasebetCost)
+                        if (MultiplyWinTracker >= GameConfig.PercentOnWinResetGames && GameConfig.BetCost > BasebetCost)
                         {
                             Log("Resetting bet cost from {0} to {1}", GameConfig.BetCost, BasebetCost);
                             GameConfig.BetCost = BasebetCost;
@@ -910,7 +910,7 @@ namespace Bomber_GUI.Forms
                     }
                     if (GameConfig.percentOnWinResetChecked)
                     {
-                        if (MultiplyWinTracker > GameConfig.PercentOnWinResetGames && GameConfig.BetCost > BasebetCost)
+                        if (MultiplyWinTracker >= GameConfig.PercentOnWinResetGames && GameConfig.BetCost > BasebetCost)
                         {
                             Log("Resetting bet cost from {0} to {1}", GameConfig.BetCost, BasebetCost);
                             GameConfig.BetCost = BasebetCost;
