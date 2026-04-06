@@ -224,12 +224,10 @@
             // 
             precentOnLoss.Location = new Point(120, 30);
             precentOnLoss.Margin = new Padding(5, 4, 5, 4);
-            precentOnLoss.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
-            precentOnLoss.Minimum = new decimal(new int[] { 10, 0, 0, 0 });
+            precentOnLoss.Maximum = new decimal(new int[] { 999999999, 0, 0, 0 });
             precentOnLoss.Name = "precentOnLoss";
             precentOnLoss.Size = new Size(112, 27);
             precentOnLoss.TabIndex = 15;
-            precentOnLoss.Value = new decimal(new int[] { 100, 0, 0, 0 });
             // 
             // label5
             // 
@@ -663,12 +661,10 @@
             // 
             precentOnWin.Location = new Point(120, 96);
             precentOnWin.Margin = new Padding(5, 4, 5, 4);
-            precentOnWin.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
-            precentOnWin.Minimum = new decimal(new int[] { 10, 0, 0, 0 });
+            precentOnWin.Maximum = new decimal(new int[] { 999999999, 0, 0, 0 });
             precentOnWin.Name = "precentOnWin";
             precentOnWin.Size = new Size(112, 27);
             precentOnWin.TabIndex = 20;
-            precentOnWin.Value = new decimal(new int[] { 100, 0, 0, 0 });
             // 
             // label9
             // 

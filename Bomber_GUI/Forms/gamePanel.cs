@@ -24,6 +24,7 @@ namespace Bomber_GUI.Forms
         private int currentBetStreak = 0;
         private int currentPlayStreak = 0;
         private int MultiplyDeadlineTracker = 0;
+        private int MultiplyWinTracker = 0;
         private bool running = false;
         private decimal currentBal = 0;
         private bool fastmode = false;
@@ -124,8 +125,8 @@ namespace Bomber_GUI.Forms
                     GameConfig = sf.GameConfig;
                     BasebetCost = GameConfig.BetCost;
                     GameConfig.BetCost = BasebetCost;
-                    multiplyOnLoss = GameConfig.PercentOnLoss / 100;
-                    multiplyOnWin = GameConfig.precentOnWin / 100;
+                    multiplyOnLoss = (GameConfig.PercentOnLoss / 100) + 1;
+                    multiplyOnWin = (GameConfig.precentOnWin / 100) + 1;
                     stratergyIndex = 0;
                     
                     //gameGroupBox.Text = GameConfig.ConfigTag;
@@ -328,7 +329,8 @@ namespace Bomber_GUI.Forms
                         if (b != hitField && !revealedFields.Contains(b))
                             FadebombSquare(b + 1);
                     }
-
+                    MultiplyDeadlineTracker++;
+                    MultiplyWinTracker++;
                     Log("BOMB on tile {0}! Lost {1} {2}",
                         hitField + 1,
                         bet.amount.ToString("0.00000000"),
@@ -337,7 +339,24 @@ namespace Bomber_GUI.Forms
                     currentWinStreak = 0;
                     AddLoss();
                     CheckLastGame();
-
+                    if (GameConfig.ResetBetMultiplyer)
+                    {
+                        if (MultiplyDeadlineTracker >= GameConfig.ResetBetMultiplyerDeadline && GameConfig.BetCost > BasebetCost)
+                        {
+                            Log("Resetting bet cost from {0} to {1}", GameConfig.BetCost, BasebetCost);
+                            GameConfig.BetCost = BasebetCost;
+                            MultiplyDeadlineTracker = 0;
+                        }
+                    }
+                    if (GameConfig.percentOnWinResetChecked)
+                    {
+                        if (MultiplyWinTracker > GameConfig.PercentOnWinResetGames && GameConfig.BetCost > BasebetCost)
+                        {
+                            Log("Resetting bet cost from {0} to {1}", GameConfig.BetCost, BasebetCost);
+                            GameConfig.BetCost = BasebetCost;
+                            MultiplyWinTracker = 0;
+                        }
+                    }
                     if (GameConfig.StopAfterLoss && running)
                     {
                         Log("Stop After Loss enabled... Stopping...");
@@ -347,29 +366,18 @@ namespace Bomber_GUI.Forms
                         return;
                     }
 
-                    if (GameConfig.ResetBetMultiplyer)
-                    {
-                        if (MultiplyDeadlineTracker >= GameConfig.ResetBetMultiplyerDeadline)
-                        {
-                            Log("Resetting bet to base: {0}", BasebetCost);
-                            GameConfig.BetCost = BasebetCost;
-                            MultiplyDeadlineTracker = 0;
-                        }
-                        else if (multiplyOnLoss != 1)
-                        {
-                            Log("Bet increased: {0} → {1}", GameConfig.BetCost, GameConfig.BetCost * multiplyOnLoss);
-                            GameConfig.BetCost *= multiplyOnLoss;
-                            MultiplyDeadlineTracker++;
-                        }
-                    }
-                    else if (multiplyOnLoss != 1)
+                    if (multiplyOnLoss != 1)
                     {
                         Log("Bet increased: {0} → {1}", GameConfig.BetCost, GameConfig.BetCost * multiplyOnLoss);
                         GameConfig.BetCost *= multiplyOnLoss;
+                        MultiplyDeadlineTracker = 0;
+
                     }
                 }
                 else
                 {
+                    MultiplyDeadlineTracker++;
+                    MultiplyWinTracker++;
                     // ── WIN ───────────────────────────────────────────────────────
                     decimal profit = bet.payout - bet.amount;
                     Log("WIN! +{0} {1} | Multiplier: {2}x",
@@ -394,7 +402,24 @@ namespace Bomber_GUI.Forms
                     currentWinStreak++;
                     AddWin();
                     CheckLastGame();
-
+                    if (GameConfig.ResetBetMultiplyer)
+                    {
+                        if (MultiplyDeadlineTracker >= GameConfig.ResetBetMultiplyerDeadline && GameConfig.BetCost > BasebetCost)
+                        {
+                            Log("Resetting bet cost from {0} to {1}", GameConfig.BetCost, BasebetCost);
+                            GameConfig.BetCost = BasebetCost;
+                            MultiplyDeadlineTracker = 0;
+                        }
+                    }
+                    if (GameConfig.percentOnWinResetChecked)
+                    {
+                        if (MultiplyWinTracker > GameConfig.PercentOnWinResetGames && GameConfig.BetCost > BasebetCost)
+                        {
+                            Log("Resetting bet cost from {0} to {1}", GameConfig.BetCost, BasebetCost);
+                            GameConfig.BetCost = BasebetCost;
+                            MultiplyWinTracker = 0;
+                        }
+                    }
                     if (GameConfig.StopAfterWin && running)
                     {
                         Log("Stop After Win enabled... Stopping...");
@@ -408,6 +433,7 @@ namespace Bomber_GUI.Forms
                     {
                         Log("Bet increased: {0} → {1}", GameConfig.BetCost, GameConfig.BetCost * multiplyOnWin);
                         GameConfig.BetCost *= multiplyOnWin;
+                        
                     }
 
                     if (GameConfig.ResetBaseWinsChecked && currentWinStreak >= GameConfig.ResetBaseWinCount)
@@ -416,11 +442,7 @@ namespace Bomber_GUI.Forms
                         currentWinStreak = 0;
                     }
 
-                    if (GameConfig.percentOnWinResetChecked && currentWinStreak >= GameConfig.PercentOnWinResetGames)
-                    {
-                        GameConfig.BetCost = BasebetCost;
-                        currentWinStreak = 0;
-                    }
+    
                 }
 
                 // ── Balance checks ───────────────────────────────────────────────
@@ -743,6 +765,8 @@ namespace Bomber_GUI.Forms
                     //Log("Url: {0}", url);
                     AddWin();
                     guesscount = 0;
+                    MultiplyDeadlineTracker++;
+                    MultiplyWinTracker++;
                     bool ShouldStop = false;
 
 
@@ -765,6 +789,7 @@ namespace Bomber_GUI.Forms
                     {
                         Log("Betting increced from {0} to {1}", GameConfig.BetCost, GameConfig.BetCost * multiplyOnWin);
                         GameConfig.BetCost = GameConfig.BetCost * multiplyOnWin;
+                        
                     }
 
                     currentWinStreak++;
@@ -775,15 +800,25 @@ namespace Bomber_GUI.Forms
                        // Log("Bet has been reset. ResetBaseWinsChecked");
                     }
 
-                    if (currentWinStreak >= GameConfig.PercentOnWinResetGames && GameConfig.percentOnWinResetChecked)
+ 
+                    if (GameConfig.ResetBetMultiplyer)
                     {
-                        GameConfig.BetCost = BasebetCost;
-                        currentWinStreak = 0;
-                        //Log("Bet has been reset. PercentOnWinResetGames");
-
+                        if (MultiplyDeadlineTracker >= GameConfig.ResetBetMultiplyerDeadline && GameConfig.BetCost > BasebetCost)
+                        {
+                            Log("Resetting bet cost from {0} to {1}", GameConfig.BetCost, BasebetCost);
+                            GameConfig.BetCost = BasebetCost;
+                            MultiplyDeadlineTracker = 0;
+                        }
                     }
-
-
+                    if (GameConfig.percentOnWinResetChecked)
+                    {
+                        if (MultiplyWinTracker > GameConfig.PercentOnWinResetGames && GameConfig.BetCost > BasebetCost)
+                        {
+                            Log("Resetting bet cost from {0} to {1}", GameConfig.BetCost, BasebetCost);
+                            GameConfig.BetCost = BasebetCost;
+                            MultiplyWinTracker = 0;
+                        }
+                    }
                     CheckLastGame();
                     await CheckBalance(GameConfig.SiteConfig, GameConfig.PlayerHash, GameConfig.ConfigTag);
                     //Log("");
@@ -862,6 +897,26 @@ namespace Bomber_GUI.Forms
                     LatestBombs = bd.data.minesNext.state.mines.ToArray();
                     AddLoss();
                     Log("Bomb. Loss: {0} {1}", bd.data.minesNext.amount, GameConfig.ConfigTag);
+                    MultiplyDeadlineTracker++;
+                    MultiplyWinTracker++;
+                    if (GameConfig.ResetBetMultiplyer)
+                    {
+                        if (MultiplyDeadlineTracker >= GameConfig.ResetBetMultiplyerDeadline && GameConfig.BetCost > BasebetCost)
+                        {
+                            Log("Resetting bet cost from {0} to {1}", GameConfig.BetCost, BasebetCost);
+                            GameConfig.BetCost = BasebetCost;
+                            MultiplyDeadlineTracker = 0;
+                        }
+                    }
+                    if (GameConfig.percentOnWinResetChecked)
+                    {
+                        if (MultiplyWinTracker > GameConfig.PercentOnWinResetGames && GameConfig.BetCost > BasebetCost)
+                        {
+                            Log("Resetting bet cost from {0} to {1}", GameConfig.BetCost, BasebetCost);
+                            GameConfig.BetCost = BasebetCost;
+                            MultiplyWinTracker = 0;
+                        }
+                    }
 
                     List<int> bmbz = bd.data.minesNext.state.mines;
                     if (GameConfig.ShowGameBombs)
@@ -924,33 +979,14 @@ namespace Bomber_GUI.Forms
                     }
                     else
                     {
-                        if (GameConfig.ResetBetMultiplyer)
+      
+                        if (multiplyOnLoss != 1)
                         {
-                            if (MultiplyDeadlineTracker >= GameConfig.ResetBetMultiplyerDeadline)
-                            {
-                                Log("Resetting bet cost from {0} to {1}", GameConfig.BetCost, BasebetCost);
-                                GameConfig.BetCost = BasebetCost;
-                                MultiplyDeadlineTracker = 0;
-                            }
-                            else
-                            {
-                                if (multiplyOnLoss != 1)
-                                {
-                                    Log("Betting increced from {0} to {1}", GameConfig.BetCost, GameConfig.BetCost * multiplyOnLoss);
-                                    GameConfig.BetCost = GameConfig.BetCost * multiplyOnLoss;
-                                    MultiplyDeadlineTracker++;
-                                }
-                            }
-
+                            Log("Betting increced from {0} to {1}", GameConfig.BetCost, GameConfig.BetCost * multiplyOnLoss);
+                            GameConfig.BetCost = GameConfig.BetCost * multiplyOnLoss;
+                            MultiplyDeadlineTracker = 0;
                         }
-                        else
-                        {
-                            if (multiplyOnLoss != 1)
-                            {
-                                Log("Betting increced from {0} to {1}", GameConfig.BetCost, GameConfig.BetCost * multiplyOnLoss);
-                                GameConfig.BetCost = GameConfig.BetCost * multiplyOnLoss;
-                            }
-                        }
+                       
 
                         //string url = string.Format("https://satoshimines.com/s/{0}/{1}/", bd.game_id, bd.random_string);
                         //Log("Url: {0}", url);
@@ -992,9 +1028,10 @@ namespace Bomber_GUI.Forms
                     glowSquare(bd.data.minesNext.state.rounds[guesscount - 1].field + 1);
                     //int betSquare = getNextSquare();
                     currentBetStreak++;
+
                     if (currentBetStreak >= GameConfig.BetAmmount)
                     {
-                        MultiplyDeadlineTracker = 0;
+                        
                         //Log("");
                         endCashoutResponce();
                     }
