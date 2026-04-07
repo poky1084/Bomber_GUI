@@ -96,11 +96,6 @@ namespace Bomber_GUI.Forms
             RandomEveryGameChecked = new CheckBox();
             button3 = new Button();
             SiteConfig = new TextBox();
-            button4 = new Button();
-            textBox1 = new TextBox();
-            textBox2 = new TextBox();
-            label14 = new Label();
-            label15 = new Label();
             ((System.ComponentModel.ISupportInitialize)numberofBets).BeginInit();
             ((System.ComponentModel.ISupportInitialize)betCostNUD).BeginInit();
             ((System.ComponentModel.ISupportInitialize)precentOnLoss).BeginInit();
@@ -135,10 +130,10 @@ namespace Bomber_GUI.Forms
             // 
             // pHash
             // 
-            pHash.Location = new Point(65, 7);
+            pHash.Location = new Point(106, 4);
             pHash.Margin = new Padding(5, 4, 5, 4);
             pHash.Name = "pHash";
-            pHash.Size = new Size(214, 27);
+            pHash.Size = new Size(453, 27);
             pHash.TabIndex = 1;
             pHash.TextChanged += pHash_TextChanged;
             // 
@@ -777,17 +772,17 @@ namespace Bomber_GUI.Forms
             // 
             cfgTag.DropDownStyle = ComboBoxStyle.DropDownList;
             cfgTag.FormattingEnabled = true;
-            cfgTag.Location = new Point(65, 41);
+            cfgTag.Location = new Point(105, 42);
             cfgTag.Margin = new Padding(5, 4, 5, 4);
             cfgTag.Name = "cfgTag";
-            cfgTag.Size = new Size(152, 28);
+            cfgTag.Size = new Size(159, 28);
             cfgTag.TabIndex = 35;
             cfgTag.SelectedIndexChanged += cfgTag_SelectedIndexChanged;
             // 
             // SiteLabel
             // 
             SiteLabel.AutoSize = true;
-            SiteLabel.Location = new Point(386, 42);
+            SiteLabel.Location = new Point(340, 45);
             SiteLabel.Margin = new Padding(5, 0, 5, 0);
             SiteLabel.Name = "SiteLabel";
             SiteLabel.Size = new Size(37, 20);
@@ -846,74 +841,27 @@ namespace Bomber_GUI.Forms
             // 
             // button3
             // 
-            button3.Location = new Point(220, 36);
+            button3.Location = new Point(265, 36);
             button3.Margin = new Padding(5, 4, 5, 4);
             button3.Name = "button3";
             button3.Size = new Size(59, 36);
             button3.TabIndex = 36;
-            button3.Text = "Login";
+            button3.Text = "Get";
             button3.UseVisualStyleBackColor = true;
             button3.Click += button3_Click;
             // 
             // SiteConfig
             // 
-            SiteConfig.Location = new Point(431, 39);
+            SiteConfig.Location = new Point(376, 39);
             SiteConfig.Name = "SiteConfig";
-            SiteConfig.Size = new Size(136, 27);
+            SiteConfig.Size = new Size(183, 27);
             SiteConfig.TabIndex = 43;
-            // 
-            // button4
-            // 
-            button4.Location = new Point(282, 39);
-            button4.Name = "button4";
-            button4.Size = new Size(94, 29);
-            button4.TabIndex = 44;
-            button4.Text = "Cookie Get";
-            button4.UseVisualStyleBackColor = true;
-            button4.Click += button4_Click;
-            // 
-            // textBox1
-            // 
-            textBox1.Location = new Point(335, 7);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(97, 27);
-            textBox1.TabIndex = 45;
-            // 
-            // textBox2
-            // 
-            textBox2.Location = new Point(485, 7);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(82, 27);
-            textBox2.TabIndex = 46;
-            // 
-            // label14
-            // 
-            label14.AutoSize = true;
-            label14.Location = new Point(278, 12);
-            label14.Name = "label14";
-            label14.Size = new Size(58, 20);
-            label14.TabIndex = 47;
-            label14.Text = "Cookie:";
-            // 
-            // label15
-            // 
-            label15.AutoSize = true;
-            label15.Location = new Point(435, 9);
-            label15.Name = "label15";
-            label15.Size = new Size(52, 20);
-            label15.TabIndex = 48;
-            label15.Text = "Agent:";
             // 
             // SettingsForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(576, 676);
-            Controls.Add(label15);
-            Controls.Add(label14);
-            Controls.Add(textBox2);
-            Controls.Add(textBox1);
-            Controls.Add(button4);
             Controls.Add(SiteConfig);
             Controls.Add(button3);
             Controls.Add(metaChecked);
@@ -1033,10 +981,5 @@ namespace Bomber_GUI.Forms
         private Button button3;
         private CheckBox checkInstant;
         private TextBox SiteConfig;
-        private Button button4;
-        private TextBox textBox1;
-        private TextBox textBox2;
-        private Label label14;
-        private Label label15;
     }
 }
