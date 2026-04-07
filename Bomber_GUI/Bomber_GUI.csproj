@@ -1,25 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <UseWindowsForms>true</UseWindowsForms>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Platforms>x86</Platforms>
-    <ApplicationIcon>minimizeTrayIcon.Icon.ico</ApplicationIcon>
-    <DebugType>none</DebugType>
-    <NoWin32Manifest>true</NoWin32Manifest>
-    <EnableNETAnalyzers>False</EnableNETAnalyzers>
-    <RunAnalyzersDuringLiveAnalysis>True</RunAnalyzersDuringLiveAnalysis>
-  </PropertyGroup>
+  <OutputType>WinExe</OutputType>
+  <TargetFramework>net472</TargetFramework>
+  <UseWindowsForms>true</UseWindowsForms>
+  <Platforms>x86</Platforms>
+  <ApplicationIcon>minimizeTrayIcon.Icon.ico</ApplicationIcon>
+  <DebugType>none</DebugType>
+  <NoWin32Manifest>true</NoWin32Manifest>
+  <EnableNETAnalyzers>False</EnableNETAnalyzers>
+  <RunAnalyzersDuringLiveAnalysis>True</RunAnalyzersDuringLiveAnalysis>
+</PropertyGroup>
 
   <ItemGroup>
     <Content Include="minimizeTrayIcon.Icon.ico" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Fleck" Version="1.2.0" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3856.49" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="RestSharp" Version="106.15.0" />
   </ItemGroup>
