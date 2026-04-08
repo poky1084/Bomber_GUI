@@ -22,8 +22,5 @@
     <Compile Update="Forms\stratGrid.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="WebViewLogin.cs">
-      <SubType>Form</SubType>
-    </Compile>
   </ItemGroup>
 </Project>
