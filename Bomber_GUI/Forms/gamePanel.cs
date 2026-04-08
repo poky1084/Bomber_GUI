@@ -50,7 +50,7 @@ namespace Bomber_GUI.Forms
         {
             GameConfig = new GameSettings();
             InitializeComponent();
-            Log("Welcome to Bomber Bot");
+            Log("Welcome to Bomber Bot.");
 
             
         }
@@ -58,7 +58,7 @@ namespace Bomber_GUI.Forms
         {
             GameConfig = new GameSettings();
             InitializeComponent();
-            Log("Welcome to Bomber Bot");
+            Log("Welcome to Bomber Bot.");
             if (hideStop)
             {
                 //button2.Visible = false;
