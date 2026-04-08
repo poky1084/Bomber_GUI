@@ -1,7 +1,7 @@
-﻿
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+
 namespace Bomber_GUI
 {
     partial class Form1
