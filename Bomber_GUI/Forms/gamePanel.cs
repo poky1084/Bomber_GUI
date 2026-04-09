@@ -6,8 +6,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,7 +23,6 @@ namespace Bomber_GUI.Forms
     public partial class gamePanel : UserControl
     {
         CookieContainer cc = new CookieContainer();
-
         private int guesscount = 0;
         private double wins = 0;
         private double loss = 0;
@@ -56,11 +57,14 @@ namespace Bomber_GUI.Forms
         private int betCount = 0;
         private bool historyVisible = false;
         private readonly Dictionary<ListViewItem, string> _resolvedBetIids = new Dictionary<ListViewItem, string>();
-
+        private PrivateFontCollection _privateFonts = new PrivateFontCollection();
         public gamePanel()
         {
             GameConfig = new GameSettings();
             InitializeComponent();
+            ApplyFont();
+            LoadMontserrat();
+            this.Font = new Font(FontHelper.Montserrat, 9f, FontStyle.Regular);
             InitBetHistoryView();
             Log("Welcome to Bomber Bot");
         }
@@ -69,6 +73,9 @@ namespace Bomber_GUI.Forms
         {
             GameConfig = new GameSettings();
             InitializeComponent();
+            ApplyFont();
+            LoadMontserrat();
+            this.Font = new Font(FontHelper.Montserrat, 9f, FontStyle.Regular);
             InitBetHistoryView();
             Log("Welcome to Bomber Bot");
             if (hideStop)
@@ -76,11 +83,51 @@ namespace Bomber_GUI.Forms
                 // button2 is now History, keep it enabled for all panels
             }
             StartLoop();
+            BrowserFetch.StartServer();
+        }
+        private void ApplyFont()
+        {
+            var font = new Font(FontHelper.Montserrat, 9f, FontStyle.Regular);
+
+            // Apply to every button in the panel
+            foreach (Control c in this.GetAllControls(this))
+            {
+                if (c is Button || c is TextBox || c is Label || c is GroupBox)
+                    c.Font = font;
+            }
+            label2.Font = new Font("Microsoft Sans Serif", 9.75f, FontStyle.Bold);
+            winStats.Font = new Font("Microsoft Sans Serif", 9.75f, FontStyle.Regular);
+            betHistoryView.Font = new Font(FontHelper.Montserrat, 8.25f, FontStyle.Regular);
         }
 
+        // Recursive helper to get all controls including inside GroupBoxes
+        private IEnumerable<Control> GetAllControls(Control parent)
+        {
+            foreach (Control c in parent.Controls)
+            {
+                yield return c;
+                foreach (Control child in GetAllControls(c))
+                    yield return child;
+            }
+        }
+        private void LoadMontserrat()
+        {
+            // Embed Montserrat-Regular.ttf as a project resource (Build Action: Embedded Resource)
+            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            using (var stream = assembly.GetManifestResourceStream("Bomber_GUI.Fonts.Montserrat-Regular.ttf"))
+            {
+                byte[] data = new byte[stream.Length];
+                stream.Read(data, 0, data.Length);
+                IntPtr ptr = Marshal.AllocCoTaskMem(data.Length);
+                Marshal.Copy(data, 0, ptr, data.Length);
+                _privateFonts.AddMemoryFont(ptr, data.Length);
+                Marshal.FreeCoTaskMem(ptr);
+            }
+            betHistoryView.Font = new Font(_privateFonts.Families[0], 8.25f, FontStyle.Regular);
+        }
         private void InitBetHistoryView()
         {
-            // Apply double buffering to the ListView via reflection (same technique as Keno)
+            // Apply double buffering to the ListView via reflection
             betHistoryView
                 .GetType()
                 .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
@@ -94,7 +141,21 @@ namespace Bomber_GUI.Forms
 
         private void BetHistoryView_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
         {
-            e.DrawDefault = true;
+            // Draw background
+            e.DrawBackground();
+
+            using (var font = new Font(FontHelper.Montserrat, 8.25f, FontStyle.Bold))
+            using (var brush = new SolidBrush(SystemColors.ControlText))
+            {
+                var fmt = new StringFormat
+                {
+                    Alignment = StringAlignment.Near,
+                    LineAlignment = StringAlignment.Center,
+                    FormatFlags = StringFormatFlags.NoWrap
+                };
+                var textBounds = new Rectangle(e.Bounds.X + 4, e.Bounds.Y, e.Bounds.Width - 4, e.Bounds.Height);
+                e.Graphics.DrawString(e.Header.Text, font, brush, textBounds, fmt);
+            }
         }
 
         private void BetHistoryView_DrawItem(object sender, DrawListViewItemEventArgs e)
@@ -114,7 +175,7 @@ namespace Bomber_GUI.Forms
                 bool resolved = _resolvedBetIids.TryGetValue(e.Item, out string iid);
                 string cellText = resolved ? iid : "View";
                 Color linkColor = resolved ? Color.Black : Color.Blue;
-                using (var linkFont = new Font(e.SubItem.Font, FontStyle.Underline))
+                using (var linkFont = new Font(e.SubItem.Font, FontStyle.Regular))
                 using (var brush = new SolidBrush(linkColor))
                 {
                     var fmt = new StringFormat
@@ -163,14 +224,14 @@ namespace Bomber_GUI.Forms
                 }
 
                 string cleanIid = iid.Replace("house:", "casino:");
-                string openUrl  = string.Format("https://{0}/?modal=bet&iid={1}", GameConfig.SiteConfig, cleanIid);
+                string openUrl = string.Format("https://{0}/?modal=bet&iid={1}", GameConfig.SiteConfig, cleanIid);
 
                 _resolvedBetIids[info.Item] = cleanIid;
 
                 // Widen the column if the IID text is wider than the current column.
                 int needed = TextRenderer.MeasureText(cleanIid, betHistoryView.Font).Width + 10;
                 if (needed > betHistoryView.Columns[5].Width)
-                    betHistoryView.Columns[5].Width = needed;
+                    betHistoryView.Columns[5].Width = 250;
 
                 betHistoryView.Invalidate();
 
@@ -194,26 +255,56 @@ namespace Bomber_GUI.Forms
         /// </summary>
         private async Task<string> FetchBetIid(string betId)
         {
-            var mainurl = "https://" + GameConfig.SiteConfig + "/_api/graphql";
-            var request = new RestRequest(Method.POST);
-            var client  = new RestClient(mainurl);
-            client.CookieContainer = cc;
-            client.UserAgent = GameConfig.Agent;
-            client.CookieContainer.Add(new Cookie("cf_clearance", GameConfig.Cookie, "/", GameConfig.SiteConfig));
-
-            var payload = new
+            try
             {
-                query     = "query BetLookup($iid: String, $betId: String) { bet(iid: $iid, betId: $betId) { iid } }",
-                variables = new { betId }
+                var url = "https://" + GameConfig.SiteConfig + "/_api/graphql";
+                var body = new
+                {
+                    operationName = "BetLookup",
+                    query = "query BetLookup($iid: String, $betId: String) { bet(iid: $iid, betId: $betId) { iid } }",
+                    variables = new { betId }
+                };
+                var options = new
+                {
+                    method = "POST",
+                    headers = new Dictionary<string, string>
+                    {
+                        { "Content-Type", "application/json" },
+                        { "x-access-token", GameConfig.PlayerHash }
+                    },
+                    body
+                };
+                var json = await BrowserFetch.FetchAsync(url, options);
+                var jObj = JObject.Parse(json);
+                return jObj["data"]?["bet"]?["iid"]?.ToString();
+            }
+            catch { return null; }
+        }
+
+        private async Task<string> GraphQL(string operationName, string query,
+                                    BetClass variables = null)
+        {
+            var url = "https://" + GameConfig.SiteConfig + "/_api/graphql";
+
+            var body = new BetSend
+            {
+                operationName = operationName,
+                query = query,
+                variables = variables
             };
 
-            request.AddHeader("Content-Type", "application/json");
-            request.AddHeader("x-access-token", GameConfig.PlayerHash);
-            request.AddParameter("application/json", JsonConvert.SerializeObject(payload), ParameterType.RequestBody);
+            var options = new
+            {
+                method = "POST",
+                headers = new Dictionary<string, string>
+                {
+                    { "Content-Type", "application/json" },
+                    { "x-access-token", GameConfig.PlayerHash }
+                },
+                body = body
+            };
 
-            var restResponse = await client.ExecuteAsync(request);
-            var json = JObject.Parse(restResponse.Content);
-            return json["data"]?["bet"]?["iid"]?.ToString();
+            return await BrowserFetch.FetchAsync(url, options);
         }
 
         public async Task StartLoop()
@@ -278,7 +369,7 @@ namespace Bomber_GUI.Forms
                 using (SettingsForm sf = new SettingsForm(Global.DefaultGameSettings))
                 {
                     sf.loadConfigSettings();
-                    // If this panel already has its own config (set at creation), apply it
+                    // If this panel already has its own config (set at creation), keep it.
                     if (GameConfig != null && !string.IsNullOrEmpty(GameConfig.SiteConfig))
                         sf.GameConfig = GameConfig;
                     GameConfig = sf.GameConfig;
@@ -323,24 +414,12 @@ namespace Bomber_GUI.Forms
         {
             try
             {
-                var mainurl = "https://" + site + "/_api/graphql";
-                var request = new RestRequest(Method.POST);
-                var client = new RestClient(mainurl);
-                client.CookieContainer = cc;
-                client.UserAgent = GameConfig.Agent;
-                client.CookieContainer.Add(new Cookie("cf_clearance", GameConfig.Cookie, "/", GameConfig.SiteConfig));
-                BetQuery payload = new BetQuery();
-                payload.operationName = "UserBalances";
-                payload.query = "query UserBalances {\n  user {\n    id\n    balances {\n      available {\n        amount\n        currency\n        __typename\n      }\n      vault {\n        amount\n        currency\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n";
+                var json = await GraphQL(
+                    "UserBalances",
+                    "query UserBalances {\n  user {\n    id\n    balances {\n      available {\n        amount\n        currency\n        __typename\n      }\n      vault {\n        amount\n        currency\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n"
+                );
 
-                request.AddHeader("Content-Type", "application/json");
-                request.AddHeader("x-access-token", phash);
-
-                request.AddParameter("application/json", JsonConvert.SerializeObject(payload), ParameterType.RequestBody);
-
-                var restResponse = await client.ExecuteAsync(request);
-
-                BalancesData response = JsonConvert.DeserializeObject<BalancesData>(restResponse.Content);
+                BalancesData response = JsonConvert.DeserializeObject<BalancesData>(json);
 
                 if (response.errors != null)
                 {
@@ -415,7 +494,7 @@ namespace Bomber_GUI.Forms
                 action();
         }
 
-        // ── Game logic (unchanged below) ─────────────────────────────────────────────
+        // ── Game logic ───────────────────────────────────────────────────────────────
 
         async void fastRequest()
         {
@@ -447,32 +526,23 @@ namespace Bomber_GUI.Forms
                     fieldsToReveal.Count, GameConfig.BombCount,
                     GameConfig.BetCost.ToString("0.00000000"), GameConfig.ConfigTag);
 
-                var mainurl = "https://" + GameConfig.SiteConfig + "/_api/graphql";
-                var request = new RestRequest(Method.POST);
-                var client = new RestClient(mainurl);
-                client.CookieContainer = cc;
-                client.UserAgent = GameConfig.Agent;
-                client.CookieContainer.Add(new Cookie("cf_clearance", GameConfig.Cookie, "/", GameConfig.SiteConfig));
-                Guid guid = Guid.NewGuid();
-                BetQuery payload = new BetQuery();
-                payload.variables = new BetClass()
-                {
-                    currency = GameConfig.ConfigTag.ToLower(),
-                    amount = GameConfig.BetCost,
-                    minesCount = GameConfig.BombCount,
-                    fields = fieldsToReveal
-                };
+                var json = await GraphQL(
+                    "MinesBet",
+                    "mutation MinesBet($amount: Float!, $currency: CurrencyEnum!, $minesCount: Int!, $fields: [Int!], $identifier: String) {\n" +
+                    "  minesBet(\n    amount: $amount\n    currency: $currency\n    minesCount: $minesCount\n    fields: $fields\n    identifier: $identifier\n  ) {\n" +
+                    "    ...CasinoBet\n    state {\n      ...CasinoGameMines\n    }\n  }\n}\n\n" +
+                    "fragment CasinoBet on CasinoBet {\n  id\n  active\n  payoutMultiplier\n  amountMultiplier\n  amount\n  payout\n  updatedAt\n  currency\n  game\n  user {\n    id\n    name\n  }\n}\n\n" +
+                    "fragment CasinoGameMines on CasinoGameMines {\n  mines\n  minesCount\n  rounds {\n    field\n    payoutMultiplier\n  }\n}\n",
+                    new BetClass
+                    {
+                        currency = GameConfig.ConfigTag.ToLower(),
+                        amount = GameConfig.BetCost,
+                        minesCount = GameConfig.BombCount,
+                        fields = fieldsToReveal
+                    }
+                );
 
-                payload.query = "mutation MinesBet($amount: Float!, $currency: CurrencyEnum!, $minesCount: Int!, $fields: [Int!], $identifier: String) {\n  minesBet(\n    amount: $amount\n    currency: $currency\n    minesCount: $minesCount\n    fields: $fields\n    identifier: $identifier\n  ) {\n    ...CasinoBet\n    state {\n      ...CasinoGameMines\n    }\n  }\n}\n\nfragment CasinoBet on CasinoBet {\n  id\n  active\n  payoutMultiplier\n  amountMultiplier\n  amount\n  payout\n  updatedAt\n  currency\n  game\n  user {\n    id\n    name\n  }\n}\n\nfragment CasinoGameMines on CasinoGameMines {\n  mines\n  minesCount\n  rounds {\n    field\n    payoutMultiplier\n  }\n}\n";
-
-                request.AddHeader("Content-Type", "application/json");
-                request.AddHeader("x-access-token", GameConfig.PlayerHash);
-
-                request.AddParameter("application/json", JsonConvert.SerializeObject(payload), ParameterType.RequestBody);
-
-                var restResponse = await client.ExecuteAsync(request);
-
-                Data response = JsonConvert.DeserializeObject<Data>(restResponse.Content);
+                Data response = JsonConvert.DeserializeObject<Data>(json);
 
                 if (response.errors != null)
                 {
@@ -703,29 +773,18 @@ namespace Bomber_GUI.Forms
                 button1.Enabled = true;
 
                 Guid guid = Guid.NewGuid();
-                var mainurl = "https://" + GameConfig.SiteConfig + "/_api/graphql";
-                var request = new RestRequest(Method.POST);
-                var client = new RestClient(mainurl);
-                client.CookieContainer = cc;
-                client.UserAgent = GameConfig.Agent;
-                client.CookieContainer.Add(new Cookie("cf_clearance", GameConfig.Cookie, "/", GameConfig.SiteConfig));
-                BetQuery payload = new BetQuery();
-                payload.variables = new BetClass()
-                {
-                    currency = GameConfig.ConfigTag.ToLower(),
-                    amount = GameConfig.BetCost,
-                    minesCount = GameConfig.BombCount
-                };
+                var json = await GraphQL(
+                    "MinesBet",
+                    "mutation MinesBet($amount: Float!, $currency: CurrencyEnum!, $minesCount: Int!, $fields: [Int!], $identifier: String) {\n  minesBet(\n    amount: $amount\n    currency: $currency\n    minesCount: $minesCount\n    fields: $fields\n    identifier: $identifier\n  ) {\n    ...CasinoBet\n    state {\n      ...CasinoGameMines\n    }\n  }\n}\n\nfragment CasinoBet on CasinoBet {\n  id\n  active\n  payoutMultiplier\n  amountMultiplier\n  amount\n  payout\n  updatedAt\n  currency\n  game\n  user {\n    id\n    name\n  }\n}\n\nfragment CasinoGameMines on CasinoGameMines {\n  mines\n  minesCount\n  rounds {\n    field\n    payoutMultiplier\n  }\n}\n",
+                    new BetClass
+                    {
+                        currency = GameConfig.ConfigTag.ToLower(),
+                        amount = GameConfig.BetCost,
+                        minesCount = GameConfig.BombCount
+                    }
+                );
 
-                payload.query = "mutation MinesBet($amount: Float!, $currency: CurrencyEnum!, $minesCount: Int!, $fields: [Int!], $identifier: String) {\n  minesBet(\n    amount: $amount\n    currency: $currency\n    minesCount: $minesCount\n    fields: $fields\n    identifier: $identifier\n  ) {\n    ...CasinoBet\n    state {\n      ...CasinoGameMines\n    }\n  }\n}\n\nfragment CasinoBet on CasinoBet {\n  id\n  active\n  payoutMultiplier\n  amountMultiplier\n  amount\n  payout\n  updatedAt\n  currency\n  game\n  user {\n    id\n    name\n  }\n}\n\nfragment CasinoGameMines on CasinoGameMines {\n  mines\n  minesCount\n  rounds {\n    field\n    payoutMultiplier\n  }\n}\n";
-
-                request.AddHeader("Content-Type", "application/json");
-                request.AddHeader("x-access-token", GameConfig.PlayerHash);
-
-                request.AddParameter("application/json", JsonConvert.SerializeObject(payload), ParameterType.RequestBody);
-
-                var restResponse = await client.ExecuteAsync(request);
-                Data response = JsonConvert.DeserializeObject<Data>(restResponse.Content);
+                Data response = JsonConvert.DeserializeObject<Data>(json);
 
                 if (response.errors != null)
                 {
@@ -922,28 +981,16 @@ namespace Bomber_GUI.Forms
             try
             {
                 Guid guid = Guid.NewGuid();
-                var mainurl = "https://" + GameConfig.SiteConfig + "/_api/graphql";
-                var request = new RestRequest(Method.POST);
-                var client = new RestClient(mainurl);
-                client.CookieContainer = cc;
-                client.UserAgent = GameConfig.Agent;
-                client.CookieContainer.Add(new Cookie("cf_clearance", GameConfig.Cookie, "/", GameConfig.SiteConfig));
-                BetQuery payload = new BetQuery();
+                var json = await GraphQL(
+                    "MinesCashout",
+                    "mutation MinesCashout($identifier: String!) {\n  minesCashout(identifier: $identifier) {\n    ...CasinoBet\n    state {\n      ...CasinoGameMines\n    }\n  }\n}\n\nfragment CasinoBet on CasinoBet {\n  id\n  active\n  payoutMultiplier\n  amountMultiplier\n  amount\n  payout\n  updatedAt\n  currency\n  game\n  user {\n    id\n    name\n  }\n}\n\nfragment CasinoGameMines on CasinoGameMines {\n  mines\n  minesCount\n  rounds {\n    field\n    payoutMultiplier\n  }\n}\n",
+                    new BetClass
+                    {
+                        identifier = guid.ToString()
+                    }
+                );
 
-                payload.variables = new BetClass()
-                {
-                    identifier = guid.ToString()
-                };
-                payload.query = "mutation MinesCashout($identifier: String!) {\n  minesCashout(identifier: $identifier) {\n    ...CasinoBet\n    state {\n      ...CasinoGameMines\n    }\n  }\n}\n\nfragment CasinoBet on CasinoBet {\n  id\n  active\n  payoutMultiplier\n  amountMultiplier\n  amount\n  payout\n  updatedAt\n  currency\n  game\n  user {\n    id\n    name\n  }\n}\n\nfragment CasinoGameMines on CasinoGameMines {\n  mines\n  minesCount\n  rounds {\n    field\n    payoutMultiplier\n  }\n}\n";
-
-                request.AddHeader("Content-Type", "application/json");
-                request.AddHeader("x-access-token", GameConfig.PlayerHash);
-
-                request.AddParameter("application/json", JsonConvert.SerializeObject(payload), ParameterType.RequestBody);
-
-                var restResponse = await client.ExecuteAsync(request);
-
-                Data cd = JsonConvert.DeserializeObject<Data>(restResponse.Content);
+                Data cd = JsonConvert.DeserializeObject<Data>(json);
 
                 if (cd.errors != null)
                 {
@@ -1259,27 +1306,16 @@ namespace Bomber_GUI.Forms
                 int betSquare = getNextSquare();
                 Log("betting square {0}", betSquare);
 
-                var mainurl = "https://" + GameConfig.SiteConfig + "/_api/graphql";
-                var request = new RestRequest(Method.POST);
-                var client = new RestClient(mainurl);
-                client.CookieContainer = cc;
-                client.UserAgent = GameConfig.Agent;
-                client.CookieContainer.Add(new Cookie("cf_clearance", GameConfig.Cookie, "/", GameConfig.SiteConfig));
-                BetQuery payload = new BetQuery();
-                payload.variables = new BetClass()
-                {
-                    fields = new List<int> { betSquare - 1 }
-                };
-                payload.query = "mutation MinesNext($fields: [Int!]!) {\n  minesNext(fields: $fields) {\n    ...CasinoBet\n    state {\n      ...CasinoGameMines\n    }\n  }\n}\n\nfragment CasinoBet on CasinoBet {\n  id\n  active\n  payoutMultiplier\n  amountMultiplier\n  amount\n  payout\n  updatedAt\n  currency\n  game\n  user {\n    id\n    name\n  }\n}\n\nfragment CasinoGameMines on CasinoGameMines {\n  mines\n  minesCount\n  rounds {\n    field\n    payoutMultiplier\n  }\n}\n";
+                var json = await GraphQL(
+                    "MinesNext",
+                    "mutation MinesNext($fields: [Int!]!) {\n  minesNext(fields: $fields) {\n    ...CasinoBet\n    state {\n      ...CasinoGameMines\n    }\n  }\n}\n\nfragment CasinoBet on CasinoBet {\n  id\n  active\n  payoutMultiplier\n  amountMultiplier\n  amount\n  payout\n  updatedAt\n  currency\n  game\n  user {\n    id\n    name\n  }\n}\n\nfragment CasinoGameMines on CasinoGameMines {\n  mines\n  minesCount\n  rounds {\n    field\n    payoutMultiplier\n  }\n}\n",
+                    new BetClass
+                    {
+                        fields = new List<int> { betSquare - 1 }
+                    }
+                );
 
-                request.AddHeader("Content-Type", "application/json");
-                request.AddHeader("x-access-token", GameConfig.PlayerHash);
-
-                request.AddParameter("application/json", JsonConvert.SerializeObject(payload), ParameterType.RequestBody);
-
-                var restResponse = await client.ExecuteAsync(request);
-
-                Data response = JsonConvert.DeserializeObject<Data>(restResponse.Content);
+                Data response = JsonConvert.DeserializeObject<Data>(json);
 
                 if (response.errors != null)
                 {
