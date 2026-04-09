@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+
 namespace Bomber_GUI.Forms
 {
     partial class gamePanel
@@ -164,7 +165,7 @@ namespace Bomber_GUI.Forms
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click_1);
             // 
-            // buttonLog — toggles the output log / bet history panel
+            // buttonLog — toggles bet history / output log panel
             // 
             this.buttonLog.Location = new System.Drawing.Point(150, 17);
             this.buttonLog.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
