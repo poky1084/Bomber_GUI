@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
+
 namespace Bomber_GUI
 {
     public partial class Form1 : Form
@@ -45,7 +46,7 @@ namespace Bomber_GUI
             ngp.OnRemove += ngp_OnRemove;
             ngp.OnHistoryToggle += ngp_OnHistoryToggle;
             ngp.Parent = this;
-            if (horIndex != 2) // This number is how many game panels wide it will be. Default is 2
+            if (horIndex != 2)
             {
                 if (!DontExtend)
                     this.Width = (_initGamepanel.Width * (horIndex + 1)) + 10;
@@ -75,7 +76,7 @@ namespace Bomber_GUI
             horIndex = 1;
             foreach (gamePanel panel in currentPanels)
             {
-                if (horIndex != 2) // This number is how many game panels wide it will be. Default is 2
+                if (horIndex != 2)
                 {
                     panel.Location = new Point(panel.Width * horIndex,
                         (vertIndex * panel.Height) + toolstripOffset);
