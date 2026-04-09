@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+
 namespace Bomber_GUI.Forms
 {
     partial class gamePanel
@@ -42,6 +43,7 @@ namespace Bomber_GUI.Forms
             this.liveBitsBox = new System.Windows.Forms.TextBox();
             this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
+            this.buttonLog = new System.Windows.Forms.Button();
             this.gameSquares = new Bomber_GUI.Forms.SatoshiGrid();
             this.cmManualBet = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.betHistoryView = new System.Windows.Forms.ListView();
@@ -69,7 +71,7 @@ namespace Bomber_GUI.Forms
             // 
             this.winStats.AutoSize = true;
             this.winStats.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.winStats.Location = new System.Drawing.Point(225, 20);
+            this.winStats.Location = new System.Drawing.Point(262, 20);
             this.winStats.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.winStats.Name = "winStats";
             this.winStats.Size = new System.Drawing.Size(144, 16);
@@ -80,7 +82,7 @@ namespace Bomber_GUI.Forms
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label2.Location = new System.Drawing.Point(154, 20);
+            this.label2.Location = new System.Drawing.Point(200, 20);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(54, 16);
@@ -99,7 +101,7 @@ namespace Bomber_GUI.Forms
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
-            // button2 — History toggle (replaces Remove)
+            // button2 — Remove this game panel
             // 
             this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.button2.Location = new System.Drawing.Point(7, 157);
@@ -107,7 +109,7 @@ namespace Bomber_GUI.Forms
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(108, 38);
             this.button2.TabIndex = 14;
-            this.button2.Text = "History";
+            this.button2.Text = "Remove";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -117,6 +119,7 @@ namespace Bomber_GUI.Forms
             this.gameGroupBox.Controls.Add(this.button4);
             this.gameGroupBox.Controls.Add(this.winStats);
             this.gameGroupBox.Controls.Add(this.button3);
+            this.gameGroupBox.Controls.Add(this.buttonLog);
             this.gameGroupBox.Controls.Add(this.label2);
             this.gameGroupBox.Controls.Add(this.gameSquares);
             this.gameGroupBox.Controls.Add(this.button1);
@@ -156,11 +159,22 @@ namespace Bomber_GUI.Forms
             this.button3.Location = new System.Drawing.Point(122, 17);
             this.button3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(24, 23);
+            this.button3.Size = new System.Drawing.Size(24, 25);
             this.button3.TabIndex = 16;
             this.button3.Text = "R";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click_1);
+            // 
+            // buttonLog — toggles bet history / output log panel
+            // 
+            this.buttonLog.Location = new System.Drawing.Point(150, 17);
+            this.buttonLog.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.buttonLog.Name = "buttonLog";
+            this.buttonLog.Size = new System.Drawing.Size(48, 25);
+            this.buttonLog.TabIndex = 20;
+            this.buttonLog.Text = "Log";
+            this.buttonLog.UseVisualStyleBackColor = true;
+            this.buttonLog.Click += new System.EventHandler(this.buttonLog_Click);
             // 
             // gameSquares
             // 
@@ -260,6 +274,7 @@ namespace Bomber_GUI.Forms
         private SatoshiGrid gameSquares;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button buttonLog;
         private System.Windows.Forms.TextBox liveBitsBox;
         private System.Windows.Forms.ContextMenuStrip cmManualBet;
         private System.Windows.Forms.ListView betHistoryView;

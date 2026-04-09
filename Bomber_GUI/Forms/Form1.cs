@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
-
 namespace Bomber_GUI
 {
     public partial class Form1 : Form
@@ -46,25 +45,8 @@ namespace Bomber_GUI
             ngp.OnRemove += ngp_OnRemove;
             ngp.OnHistoryToggle += ngp_OnHistoryToggle;
             ngp.Parent = this;
-            if (horIndex != 2)
-            {
-                if (!DontExtend)
-                    this.Width = (_initGamepanel.Width * (horIndex + 1)) + 10;
-                ngp.Location = new Point(ngp.Width * horIndex,
-                    (vertIndex * ngp.Height) + toolstripOffset);
-                ngp.Show();
-            }
-            else
-            {
-                DontExtend = true;
-                horIndex = 0;
-                vertIndex++;
-                this.Height = (_initGamepanel.Height * (vertIndex + 1)) + tbOffset + toolstripOffset;
-                ngp.Location = new Point(ngp.Width * horIndex,
-                    (vertIndex * ngp.Height) + toolstripOffset);
-            }
-            horIndex++;
             ngp.Show();
+            RefreshLayout();
         }
 
         void ngp_OnRemove(gamePanel sender)
@@ -76,7 +58,7 @@ namespace Bomber_GUI
             horIndex = 1;
             foreach (gamePanel panel in currentPanels)
             {
-                if (horIndex != 2)
+                if (horIndex != 2) // This number is how many game panels wide it will be. Default is 2
                 {
                     panel.Location = new Point(panel.Width * horIndex,
                         (vertIndex * panel.Height) + toolstripOffset);
@@ -158,7 +140,24 @@ namespace Bomber_GUI
 
         private void toolStripLabel1_Click(object sender, EventArgs e)
         {
-            AddGamePanel(new gamePanel());
+            var ngp = new gamePanel();
+
+            // Let the user configure this panel independently before it is added.
+            // Changes here do NOT affect the global default settings.
+            using (SettingsForm sf = new SettingsForm(Global.DefaultGameSettings))
+            {
+                sf.loadConfigSettings();
+                if (sf.ShowDialog() != DialogResult.OK)
+                    return;                       // user cancelled – don't add panel
+
+                ngp.GameConfig = sf.GameConfig;  // store the panel-specific config
+            }
+
+            AddGamePanel(ngp);
+
+            // Show balance immediately and keep it updating, same as the init panel.
+            ngp.CheckBalance(ngp.GameConfig.SiteConfig, ngp.GameConfig.PlayerHash, ngp.GameConfig.ConfigTag);
+            ngp.StartLoop();
         }
 
         private void toolStripLabel5_Click(object sender, EventArgs e)
