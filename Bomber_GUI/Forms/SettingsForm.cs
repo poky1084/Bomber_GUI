@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿
+using Keno;
+using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Menu;
 
 namespace Bomber_GUI.Forms
@@ -31,7 +34,6 @@ namespace Bomber_GUI.Forms
             ApplyFont();
             GameConfig.BombCount = 3;
             LoadDefaultSettings();
-            //button3.PerformClick();
             this.Load += SettingsForm_Load;
         }
 
@@ -58,12 +60,17 @@ namespace Bomber_GUI.Forms
             }
         }
 
+        public SettingsForm(GameSettings gameConfig)
+        {
+            GameConfig = gameConfig;
+        }
+
         private void ApplyFont()
         {
             var font = new Font(FontHelper.Montserrat, 9f, FontStyle.Regular);
-            this.Font = font;
             foreach (Control c in GetAllControls(this))
                 c.Font = font;
+            this.Font = font;
         }
 
         private IEnumerable<Control> GetAllControls(Control parent)
@@ -75,6 +82,7 @@ namespace Bomber_GUI.Forms
                     yield return child;
             }
         }
+
         private void SettingsForm_Load(object sender, EventArgs e)
         {
             PutBalance(true);
@@ -257,8 +265,8 @@ namespace Bomber_GUI.Forms
             //return;
             LoadingDefaults = true;
 
-            //textBox1.Text = Properties.Settings.Default.Cookie;
-            //textBox2.Text = Properties.Settings.Default.Agent;
+            textBox1.Text = Properties.Settings.Default.Cookie;
+            textBox2.Text = Properties.Settings.Default.Agent;
 
             checkInstant.Checked = Properties.Settings.Default.Instant;
             pHash.Text = Properties.Settings.Default.PlayerHash;
@@ -357,8 +365,8 @@ namespace Bomber_GUI.Forms
 
         public void initSettings()
         {
-            
-                    
+
+
             GameConfig.ConfigTag = coinList[coinIndex];
             int BetAmmount = (int)numberofBets.Value;
             if (GameConfig.UseStrat)
@@ -367,8 +375,8 @@ namespace Bomber_GUI.Forms
             GameConfig.Proxy = proxyBox.Text;
 
             GameConfig.Instant = checkInstant.Checked;
-            //GameConfig.Agent = textBox2.Text;
-            //GameConfig.Cookie = textBox1.Text;
+            GameConfig.Agent = textBox2.Text;
+            GameConfig.Cookie = textBox1.Text;
             GameConfig.PlayerHash = pHash.Text;
             GameConfig.BetAmmount = BetAmmount;
             GameConfig.BetCost = betCostNUD.Value;
@@ -380,8 +388,8 @@ namespace Bomber_GUI.Forms
             GameConfig.BombCount = (int)BombCountBox.Value;
             GameConfig.ShowGameBombs = showGBombsCheck.Checked;
             GameConfig.SaveLogToFile = saveLog.Checked;
-    
-            
+
+
             GameConfig.SiteConfig = SiteConfig.Text;
             GameConfig.StopAfterGamesAmmount = (int)stopAfterGamesNum.Value;
             GameConfig.StopAfterGames = stopAfterGamesChecked.Checked;
@@ -431,8 +439,8 @@ namespace Bomber_GUI.Forms
             //Properties.Settings.Default.UseProxy = GameConfig.UseProxy;
             //GameConfig.Proxy = proxyBox.Text;
             Properties.Settings.Default.Instant = checkInstant.Checked;
-           // Properties.Settings.Default.Agent = textBox2.Text;
-           // Properties.Settings.Default.Cookie = textBox1.Text;
+            Properties.Settings.Default.Agent = textBox2.Text;
+            Properties.Settings.Default.Cookie = textBox1.Text;
             Properties.Settings.Default.PlayerHash = pHash.Text;
             Properties.Settings.Default.BetAmmount = BetAmmount;
             Properties.Settings.Default.BetCost = betCostNUD.Value;
@@ -494,41 +502,32 @@ namespace Bomber_GUI.Forms
         {
             PutBalance(false);
         }
-        private async Task<string> GraphQL(string operationName, string query,
-                                  BetClass variables = null)
-        {
-            var url = "https://" + SiteConfig.Text + "/_api/graphql";
 
-            var body = new BetSend
-            {
-                operationName = operationName,
-                query = query,
-                variables = variables
-            };
-
-            var options = new
-            {
-                method = "POST",
-                headers = new Dictionary<string, string>
-        {
-            { "Content-Type", "application/json" },
-            { "x-access-token", pHash.Text }
-        },
-                body = body
-            };
-
-            return await BrowserFetch.FetchAsync(url, options);
-        }
         public async void PutBalance(bool sign)
         {
             try
             {
-                var json = await GraphQL(
-                    "UserBalances",
-                    "query UserBalances {\n  user {\n    id\n    balances {\n      available {\n        amount\n        currency\n        __typename\n      }\n      vault {\n        amount\n        currency\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n"
-                );
+                var mainurl = "https://" + SiteConfig.Text + "/_api/graphql";
+                var request = new RestRequest(Method.POST);
+                var client = new RestClient(mainurl);
+                client.CookieContainer = cc;
+                client.UserAgent = textBox2.Text; ;
+                client.CookieContainer.Add(new Cookie("cf_clearance", textBox1.Text, "/", SiteConfig.Text));
+                BetQuery payload = new BetQuery();
+                payload.operationName = "UserBalances";
+                payload.query = "query UserBalances {\n  user {\n    id\n    balances {\n      available {\n        amount\n        currency\n        __typename\n      }\n      vault {\n        amount\n        currency\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n";
+                //request.RequestFormat = DataFormat.Json;
+                request.AddHeader("Content-Type", "application/json");
+                request.AddHeader("x-access-token", pHash.Text);
 
-                BalancesData response = JsonConvert.DeserializeObject<BalancesData>(json);
+                request.AddParameter("application/json", JsonConvert.SerializeObject(payload), ParameterType.RequestBody);
+                //request.AddJsonBody(payload);
+                //IRestResponse response = client.Execute(request);
+
+                var restResponse =
+                    await client.ExecuteAsync(request);
+
+                BalancesData response = JsonConvert.DeserializeObject<BalancesData>(restResponse.Content);
 
                 if (response.errors != null)
                 {
@@ -558,11 +557,12 @@ namespace Bomber_GUI.Forms
                                 if (balance.amount > 0)
                                 {
                                     cfgTag.Items.Add($"{balance.currency.ToUpper()} - {balance.amount.ToString("N8")}");
-                                }
+                                } 
                                 else
                                 {
                                     cfgTag.Items.Add(response.data.user.balances[i].available.currency.ToUpper());
                                 }
+                                
                             }
 
                             if (response.data.user.balances[i].available.currency == currentSelected.ToLower())
@@ -677,6 +677,56 @@ namespace Bomber_GUI.Forms
         private void nudDelay_ValueChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnWebViewLogin_Click_1(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void SiteConfig_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SiteConfig_TextChanged_1(object sender, EventArgs e)
+        {
+            GameConfig.SiteConfig = SiteConfig.Text;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            using (var loginForm = new WebViewLogin(SiteConfig.Text))
+            {
+                // ShowDialog blocks until user clicks Done (DialogResult.OK)
+                var result = loginForm.ShowDialog(this);
+
+                if (result == DialogResult.OK)
+                {
+                    // Apply captured values
+                    GameConfig.Cookie = loginForm.CapturedClearance;
+                    GameConfig.Agent = loginForm.CapturedUserAgent;
+
+                    // Update UI text fields
+                    textBox1.Text = GameConfig.Cookie;
+                    textBox2.Text = GameConfig.Agent;
+
+                    // Save to settings
+                    Properties.Settings.Default.Cookie = GameConfig.Cookie;
+                    Properties.Settings.Default.Agent = GameConfig.Agent;
+                    Properties.Settings.Default.Save();
+
+                    // Rebuild CookieContainer fresh
+                    cc = new CookieContainer();
+
+                    // Verify connection with new cookies
+                    //await Authorize();
+                }
+                else
+                {
+                    
+                }
+            }
         }
     }
 }
