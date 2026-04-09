@@ -131,7 +131,7 @@ namespace Bomber_GUI.Forms
             this.gameGroupBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.gameGroupBox.Name = "gameGroupBox";
             this.gameGroupBox.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.gameGroupBox.Size = new System.Drawing.Size(526, 207);
+            this.gameGroupBox.Size = new System.Drawing.Size(526, 198);
             this.gameGroupBox.TabIndex = 16;
             this.gameGroupBox.TabStop = false;
             // 
@@ -249,7 +249,7 @@ namespace Bomber_GUI.Forms
             this.betHistoryView.FullRowSelect = true;
             this.betHistoryView.GridLines = true;
             this.betHistoryView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.betHistoryView.Location = new System.Drawing.Point(8, 212);
+            this.betHistoryView.Location = new System.Drawing.Point(8, 198);
             this.betHistoryView.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.betHistoryView.Name = "betHistoryView";
             this.betHistoryView.OwnerDraw = true;
@@ -270,7 +270,7 @@ namespace Bomber_GUI.Forms
             this.Controls.Add(this.betHistoryView);
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "gamePanel";
-            this.Size = new System.Drawing.Size(538, 217);
+            this.Size = new System.Drawing.Size(538, 208);
             this.gameGroupBox.ResumeLayout(false);
             this.gameGroupBox.PerformLayout();
             this.ResumeLayout(false);
