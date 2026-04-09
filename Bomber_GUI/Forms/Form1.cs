@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
+
 namespace Bomber_GUI
 {
     public partial class Form1 : Form
@@ -59,7 +60,7 @@ namespace Bomber_GUI
             horIndex = 1;
             foreach (gamePanel panel in currentPanels)
             {
-                if (horIndex != 2) // This number is how many game panels wide it will be. Default is 2
+                if (horIndex != 2)
                 {
                     panel.Location = new Point(panel.Width * horIndex,
                         (vertIndex * panel.Height) + toolstripOffset);
@@ -144,19 +145,20 @@ namespace Bomber_GUI
             var ngp = new gamePanel();
 
             // Let the user configure this panel independently before it is added.
-            // Changes here do NOT affect the global default settings.
+            // We pass a copy of the current default so the dialog starts with
+            // sensible values, but changes here do NOT affect the global default.
             using (SettingsForm sf = new SettingsForm(Global.DefaultGameSettings))
             {
-                sf.loadConfigSettings();
+                sf.loadConfigSettings();          // pre-fill with saved defaults
                 if (sf.ShowDialog() != DialogResult.OK)
-                    return;                       // user cancelled – don't add panel
+                    return;                        // user cancelled – don't add panel
 
-                ngp.GameConfig = sf.GameConfig;  // store the panel-specific config
+                ngp.GameConfig = sf.GameConfig;   // store the panel-specific config
             }
 
             AddGamePanel(ngp);
 
-            // Show balance immediately and keep it updating, same as the init panel.
+            // Show balance immediately and start the polling loop for this panel.
             ngp.CheckBalance(ngp.GameConfig.SiteConfig, ngp.GameConfig.PlayerHash, ngp.GameConfig.ConfigTag);
             ngp.StartLoop();
         }
