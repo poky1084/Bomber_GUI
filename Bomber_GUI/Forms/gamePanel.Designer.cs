@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+
 namespace Bomber_GUI.Forms
 {
     partial class gamePanel
@@ -44,6 +45,13 @@ namespace Bomber_GUI.Forms
             this.button3 = new System.Windows.Forms.Button();
             this.gameSquares = new Bomber_GUI.Forms.SatoshiGrid();
             this.cmManualBet = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.betHistoryView = new System.Windows.Forms.ListView();
+            this.colNum = new System.Windows.Forms.ColumnHeader();
+            this.colTime = new System.Windows.Forms.ColumnHeader();
+            this.colAmount = new System.Windows.Forms.ColumnHeader();
+            this.colMultiplier = new System.Windows.Forms.ColumnHeader();
+            this.colProfit = new System.Windows.Forms.ColumnHeader();
+            this.colView = new System.Windows.Forms.ColumnHeader();
             this.gameGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -92,7 +100,7 @@ namespace Bomber_GUI.Forms
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
-            // button2
+            // button2 — History toggle (replaces Remove)
             // 
             this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.button2.Location = new System.Drawing.Point(7, 157);
@@ -100,7 +108,7 @@ namespace Bomber_GUI.Forms
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(108, 38);
             this.button2.TabIndex = 14;
-            this.button2.Text = "Remove";
+            this.button2.Text = "History";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -172,18 +180,75 @@ namespace Bomber_GUI.Forms
             this.cmManualBet.Name = "cmManualBet";
             this.cmManualBet.Size = new System.Drawing.Size(61, 4);
             // 
+            // colNum
+            // 
+            this.colNum.Text = "#";
+            this.colNum.Width = 38;
+            // 
+            // colTime
+            // 
+            this.colTime.Text = "Time";
+            this.colTime.Width = 66;
+            // 
+            // colAmount
+            // 
+            this.colAmount.Text = "Amount";
+            this.colAmount.Width = 80;
+            // 
+            // colMultiplier
+            // 
+            this.colMultiplier.Text = "Multiplier";
+            this.colMultiplier.Width = 72;
+            // 
+            // colProfit
+            // 
+            this.colProfit.Text = "Profit";
+            this.colProfit.Width = 90;
+            // 
+            // colView (renamed header to "Bet ID"; cell text "View" is blue+underlined via owner-draw)
+            // 
+            this.colView.Text = "Bet ID";
+            this.colView.Width = 50;
+            // 
+            // betHistoryView
+            // 
+            this.betHistoryView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+                this.colNum,
+                this.colTime,
+                this.colAmount,
+                this.colMultiplier,
+                this.colProfit,
+                this.colView
+            });
+            this.betHistoryView.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.betHistoryView.FullRowSelect = true;
+            this.betHistoryView.GridLines = true;
+            this.betHistoryView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.betHistoryView.Location = new System.Drawing.Point(8, 212);
+            this.betHistoryView.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.betHistoryView.Name = "betHistoryView";
+            this.betHistoryView.OwnerDraw = true;
+            this.betHistoryView.Size = new System.Drawing.Size(522, 150);
+            this.betHistoryView.TabIndex = 19;
+            this.betHistoryView.UseCompatibleStateImageBehavior = false;
+            this.betHistoryView.View = System.Windows.Forms.View.Details;
+            this.betHistoryView.Visible = false;
+            this.betHistoryView.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.BetHistoryView_DrawColumnHeader);
+            this.betHistoryView.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.BetHistoryView_DrawItem);
+            this.betHistoryView.DrawSubItem += new System.Windows.Forms.DrawListViewSubItemEventHandler(this.BetHistoryView_DrawSubItem);
+            // 
             // gamePanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.gameGroupBox);
+            this.Controls.Add(this.betHistoryView);
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "gamePanel";
             this.Size = new System.Drawing.Size(538, 217);
             this.gameGroupBox.ResumeLayout(false);
             this.gameGroupBox.PerformLayout();
             this.ResumeLayout(false);
-
         }
 
         #endregion
@@ -198,5 +263,12 @@ namespace Bomber_GUI.Forms
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.TextBox liveBitsBox;
         private System.Windows.Forms.ContextMenuStrip cmManualBet;
+        private System.Windows.Forms.ListView betHistoryView;
+        private System.Windows.Forms.ColumnHeader colNum;
+        private System.Windows.Forms.ColumnHeader colTime;
+        private System.Windows.Forms.ColumnHeader colAmount;
+        private System.Windows.Forms.ColumnHeader colMultiplier;
+        private System.Windows.Forms.ColumnHeader colProfit;
+        private System.Windows.Forms.ColumnHeader colView;
     }
 }

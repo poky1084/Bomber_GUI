@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
@@ -16,10 +16,11 @@ using System.Windows.Forms;
 namespace Bomber_GUI.Forms
 {
     public delegate void OnRemoveCallback(gamePanel sender);
+    public delegate void OnHistoryToggleCallback(gamePanel sender, bool visible);
+
     public partial class gamePanel : UserControl
     {
         CookieContainer cc = new CookieContainer();
-
         private int guesscount = 0;
         private double wins = 0;
         private double loss = 0;
@@ -33,6 +34,7 @@ namespace Bomber_GUI.Forms
         private bool fastmode = false;
 
         public event OnRemoveCallback OnRemove;
+        public event OnHistoryToggleCallback OnHistoryToggle;
 
         public GameSettings GameConfig;
         //private GameData Data;
@@ -48,33 +50,204 @@ namespace Bomber_GUI.Forms
         private int[] SquareRepeatData = null;
         public int[] LatestBombs = new int[] { 1 };
         private CancellationTokenSource _cts;
+
+        // Bet history fields
+        private int betCount = 0;
+        private bool historyVisible = false;
+        private readonly Dictionary<ListViewItem, string> _resolvedBetIids = new Dictionary<ListViewItem, string>();
+
         public gamePanel()
         {
             GameConfig = new GameSettings();
             InitializeComponent();
+            InitBetHistoryView();
             Log("Welcome to Bomber Bot");
-
-
         }
+
         public gamePanel(bool hideStop)
         {
             GameConfig = new GameSettings();
             InitializeComponent();
+            InitBetHistoryView();
             Log("Welcome to Bomber Bot");
             if (hideStop)
             {
-                //button2.Visible = false;
-                button2.Enabled = false;
-                // button1.Location = new Point(147, 19);
-                // button1.Width = 307;
+                // button2 is now History, keep it enabled for all panels
             }
             StartLoop();
+            BrowserFetch.StartServer();
+        }
 
+        private void InitBetHistoryView()
+        {
+            // Apply double buffering to the ListView via reflection
+            betHistoryView
+                .GetType()
+                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                .SetValue(betHistoryView, true, null);
+
+            betHistoryView.AutoResizeColumn(5, ColumnHeaderAutoResizeStyle.HeaderSize);
+            betHistoryView.MouseClick += BetHistoryView_MouseClick;
+        }
+
+        // ── Owner-draw handlers for blue underlined "View" link in last column ────────
+
+        private void BetHistoryView_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
+        {
+            e.DrawDefault = true;
+        }
+
+        private void BetHistoryView_DrawItem(object sender, DrawListViewItemEventArgs e)
+        {
+            // Let sub-item drawing handle everything.
+        }
+
+        private void BetHistoryView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
+        {
+            // Draw row background (respects win/loss colour set on the item).
+            e.Graphics.FillRectangle(new SolidBrush(e.Item.BackColor), e.Bounds);
+
+            const int VIEW_COL = 5;
+
+            if (e.ColumnIndex == VIEW_COL)
+            {
+                bool resolved = _resolvedBetIids.TryGetValue(e.Item, out string iid);
+                string cellText = resolved ? iid : "View";
+                Color linkColor = resolved ? Color.Black : Color.Blue;
+                using (var linkFont = new Font(e.SubItem.Font, FontStyle.Underline))
+                using (var brush = new SolidBrush(linkColor))
+                {
+                    var fmt = new StringFormat
+                    {
+                        Alignment = StringAlignment.Near,
+                        LineAlignment = StringAlignment.Center
+                    };
+                    e.Graphics.DrawString(cellText, linkFont, brush, e.Bounds, fmt);
+                }
+            }
+            else
+            {
+                // Draw all other sub-items normally using the item's foreground colour.
+                using (var brush = new SolidBrush(e.Item.ForeColor))
+                {
+                    var fmt = new StringFormat { LineAlignment = StringAlignment.Center };
+                    var textBounds = new Rectangle(e.Bounds.X + 2, e.Bounds.Y, e.Bounds.Width - 2, e.Bounds.Height);
+                    e.Graphics.DrawString(e.SubItem.Text, e.SubItem.Font, brush, textBounds, fmt);
+                }
+            }
+        }
+
+        private async void BetHistoryView_MouseClick(object sender, MouseEventArgs e)
+        {
+            var info = betHistoryView.HitTest(e.X, e.Y);
+            if (info.Item == null || info.SubItem == null) return;
+
+            int colIndex = info.Item.SubItems.IndexOf(info.SubItem);
+            if (colIndex == 5) // "Bet ID" (View link) column
+            {
+                string betId = info.Item.Tag as string;
+                if (string.IsNullOrEmpty(betId)) return;
+
+                betHistoryView.Cursor = Cursors.WaitCursor;
+                string iid = null;
+                try { iid = await FetchBetIid(betId); }
+                catch { }
+                finally { betHistoryView.Cursor = Cursors.Default; }
+
+                // If we couldn't resolve the IID, fall back to opening by betId.
+                if (string.IsNullOrEmpty(iid))
+                {
+                    System.Diagnostics.Process.Start(
+                        string.Format("https://{0}/?betId={1}&modal=bet", GameConfig.SiteConfig, betId));
+                    return;
+                }
+
+                string cleanIid = iid.Replace("house:", "casino:");
+                string openUrl = string.Format("https://{0}/?modal=bet&iid={1}", GameConfig.SiteConfig, cleanIid);
+
+                _resolvedBetIids[info.Item] = cleanIid;
+
+                // Widen the column if the IID text is wider than the current column.
+                int needed = TextRenderer.MeasureText(cleanIid, betHistoryView.Font).Width + 10;
+                if (needed > betHistoryView.Columns[5].Width)
+                    betHistoryView.Columns[5].Width = needed;
+
+                betHistoryView.Invalidate();
+
+                var menu = new ContextMenuStrip();
+
+                var copyItem = new ToolStripMenuItem(string.Format("📋  Copy IID:  {0}", cleanIid));
+                copyItem.Click += (s, ev) => Clipboard.SetText(cleanIid);
+
+                var openItem = new ToolStripMenuItem("🌐  Open in browser");
+                openItem.Click += (s, ev) => System.Diagnostics.Process.Start(openUrl);
+
+                menu.Items.Add(copyItem);
+                menu.Items.Add(openItem);
+                menu.Show(betHistoryView, new Point(e.X, e.Y));
+            }
+        }
+
+        /// <summary>
+        /// Resolves a betId to its IID string via the GraphQL BetLookup query.
+        /// Returns null if the request fails or the IID is not present.
+        /// </summary>
+        private async Task<string> FetchBetIid(string betId)
+        {
+            try
+            {
+                var url = "https://" + GameConfig.SiteConfig + "/_api/graphql";
+                var body = new
+                {
+                    operationName = "BetLookup",
+                    query = "query BetLookup($iid: String, $betId: String) { bet(iid: $iid, betId: $betId) { iid } }",
+                    variables = new { betId }
+                };
+                var options = new
+                {
+                    method = "POST",
+                    headers = new Dictionary<string, string>
+                    {
+                        { "Content-Type", "application/json" },
+                        { "x-access-token", GameConfig.PlayerHash }
+                    },
+                    body
+                };
+                var json = await BrowserFetch.FetchAsync(url, options);
+                var jObj = JObject.Parse(json);
+                return jObj["data"]?["bet"]?["iid"]?.ToString();
+            }
+            catch { return null; }
+        }
+
+        private async Task<string> GraphQL(string operationName, string query,
+                                    BetClass variables = null)
+        {
+            var url = "https://" + GameConfig.SiteConfig + "/_api/graphql";
+
+            var body = new BetSend
+            {
+                operationName = operationName,
+                query = query,
+                variables = variables
+            };
+
+            var options = new
+            {
+                method = "POST",
+                headers = new Dictionary<string, string>
+                {
+                    { "Content-Type", "application/json" },
+                    { "x-access-token", GameConfig.PlayerHash }
+                },
+                body = body
+            };
+
+            return await BrowserFetch.FetchAsync(url, options);
         }
 
         public async Task StartLoop()
         {
-            // Create a new token source
             _cts = new CancellationTokenSource();
 
             try
@@ -82,15 +255,12 @@ namespace Bomber_GUI.Forms
                 while (!_cts.Token.IsCancellationRequested)
                 {
                     await CheckBalance(GameConfig.SiteConfig, GameConfig.PlayerHash, GameConfig.ConfigTag);
-
-                    // Pass the token to Task.Delay so the wait can be cancelled instantly
                     await Task.Delay(5000, _cts.Token);
                 }
             }
             catch (OperationCanceledException)
             {
-                // This is expected when you stop the loop
-                //Console.WriteLine("Balance checking stopped.");
+                // Expected when loop is stopped
             }
         }
 
@@ -101,9 +271,18 @@ namespace Bomber_GUI.Forms
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (OnRemove != null)
-                OnRemove(this);
+            historyVisible = !historyVisible;
+            betHistoryView.Visible = historyVisible;
+            button2.Text = historyVisible ? "Close History" : "History";
+
+            this.Height = historyVisible
+                ? gameGroupBox.Bottom + betHistoryView.Height + 8
+                : gameGroupBox.Bottom + 10;
+
+            if (OnHistoryToggle != null)
+                OnHistoryToggle(this, historyVisible);
         }
+
         private void button3_Click_1(object sender, EventArgs e)
         {
             if (MessageBox.Show("Clear starts for this game?", "Clear stats", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -113,9 +292,9 @@ namespace Bomber_GUI.Forms
                 ShowWinLosStats();
             }
         }
+
         private void button1_Click_1(object sender, EventArgs e)
         {
-
             if (!running)
             {
                 currentPlayStreak = 0;
@@ -128,10 +307,7 @@ namespace Bomber_GUI.Forms
                     multiplyOnLoss = (GameConfig.PercentOnLoss / 100) + 1;
                     multiplyOnWin = (GameConfig.precentOnWin / 100) + 1;
                     stratergyIndex = 0;
-
-                    //gameGroupBox.Text = GameConfig.ConfigTag;
                 }
-                // button1.Enabled = false;
                 Log("Starting...");
 
                 try
@@ -154,9 +330,6 @@ namespace Bomber_GUI.Forms
                 {
                     PrepRequest();
                 }
-
-
-
             }
             else
             {
@@ -166,40 +339,19 @@ namespace Bomber_GUI.Forms
             }
         }
 
-
         public async Task CheckBalance(string site, string phash, string currency)
         {
             try
             {
-                var mainurl = "https://" + site + "/_api/graphql";
-                var request = new RestRequest(Method.POST);
-                var client = new RestClient(mainurl);
-                client.CookieContainer = cc;
-                client.UserAgent = GameConfig.Agent;
-                client.CookieContainer.Add(new Cookie("cf_clearance", GameConfig.Cookie, "/", GameConfig.SiteConfig));
-                BetQuery payload = new BetQuery();
-                payload.operationName = "UserBalances";
-                payload.query = "query UserBalances {\n  user {\n    id\n    balances {\n      available {\n        amount\n        currency\n        __typename\n      }\n      vault {\n        amount\n        currency\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n";
+                var json = await GraphQL(
+                    "UserBalances",
+                    "query UserBalances {\n  user {\n    id\n    balances {\n      available {\n        amount\n        currency\n        __typename\n      }\n      vault {\n        amount\n        currency\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n"
+                );
 
-                request.AddHeader("Content-Type", "application/json");
-                request.AddHeader("x-access-token", phash);
-
-                request.AddParameter("application/json", JsonConvert.SerializeObject(payload), ParameterType.RequestBody);
-
-
-
-                var restResponse =
-                    await client.ExecuteAsync(request);
-
-
-
-                //Debug.WriteLine(restResponse.Content);
-                BalancesData response = JsonConvert.DeserializeObject<BalancesData>(restResponse.Content);
-
+                BalancesData response = JsonConvert.DeserializeObject<BalancesData>(json);
 
                 if (response.errors != null)
                 {
-
                 }
                 else
                 {
@@ -211,24 +363,67 @@ namespace Bomber_GUI.Forms
                             {
                                 liveBitsBox.Text = String.Format("{0} | {1}", currency, response.data.user.balances[i].available.amount.ToString("0.00000000"));
                                 currentBal = response.data.user.balances[i].available.amount;
-
                             }
-
                         }
-
                     }
-
-
                 }
             }
             catch (Exception ex)
             {
-
-
-
             }
-
         }
+
+        // ── Bet History ──────────────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Adds a bet result entry to the history ListView.
+        /// Green row = win (multiplier > 0), Red row = loss (multiplier == 0).
+        /// </summary>
+        public void AddBetHistory(decimal amount, decimal multiplier, decimal profit, bool isWin, string betId = "")
+        {
+            betCount++;
+            Action action = () =>
+            {
+                string multStr = multiplier.ToString("0.00") + "x";
+                string profitStr = (profit >= 0 ? "+" : "") + profit.ToString("0.00000000");
+
+                string[] row = {
+                    betCount.ToString(),
+                    DateTime.Now.ToString("HH:mm:ss"),
+                    amount.ToString("0.00000000"),
+                    multStr,
+                    profitStr,
+                    "View"
+                };
+
+                var item = new ListViewItem(row);
+                item.Tag = betId;
+
+                if (!isWin || multiplier == 0)
+                {
+                    // Loss - red
+                    item.BackColor = Color.FromArgb(255, 199, 206);
+                    item.ForeColor = Color.Black;
+                }
+                else
+                {
+                    // Win - green
+                    item.BackColor = Color.FromArgb(198, 239, 206);
+                    item.ForeColor = Color.Black;
+                }
+
+                betHistoryView.Items.Insert(0, item);
+                if (betHistoryView.Items.Count > 200)
+                    betHistoryView.Items[betHistoryView.Items.Count - 1].Remove();
+            };
+
+            if (this.InvokeRequired)
+                this.Invoke((MethodInvoker)(() => action()));
+            else
+                action();
+        }
+
+        // ── Game logic ───────────────────────────────────────────────────────────────
 
         async void fastRequest()
         {
@@ -246,9 +441,9 @@ namespace Bomber_GUI.Forms
                 else
                 {
                     var allSquares = Randomize(new int[] {
-                0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,
-                15,16,17,18,19,20,21,22,23,24
-            });
+                        0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,
+                        15,16,17,18,19,20,21,22,23,24
+                    });
                     fieldsToReveal = allSquares.Take(GameConfig.BetAmmount).ToList();
                 }
 
@@ -260,35 +455,23 @@ namespace Bomber_GUI.Forms
                     fieldsToReveal.Count, GameConfig.BombCount,
                     GameConfig.BetCost.ToString("0.00000000"), GameConfig.ConfigTag);
 
-                var mainurl = "https://" + GameConfig.SiteConfig + "/_api/graphql";
-                var request = new RestRequest(Method.POST);
-                var client = new RestClient(mainurl);
-                client.CookieContainer = cc;
-                client.UserAgent = GameConfig.Agent;
-                client.CookieContainer.Add(new Cookie("cf_clearance", GameConfig.Cookie, "/", GameConfig.SiteConfig));
-                Guid guid = Guid.NewGuid();
-                BetQuery payload = new BetQuery();
-                payload.variables = new BetClass()
-                {
-                    currency = GameConfig.ConfigTag.ToLower(),
-                    amount = GameConfig.BetCost,
-                    minesCount = GameConfig.BombCount,
-                    fields = fieldsToReveal
+                var json = await GraphQL(
+                    "MinesBet",
+                    "mutation MinesBet($amount: Float!, $currency: CurrencyEnum!, $minesCount: Int!, $fields: [Int!], $identifier: String) {\n" +
+                    "  minesBet(\n    amount: $amount\n    currency: $currency\n    minesCount: $minesCount\n    fields: $fields\n    identifier: $identifier\n  ) {\n" +
+                    "    ...CasinoBet\n    state {\n      ...CasinoGameMines\n    }\n  }\n}\n\n" +
+                    "fragment CasinoBet on CasinoBet {\n  id\n  active\n  payoutMultiplier\n  amountMultiplier\n  amount\n  payout\n  updatedAt\n  currency\n  game\n  user {\n    id\n    name\n  }\n}\n\n" +
+                    "fragment CasinoGameMines on CasinoGameMines {\n  mines\n  minesCount\n  rounds {\n    field\n    payoutMultiplier\n  }\n}\n",
+                    new BetClass
+                    {
+                        currency = GameConfig.ConfigTag.ToLower(),
+                        amount = GameConfig.BetCost,
+                        minesCount = GameConfig.BombCount,
+                        fields = fieldsToReveal
+                    }
+                );
 
-                };
-
-                payload.query = "mutation MinesBet($amount: Float!, $currency: CurrencyEnum!, $minesCount: Int!, $fields: [Int!], $identifier: String) {\n  minesBet(\n    amount: $amount\n    currency: $currency\n    minesCount: $minesCount\n    fields: $fields\n    identifier: $identifier\n  ) {\n    ...CasinoBet\n    state {\n      ...CasinoGameMines\n    }\n  }\n}\n\nfragment CasinoBet on CasinoBet {\n  id\n  active\n  payoutMultiplier\n  amountMultiplier\n  amount\n  payout\n  updatedAt\n  currency\n  game\n  user {\n    id\n    name\n  }\n}\n\nfragment CasinoGameMines on CasinoGameMines {\n  mines\n  minesCount\n  rounds {\n    field\n    payoutMultiplier\n  }\n}\n";
-
-                request.AddHeader("Content-Type", "application/json");
-                request.AddHeader("x-access-token", GameConfig.PlayerHash);
-
-                request.AddParameter("application/json", JsonConvert.SerializeObject(payload), ParameterType.RequestBody);
-
-
-                var restResponse =
-                    await client.ExecuteAsync(request);
-
-                Data response = JsonConvert.DeserializeObject<Data>(restResponse.Content);
+                Data response = JsonConvert.DeserializeObject<Data>(json);
 
                 if (response.errors != null)
                 {
@@ -315,75 +498,62 @@ namespace Bomber_GUI.Forms
                     return;
                 }
 
-				var state = response.data.minesBet.state;
-				var bet = response.data.minesBet;
+                var state = response.data.minesBet.state;
+                var bet = response.data.minesBet;
                 bool hitBomb = false;
-                // 1. Setup HashSets for quick lookup
-                // Use 'new List<int>()' instead of 'new int[0]'
+
                 HashSet<int> minePositions = new HashSet<int>(state.mines ?? new List<int>());
                 HashSet<int> roundFields = new HashSet<int>();
 
-				if (state.rounds != null)
-				{
-					foreach (var round in state.rounds)
-					{
-						roundFields.Add(round.field);
-					}
-				}
-
-				// 2. Process Revealed Fields (Rounds)
-				// Logic: If field is in rounds AND in mines -> RED (bombSquare)
-				//        If field is in rounds but NOT in mines -> GREEN (glowSquare)
-				if (state.rounds != null)
-				{
-					foreach (var round in state.rounds)
-					{
-						if (minePositions.Contains(round.field))
-						{
-                            // Picked field that was a mine
-                            hitBomb = true;
-							bombSquare(round.field + 1);
-						}
-						else
-						{
-							// Picked field that was safe
-							glowSquare(round.field + 1);
-						}
-					}
-				}
-
-				// 3. Process Remaining Mines
-				// Logic: If field is in mines but NOT in rounds -> ORANGE (FadebombSquare)
-				if (state.mines != null && GameConfig.ShowGameBombs)
+                if (state.rounds != null)
                 {
-					foreach (int minePos in state.mines)
-					{
-						if (!roundFields.Contains(minePos))
-						{
-							FadebombSquare(minePos + 1);
-						}
-					}
-				}
+                    foreach (var round in state.rounds)
+                    {
+                        roundFields.Add(round.field);
+                    }
+                }
 
-				// 4. Handle Loss Logging (if a mine was hit)
-				
-				
+                if (state.rounds != null)
+                {
+                    foreach (var round in state.rounds)
+                    {
+                        if (minePositions.Contains(round.field))
+                        {
+                            hitBomb = true;
+                            bombSquare(round.field + 1);
+                        }
+                        else
+                        {
+                            glowSquare(round.field + 1);
+                        }
+                    }
+                }
 
-				
+                if (state.mines != null && GameConfig.ShowGameBombs)
+                {
+                    foreach (int minePos in state.mines)
+                    {
+                        if (!roundFields.Contains(minePos))
+                        {
+                            FadebombSquare(minePos + 1);
+                        }
+                    }
+                }
 
                 if (hitBomb)
                 {
-                    // ── LOSS ─────────────────────────────────────────────────────
-                   
+                    // ── LOSS ────────────────────────────────────────────────────────
                     MultiplyDeadlineTracker++;
                     MultiplyWinTracker++;
-					Log("Bomb. Loss: {0} {1}",
-					bet.amount.ToString("0.00000000"),
-					GameConfig.ConfigTag);
+                    Log("Bomb. Loss: {0} {1}",
+                        bet.amount.ToString("0.00000000"),
+                        GameConfig.ConfigTag);
 
                     currentWinStreak = 0;
                     AddLoss();
+                    AddBetHistory(bet.amount, 0m, -bet.amount, false, bet.id);
                     CheckLastGame();
+
                     if (GameConfig.ResetBetMultiplyer && GameConfig.MetaSettings)
                     {
                         if (MultiplyDeadlineTracker >= GameConfig.ResetBetMultiplyerDeadline && GameConfig.BetCost > BasebetCost)
@@ -416,26 +586,25 @@ namespace Bomber_GUI.Forms
                         Log("Bet increased: {0} → {1}", GameConfig.BetCost, GameConfig.BetCost * multiplyOnLoss);
                         GameConfig.BetCost *= multiplyOnLoss;
                         MultiplyDeadlineTracker = 0;
-
                     }
                 }
                 else
                 {
                     MultiplyDeadlineTracker++;
                     MultiplyWinTracker++;
-                    // ── WIN ───────────────────────────────────────────────────────
+                    // ── WIN ──────────────────────────────────────────────────────────
                     decimal profit = bet.payout - bet.amount;
                     Log("Win! +{0} {1} | Multiplier: {2}x",
                         profit.ToString("0.00000000"),
                         GameConfig.ConfigTag,
                         bet.payoutMultiplier.ToString("0.00"));
 
-                    
-
                     currentWinStreak++;
                     AddWin();
+                    AddBetHistory(bet.amount, Convert.ToDecimal(bet.payoutMultiplier), profit, true, bet.id);
                     CheckLastGame();
-                    if (GameConfig.ResetBetMultiplyer && GameConfig.MetaSettings )
+
+                    if (GameConfig.ResetBetMultiplyer && GameConfig.MetaSettings)
                     {
                         if (MultiplyDeadlineTracker >= GameConfig.ResetBetMultiplyerDeadline && GameConfig.BetCost > BasebetCost)
                         {
@@ -466,7 +635,6 @@ namespace Bomber_GUI.Forms
                     {
                         Log("Bet increased: {0} → {1}", GameConfig.BetCost, GameConfig.BetCost * multiplyOnWin);
                         GameConfig.BetCost *= multiplyOnWin;
-
                     }
 
                     if (GameConfig.ResetBaseWinsChecked && currentWinStreak >= GameConfig.ResetBaseWinCount && GameConfig.MetaSettings)
@@ -474,15 +642,11 @@ namespace Bomber_GUI.Forms
                         GameConfig.BetCost = BasebetCost;
                         currentWinStreak = 0;
                     }
-
-
                 }
 
-                // ── Balance checks ───────────────────────────────────────────────
-                //await CheckBalance(GameConfig.SiteConfig, GameConfig.PlayerHash, GameConfig.ConfigTag);
+                // ── Balance checks ────────────────────────────────────────────────
                 currentBal += bet.payout - bet.amount;
                 liveBitsBox.Text = String.Format("{0} | {1}", GameConfig.ConfigTag, currentBal.ToString("0.00000000"));
-                // ── Balance checks ───────────────────────────────────────────────
                 await Task.Delay(50);
                 if (GameConfig.CheckboxStopAbove && currentBal >= GameConfig.BalanceStopAbove)
                 {
@@ -495,7 +659,6 @@ namespace Bomber_GUI.Forms
                     running = false;
                 }
 
-                // ── Randomise strategy ───────────────────────────────────────────
                 if (GameConfig.RandomEveryGameChecked ||
                     (hitBomb && GameConfig.RandomEveryLossChecked) ||
                     (!hitBomb && GameConfig.RandomEveryWinChecked))
@@ -505,10 +668,8 @@ namespace Bomber_GUI.Forms
                         .Take(GameConfig.StratergySquares.Length).ToArray();
                 }
 
-                // ── Loop ─────────────────────────────────────────────────────────
                 if (running)
                 {
-                    //CheckWait(GameConfig.GameDelay);
                     if (GameConfig.GameDelay != 0)
                     {
                         await Task.Delay(GameConfig.GameDelay);
@@ -519,8 +680,6 @@ namespace Bomber_GUI.Forms
                 {
                     BSta(true);
                 }
-                //clearSquares();
-                //ClearLog(notFirstClear);
             }
             catch (Exception ex)
             {
@@ -533,47 +692,28 @@ namespace Bomber_GUI.Forms
                 else BSta(true);
             }
         }
+
         async void PrepRequest()
         {
             try
             {
-
-
                 guesscount = 0;
-
                 button1.Text = "Stop after game.";
                 button1.Enabled = true;
-                //CheckBalance(GameConfig.SiteConfig, GameConfig.PlayerHash, GameConfig.ConfigTag);
-
 
                 Guid guid = Guid.NewGuid();
-                var mainurl = "https://" + GameConfig.SiteConfig + "/_api/graphql";
-                var request = new RestRequest(Method.POST);
-                var client = new RestClient(mainurl);
-                client.CookieContainer = cc;
-                client.UserAgent = GameConfig.Agent;
-                client.CookieContainer.Add(new Cookie("cf_clearance", GameConfig.Cookie, "/", GameConfig.SiteConfig));
-                BetQuery payload = new BetQuery();
-                payload.variables = new BetClass()
-                {
-                    currency = GameConfig.ConfigTag.ToLower(),
-                    amount = GameConfig.BetCost,
-                    minesCount = GameConfig.BombCount
+                var json = await GraphQL(
+                    "MinesBet",
+                    "mutation MinesBet($amount: Float!, $currency: CurrencyEnum!, $minesCount: Int!, $fields: [Int!], $identifier: String) {\n  minesBet(\n    amount: $amount\n    currency: $currency\n    minesCount: $minesCount\n    fields: $fields\n    identifier: $identifier\n  ) {\n    ...CasinoBet\n    state {\n      ...CasinoGameMines\n    }\n  }\n}\n\nfragment CasinoBet on CasinoBet {\n  id\n  active\n  payoutMultiplier\n  amountMultiplier\n  amount\n  payout\n  updatedAt\n  currency\n  game\n  user {\n    id\n    name\n  }\n}\n\nfragment CasinoGameMines on CasinoGameMines {\n  mines\n  minesCount\n  rounds {\n    field\n    payoutMultiplier\n  }\n}\n",
+                    new BetClass
+                    {
+                        currency = GameConfig.ConfigTag.ToLower(),
+                        amount = GameConfig.BetCost,
+                        minesCount = GameConfig.BombCount
+                    }
+                );
 
-                };
-
-                payload.query = "mutation MinesBet($amount: Float!, $currency: CurrencyEnum!, $minesCount: Int!, $fields: [Int!], $identifier: String) {\n  minesBet(\n    amount: $amount\n    currency: $currency\n    minesCount: $minesCount\n    fields: $fields\n    identifier: $identifier\n  ) {\n    ...CasinoBet\n    state {\n      ...CasinoGameMines\n    }\n  }\n}\n\nfragment CasinoBet on CasinoBet {\n  id\n  active\n  payoutMultiplier\n  amountMultiplier\n  amount\n  payout\n  updatedAt\n  currency\n  game\n  user {\n    id\n    name\n  }\n}\n\nfragment CasinoGameMines on CasinoGameMines {\n  mines\n  minesCount\n  rounds {\n    field\n    payoutMultiplier\n  }\n}\n";
-
-                request.AddHeader("Content-Type", "application/json");
-                request.AddHeader("x-access-token", GameConfig.PlayerHash);
-
-                request.AddParameter("application/json", JsonConvert.SerializeObject(payload), ParameterType.RequestBody);
-
-
-                var restResponse =
-                    await client.ExecuteAsync(request);
-                //Debug.WriteLine(restResponse.Content);
-                Data response = JsonConvert.DeserializeObject<Data>(restResponse.Content);
+                Data response = JsonConvert.DeserializeObject<Data>(json);
 
                 if (response.errors != null)
                 {
@@ -593,14 +733,12 @@ namespace Bomber_GUI.Forms
                             {
                                 BSta(true);
                             }
-
                         }
                         else
                         {
                             await Task.Delay(2000);
                             PrepRequest();
                         }
-
                     }
                     else
                     {
@@ -619,8 +757,6 @@ namespace Bomber_GUI.Forms
                     Log("Name: {0} | Bombs: {1}", response.data.minesBet.user.name, response.data.minesBet.state.minesCount);
                     EndNewGameResponce();
                 }
-
-
             }
             catch (Exception ex)
             {
@@ -635,7 +771,6 @@ namespace Bomber_GUI.Forms
                     BSta(true);
                 }
             }
-
         }
 
         private void AddWin()
@@ -670,6 +805,7 @@ namespace Bomber_GUI.Forms
                 outputLog.Clear();
             });
         }
+
         public void Log(string input, params object[] format)
         {
             try
@@ -693,13 +829,13 @@ namespace Bomber_GUI.Forms
             }
             catch { }
         }
+
         public int getNextSquare()
         {
             if (GameConfig.UseStrat)
             {
                 lock (this)
                 {
-
                     if ((GameConfig.StratergySquares.Length == 1) || (stratergyIndex >= GameConfig.StratergySquares.Length - 1))
                         stratergyIndex = 0;
                     else
@@ -742,6 +878,7 @@ namespace Bomber_GUI.Forms
                 gameSquares.SetSquare(s - 1, Brushes.Red);
             });
         }
+
         public void FadebombSquare(int s)
         {
             this.Invoke((MethodInvoker)delegate ()
@@ -773,31 +910,16 @@ namespace Bomber_GUI.Forms
             try
             {
                 Guid guid = Guid.NewGuid();
-                var mainurl = "https://" + GameConfig.SiteConfig + "/_api/graphql";
-                var request = new RestRequest(Method.POST);
-                var client = new RestClient(mainurl);
-                client.CookieContainer = cc;
-                client.UserAgent = GameConfig.Agent;
-                client.CookieContainer.Add(new Cookie("cf_clearance", GameConfig.Cookie, "/", GameConfig.SiteConfig));
-                BetQuery payload = new BetQuery();
+                var json = await GraphQL(
+                    "MinesCashout",
+                    "mutation MinesCashout($identifier: String!) {\n  minesCashout(identifier: $identifier) {\n    ...CasinoBet\n    state {\n      ...CasinoGameMines\n    }\n  }\n}\n\nfragment CasinoBet on CasinoBet {\n  id\n  active\n  payoutMultiplier\n  amountMultiplier\n  amount\n  payout\n  updatedAt\n  currency\n  game\n  user {\n    id\n    name\n  }\n}\n\nfragment CasinoGameMines on CasinoGameMines {\n  mines\n  minesCount\n  rounds {\n    field\n    payoutMultiplier\n  }\n}\n",
+                    new BetClass
+                    {
+                        identifier = guid.ToString()
+                    }
+                );
 
-                payload.variables = new BetClass()
-                {
-                    identifier = guid.ToString()
-                };
-                payload.query = "mutation MinesCashout($identifier: String!) {\n  minesCashout(identifier: $identifier) {\n    ...CasinoBet\n    state {\n      ...CasinoGameMines\n    }\n  }\n}\n\nfragment CasinoBet on CasinoBet {\n  id\n  active\n  payoutMultiplier\n  amountMultiplier\n  amount\n  payout\n  updatedAt\n  currency\n  game\n  user {\n    id\n    name\n  }\n}\n\nfragment CasinoGameMines on CasinoGameMines {\n  mines\n  minesCount\n  rounds {\n    field\n    payoutMultiplier\n  }\n}\n";
-
-                request.AddHeader("Content-Type", "application/json");
-                request.AddHeader("x-access-token", GameConfig.PlayerHash);
-
-                request.AddParameter("application/json", JsonConvert.SerializeObject(payload), ParameterType.RequestBody);
-
-                var restResponse =
-                    await client.ExecuteAsync(request);
-
-
-                //Debug.WriteLine(restResponse.Content);
-                Data cd = JsonConvert.DeserializeObject<Data>(restResponse.Content);
+                Data cd = JsonConvert.DeserializeObject<Data>(json);
 
                 if (cd.errors != null)
                 {
@@ -812,7 +934,6 @@ namespace Bomber_GUI.Forms
                     {
                         BSta(true);
                     }
-
                 }
                 else
                 {
@@ -820,33 +941,31 @@ namespace Bomber_GUI.Forms
                     if (GameConfig.ShowGameBombs)
                     {
                         List<int> bmbz = cd.data.minesCashout.state.mines;
-
                         foreach (int s in bmbz)
                         {
                             FadebombSquare(s + 1);
                         }
                     }
-                    Log("Cashed out " + (cd.data.minesCashout.payout - cd.data.minesCashout.amount).ToString("0.00000000") + " " + GameConfig.ConfigTag + ".");
-                    //string url = string.Format("https://satoshimines.com/s/{0}/{1}/", cd.game_id, cd.random_string);
-                    //Log("Url: {0}", url);
+
+                    decimal cashoutProfit = cd.data.minesCashout.payout - cd.data.minesCashout.amount;
+                    Log("Cashed out " + cashoutProfit.ToString("0.00000000") + " " + GameConfig.ConfigTag + ".");
                     AddWin();
+                    AddBetHistory(cd.data.minesCashout.amount, Convert.ToDecimal(cd.data.minesCashout.payoutMultiplier), cashoutProfit, true, cd.data.minesCashout.id);
+
                     guesscount = 0;
                     MultiplyDeadlineTracker++;
                     MultiplyWinTracker++;
                     bool ShouldStop = false;
 
-
                     if (GameConfig.StopAfterWin && running)
                     {
                         Log("Stop After win is enabled... Stopping...");
-                        //SaveLogDisk();
                         notFirstClear = false;
                         running = false;
                     }
                     else if (ShouldStop && !running)
                     {
                         Log("Balance level met (x bits)... Stopping...");
-                        //SaveLogDisk();
                         notFirstClear = false;
                         running = false;
                     }
@@ -855,7 +974,6 @@ namespace Bomber_GUI.Forms
                     {
                         Log("Betting increced from {0} to {1}", GameConfig.BetCost, GameConfig.BetCost * multiplyOnWin);
                         GameConfig.BetCost = GameConfig.BetCost * multiplyOnWin;
-
                     }
 
                     currentWinStreak++;
@@ -864,9 +982,7 @@ namespace Bomber_GUI.Forms
                         Log("Resetting bet cost from {0} to {1}", GameConfig.BetCost, BasebetCost);
                         GameConfig.BetCost = BasebetCost;
                         currentWinStreak = 0;
-                        // Log("Bet has been reset. ResetBaseWinsChecked");
                     }
-
 
                     if (GameConfig.ResetBetMultiplyer && GameConfig.MetaSettings)
                     {
@@ -887,12 +1003,11 @@ namespace Bomber_GUI.Forms
                         }
                     }
                     CheckLastGame();
-                    //await CheckBalance(GameConfig.SiteConfig, GameConfig.PlayerHash, GameConfig.ConfigTag);
+
                     currentBal += cd.data.minesCashout.payout - cd.data.minesCashout.amount;
                     liveBitsBox.Text = String.Format("{0} | {1}", GameConfig.ConfigTag, currentBal.ToString("0.00000000"));
-                    // ── Balance checks ───────────────────────────────────────────────
                     await Task.Delay(50);
-                    //Log("");
+
                     if (GameConfig.CheckboxStopAbove && currentBal >= GameConfig.BalanceStopAbove)
                     {
                         Log("Balance is over " + GameConfig.BalanceStopAbove.ToString("0.00000000"));
@@ -902,19 +1017,14 @@ namespace Bomber_GUI.Forms
                     {
                         Log("Balance is under " + GameConfig.BalanceStopBelow.ToString("0.00000000"));
                         running = false;
-
                     }
 
-
-                    //int betSquare = getNextSquare();
                     if (GameConfig.RandomEveryGameChecked || GameConfig.RandomEveryWinChecked)
                     {
-                        //stratergyIndex = 0;
                         GameConfig.StratergySquares = Randomize(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 }).ToList().Take(GameConfig.StratergySquares.Length).ToArray();
                     }
                     if (running)
                     {
-                        //CheckWait(GameConfig.GameDelay);
                         if (GameConfig.GameDelay != 0)
                         {
                             await Task.Delay(GameConfig.GameDelay);
@@ -929,7 +1039,6 @@ namespace Bomber_GUI.Forms
             }
             catch (Exception ex)
             {
-
                 Log("Failed to cashout.");
                 if (running == true)
                 {
@@ -943,8 +1052,6 @@ namespace Bomber_GUI.Forms
             }
         }
 
-
-
         void CheckLastGame()
         {
             if (GameConfig.StopAfterGames && running)
@@ -953,17 +1060,16 @@ namespace Bomber_GUI.Forms
                 if (currentPlayStreak > GameConfig.StopAfterGamesAmmount - 1)
                 {
                     Log("Completed {0} games... Stopping...", currentPlayStreak);
-                    //SaveLogDisk();
                     notFirstClear = false;
                     running = false;
                 }
             }
         }
+
         private async void EndBetResponce(Data bd)
         {
             try
             {
-
                 if (bd.data.minesNext.state.mines != null)
                 {
                     guesscount++;
@@ -971,9 +1077,11 @@ namespace Bomber_GUI.Forms
                     bombSquare(bd.data.minesNext.state.rounds[guesscount - 1].field + 1);
                     LatestBombs = bd.data.minesNext.state.mines.ToArray();
                     AddLoss();
+                    AddBetHistory(bd.data.minesNext.amount, 0m, -bd.data.minesNext.amount, false, bd.data.minesNext.id);
                     Log("Bomb. Loss: {0} {1}", bd.data.minesNext.amount, GameConfig.ConfigTag);
                     MultiplyDeadlineTracker++;
                     MultiplyWinTracker++;
+
                     if (GameConfig.ResetBetMultiplyer && GameConfig.MetaSettings)
                     {
                         if (MultiplyDeadlineTracker >= GameConfig.ResetBetMultiplyerDeadline && GameConfig.BetCost > BasebetCost)
@@ -1002,7 +1110,6 @@ namespace Bomber_GUI.Forms
                         }
                     }
 
-                    //CheckWait(GameConfig.GameDelay * 2);
                     if (GameConfig.GameDelay != 0)
                     {
                         await Task.Delay(GameConfig.GameDelay);
@@ -1012,7 +1119,6 @@ namespace Bomber_GUI.Forms
                         if (SquareRepeatData == null)
                         {
                             SquareRepeatData = new int[bmbz.Count];
-                            //int sint;
                             for (int i = 0; i < SquareRepeatData.Length; i++)
                             {
                                 SquareRepeatData[i] = 0;
@@ -1036,14 +1142,11 @@ namespace Bomber_GUI.Forms
                     }
 
                     bool ShouldStop = false;
-                    //var data = BalanceStopShouldStop(out ShouldStop);
-
                     CheckLastGame();
 
                     if (GameConfig.StopAfterLoss && running)
                     {
                         Log("Stop After loss is enabled... Stopping...");
-                        //SaveLogDisk();
                         notFirstClear = false;
                         running = false;
                         BSta(true);
@@ -1051,14 +1154,12 @@ namespace Bomber_GUI.Forms
                     else if (ShouldStop && running)
                     {
                         Log("Balance level met (x bits)... Stopping...");
-                        //SaveLogDisk();
                         notFirstClear = false;
                         running = false;
                         BSta(true);
                     }
                     else
                     {
-
                         if (multiplyOnLoss != 1 && GameConfig.MetaSettings)
                         {
                             Log("Betting increced from {0} to {1}", GameConfig.BetCost, GameConfig.BetCost * multiplyOnLoss);
@@ -1066,15 +1167,8 @@ namespace Bomber_GUI.Forms
                             MultiplyDeadlineTracker = 0;
                         }
 
-
-                        //string url = string.Format("https://satoshimines.com/s/{0}/{1}/", bd.game_id, bd.random_string);
-                        //Log("Url: {0}", url);
-                        //Log("");
-
-                        //await CheckBalance(GameConfig.SiteConfig, GameConfig.PlayerHash, GameConfig.ConfigTag);
                         currentBal += bd.data.minesNext.payout - bd.data.minesNext.amount;
                         liveBitsBox.Text = String.Format("{0} | {1}", GameConfig.ConfigTag, currentBal.ToString("0.00000000"));
-                        // ── Balance checks ───────────────────────────────────────────────
                         await Task.Delay(50);
                         if (GameConfig.CheckboxStopAbove && currentBal >= GameConfig.BalanceStopAbove)
                         {
@@ -1085,16 +1179,13 @@ namespace Bomber_GUI.Forms
                         {
                             Log("Balance is under " + GameConfig.BalanceStopBelow.ToString("0.00000000"));
                             running = false;
-
                         }
                         if (GameConfig.RandomEveryGameChecked || GameConfig.RandomEveryLossChecked)
                         {
-                            //stratergyIndex = 0;
                             GameConfig.StratergySquares = Randomize(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 }).ToList().Take(GameConfig.StratergySquares.Length).ToArray();
                         }
                         if (running)
                         {
-
                             PrepRequest();
                         }
                         else
@@ -1102,33 +1193,26 @@ namespace Bomber_GUI.Forms
                             BSta(true);
                         }
                     }
-
                 }
                 else
                 {
                     guesscount++;
                     Log("Found {0} {1}", ((bd.data.minesNext.state.rounds[guesscount - 1].payoutMultiplier * (double)bd.data.minesNext.amount) - (double)bd.data.minesNext.amount).ToString("0.00000000"), GameConfig.ConfigTag);
                     glowSquare(bd.data.minesNext.state.rounds[guesscount - 1].field + 1);
-                    //int betSquare = getNextSquare();
                     currentBetStreak++;
 
                     if (currentBetStreak >= GameConfig.BetAmmount)
                     {
-
-                        //Log("");
                         endCashoutResponce();
                     }
                     else
                     {
                         EndNewGameResponce();
                     }
-
                 }
-
             }
             catch (Exception ex)
             {
-
                 Log("Failed bet.");
 
                 if (running == true)
@@ -1148,35 +1232,19 @@ namespace Bomber_GUI.Forms
         {
             try
             {
-
                 int betSquare = getNextSquare();
                 Log("betting square {0}", betSquare);
 
-                var mainurl = "https://" + GameConfig.SiteConfig + "/_api/graphql";
-                var request = new RestRequest(Method.POST);
-                var client = new RestClient(mainurl);
-                client.CookieContainer = cc;
-                client.UserAgent = GameConfig.Agent;
-                client.CookieContainer.Add(new Cookie("cf_clearance", GameConfig.Cookie, "/", GameConfig.SiteConfig));
-                BetQuery payload = new BetQuery();
-                payload.variables = new BetClass()
-                {
-                    fields = new List<int> { betSquare - 1 }
+                var json = await GraphQL(
+                    "MinesNext",
+                    "mutation MinesNext($fields: [Int!]!) {\n  minesNext(fields: $fields) {\n    ...CasinoBet\n    state {\n      ...CasinoGameMines\n    }\n  }\n}\n\nfragment CasinoBet on CasinoBet {\n  id\n  active\n  payoutMultiplier\n  amountMultiplier\n  amount\n  payout\n  updatedAt\n  currency\n  game\n  user {\n    id\n    name\n  }\n}\n\nfragment CasinoGameMines on CasinoGameMines {\n  mines\n  minesCount\n  rounds {\n    field\n    payoutMultiplier\n  }\n}\n",
+                    new BetClass
+                    {
+                        fields = new List<int> { betSquare - 1 }
+                    }
+                );
 
-                };
-                payload.query = "mutation MinesNext($fields: [Int!]!) {\n  minesNext(fields: $fields) {\n    ...CasinoBet\n    state {\n      ...CasinoGameMines\n    }\n  }\n}\n\nfragment CasinoBet on CasinoBet {\n  id\n  active\n  payoutMultiplier\n  amountMultiplier\n  amount\n  payout\n  updatedAt\n  currency\n  game\n  user {\n    id\n    name\n  }\n}\n\nfragment CasinoGameMines on CasinoGameMines {\n  mines\n  minesCount\n  rounds {\n    field\n    payoutMultiplier\n  }\n}\n";
-
-                request.AddHeader("Content-Type", "application/json");
-                request.AddHeader("x-access-token", GameConfig.PlayerHash);
-
-                request.AddParameter("application/json", JsonConvert.SerializeObject(payload), ParameterType.RequestBody);
-
-
-                var restResponse =
-                    await client.ExecuteAsync(request);
-
-                //Debug.WriteLine(restResponse.Content);
-                Data response = JsonConvert.DeserializeObject<Data>(restResponse.Content);
+                Data response = JsonConvert.DeserializeObject<Data>(json);
 
                 if (response.errors != null)
                 {
@@ -1195,14 +1263,11 @@ namespace Bomber_GUI.Forms
                 }
                 else
                 {
-
                     EndBetResponce(response);
                 }
-
             }
             catch (Exception ex)
             {
-
                 Log("Failed to guess.");
                 if (running == true)
                 {
@@ -1221,7 +1286,6 @@ namespace Bomber_GUI.Forms
         {
             if (GameConfig.GameDelay != 0 && running)
             {
-                //Log("Waiting {0}ms...", Delay);
                 await Task.Delay(Delay * 1000);
             }
         }
@@ -1242,12 +1306,10 @@ namespace Bomber_GUI.Forms
             }
             catch { }
         }
+
         public static int[] Randomize(int[] items)
         {
             Random rand = new Random();
-
-            // For each spot in the array, pick
-            // a random item to swap into that spot.
             for (int i = 0; i < items.Length - 1; i++)
             {
                 int j = rand.Next(i, items.Length);
@@ -1257,6 +1319,5 @@ namespace Bomber_GUI.Forms
             }
             return items;
         }
-
     }
 }
