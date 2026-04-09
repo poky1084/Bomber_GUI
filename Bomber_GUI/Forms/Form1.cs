@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
+
 namespace Bomber_GUI
 {
     public partial class Form1 : Form
@@ -60,7 +61,7 @@ namespace Bomber_GUI
             horIndex = 1;
             foreach (gamePanel panel in currentPanels)
             {
-                if (horIndex != 2) // This number is how many game panels wide it will be. Default is 2
+                if (horIndex != 2)
                 {
                     panel.Location = new Point(panel.Width * horIndex,
                         (vertIndex * panel.Height) + toolstripOffset);
@@ -150,7 +151,7 @@ namespace Bomber_GUI
 
             AddGamePanel(ngp);
 
-            // Show balance immediately and keep it updating, same as the init panel.
+            // Show balance immediately and start the polling loop for this panel.
             ngp.CheckBalance(ngp.GameConfig.SiteConfig, ngp.GameConfig.PlayerHash, ngp.GameConfig.ConfigTag);
             ngp.StartLoop();
         }
