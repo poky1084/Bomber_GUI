@@ -463,18 +463,13 @@ namespace Bomber_GUI.Forms
             precentOnWin.Value = NudClamp(precentOnWin, config.precentOnWin);
 
             OppositeTileChecked.Checked = config.OppositeTileChecked;
-            int savedIndex = Properties.Settings.Default.SavedTabIndex;
 
-            // Check if the index is valid for the current list
-            if (savedIndex >= 0 && savedIndex < cmbFetchMode.Items.Count)
-            {
-                cmbFetchMode.SelectedIndex = savedIndex;
-            }
-            else
-            {
-                // Optional: Default to the first item if nothing is saved
-                cmbFetchMode.SelectedIndex = 0;
-            }
+            // Each panel stores its own fetch mode — do NOT fall back to the global SavedTabIndex here.
+            int panelModeIndex = config.FetchModeIndex;
+            cmbFetchMode.SelectedIndex = (panelModeIndex >= 0 && panelModeIndex < cmbFetchMode.Items.Count)
+                ? panelModeIndex
+                : 0;
+
             LoadingDefaults = false;
         }
 
@@ -560,6 +555,10 @@ namespace Bomber_GUI.Forms
                 GameConfig.ResetBetMultiplyer = false;
                 GameConfig.ResetBetMultiplyerDeadline = 2;
             }
+
+            // Store the chosen fetch mode in the panel's own GameConfig (not just the global setting).
+            GameConfig.FetchModeIndex = cmbFetchMode.SelectedIndex;
+
             //Save Settings
 
         }

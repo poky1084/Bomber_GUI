@@ -259,7 +259,7 @@ namespace Bomber_GUI.Forms
                 var url = "https://" + GameConfig.SiteConfig + "/_api/graphql";
                 string json;
 
-                if (BrowserFetch.ExtensionMode)
+                if (GameConfig.FetchModeIndex == 1) // Extension mode for this panel
                 {
                     var body = new
                     {
@@ -314,7 +314,7 @@ namespace Bomber_GUI.Forms
         {
             var url = "https://" + GameConfig.SiteConfig + "/_api/graphql";
 
-            if (BrowserFetch.ExtensionMode)
+            if (GameConfig.FetchModeIndex == 1) // Extension mode for this panel
             {
                 var body = new BetSend
                 {

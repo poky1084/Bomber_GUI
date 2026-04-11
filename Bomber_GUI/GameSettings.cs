@@ -49,5 +49,6 @@ namespace Bomber_GUI
         public bool ResetBaseWinsChecked { get; set; }
         public int ResetBaseWinCount { get; set; }
         public bool OppositeTileChecked { get; set; }
+		public int FetchModeIndex { get; set; } = 0;
     }
 }
