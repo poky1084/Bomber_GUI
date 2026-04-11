@@ -87,6 +87,10 @@ namespace Bomber_GUI.Forms
             bool hasCookie = !string.IsNullOrWhiteSpace(Properties.Settings.Default.Cookie);
             lblCookieStatus.Text      = hasCookie ? "◯ Found" : "◯ Not found";
             lblCookieStatus.ForeColor = hasCookie ? Color.Orange : Color.Gray;
+            if (hasCookie)
+            {
+                button3.PerformClick();
+            }
         }
         private void metaChecked_CheckedChanged(object sender, EventArgs e)
         {
@@ -120,58 +124,44 @@ namespace Bomber_GUI.Forms
         }
         private void useStratCheck_CheckedChanged(object sender, EventArgs e)
         {
-            groupBox5.Enabled = useStratCheck.Checked;
+            groupBox5.Enabled = true;
 
             if (useStratCheck.Checked)
             {
                 OppositeTileChecked.CheckState = CheckState.Unchecked;
                 OppositeTileChecked.Enabled = false;
-                if (LoadingDefaults)
-                    return;
-                using (StratergyForm sf = new StratergyForm())
-                {
-                    if (sf.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    {
-                        GameConfig.StratergySquares = sf.StratergyArray;
-                        GameConfig.UseStrat = GameConfig.StratergySquares != null && GameConfig.StratergySquares.Length > 0;
-                        if (GameConfig.UseStrat)
-                        {
-                            /*
-                            for (int i = 0; i < StratergySquares.Length; i++)
-                            {
-                                if (StratergySquares[i] == 1)
-                                {
-                                    stratDisplay.SetSquare(i, Brushes.Green);
-                                }
-                            }*/
-                            foreach (int sv in GameConfig.StratergySquares)
-                            {
-                                stratDisplay.SetSquare(sv, Brushes.Green);
-                            }
-                        }
-                        else
-                        {
-                            useStratCheck.Checked = false;
-                            stratDisplay.Reset();
-                        }
-                    }
-                    else
-                    {
-                        useStratCheck.Checked = false;
-                        GameConfig.UseStrat = false;
-                    }
-                }
+                GameConfig.UseStrat = true;
             }
             else
             {
                 if (numberofBets.Value < 2 && BombCountBox.Value < 2)
-                {
                     OppositeTileChecked.Enabled = true;
-                }
                 GameConfig.UseStrat = false;
-                stratDisplay.Reset();
+                embeddedStratGrid.Reset();
+                GameConfig.StratergySquares = new int[0];
             }
             numberofBets.Enabled = !GameConfig.UseStrat;
+        }
+
+        private void embeddedStratGrid_MouseUp(object sender, MouseEventArgs e)
+        {
+            var selectedSquares = new System.Collections.Generic.List<int>();
+            for (int i = 0; i < embeddedStratGrid.squareData.Length; i++)
+            {
+                if (embeddedStratGrid.squareData[i] == 1)
+                    selectedSquares.Add(i);
+            }
+            GameConfig.StratergySquares = selectedSquares.ToArray();
+            bool hasSquares = selectedSquares.Count > 0;
+
+            // Ensure useStratCheck reflects selection state (hidden but still drives logic)
+            if (useStratCheck.Checked != hasSquares)
+                useStratCheck.Checked = hasSquares;
+            else if (hasSquares)
+            {
+                GameConfig.UseStrat = true;
+                numberofBets.Enabled = false;
+            }
         }
 
         private void checkBox1_CheckedChanged_2(object sender, EventArgs e)
@@ -197,12 +187,23 @@ namespace Bomber_GUI.Forms
             }
         }
 
+        /// <summary>Safely parses a '-'-delimited string of integers, ignoring blank or non-numeric tokens.</summary>
+        private static int[] SafeParseSquares(string raw)
+        {
+            if (string.IsNullOrWhiteSpace(raw)) return new int[0];
+            return raw.Split('-')
+                      .Select(n => n.Trim())
+                      .Where(n => !string.IsNullOrEmpty(n) && n.All(char.IsDigit))
+                      .Select(n => Convert.ToInt32(n))
+                      .ToArray();
+        }
+
         public void loadConfigSettings()
         {
 
             int BetAmmount = (int)Properties.Settings.Default.BetAmmount;
             if (GameConfig.UseStrat)
-                BetAmmount = Properties.Settings.Default.StratergySquares.Split('-').Select(n => Convert.ToInt32(n)).ToArray().Length;
+                BetAmmount = SafeParseSquares(Properties.Settings.Default.StratergySquares).Length;
             //GameConfig.UseProxy = useProxy.Checked;
             //GameConfig.Proxy = proxyBox.Text;
             GameConfig.Agent = Properties.Settings.Default.Agent;
@@ -289,14 +290,14 @@ namespace Bomber_GUI.Forms
             GameConfig.ResetBetMultiplyerDeadline = Properties.Settings.Default.ResetBetMultiplyerDeadline;
 
             useStratCheck.Checked = GameConfig.UseStrat;
-            groupBox5.Enabled = useStratCheck.Checked;
-            GameConfig.StratergySquares = Properties.Settings.Default.StratergySquares.Split('-').Select(n => Convert.ToInt32(n)).ToArray();
+            groupBox5.Enabled = true;
+            GameConfig.StratergySquares = SafeParseSquares(Properties.Settings.Default.StratergySquares);
             if (GameConfig.UseStrat)
             {
-                stratDisplay.Reset();
+                embeddedStratGrid.Reset();
                 foreach (int sv in GameConfig.StratergySquares)
                 {
-                    stratDisplay.SetSquare(sv, Brushes.Green);
+                    embeddedStratGrid.SetValue(sv, 1);
                 }
             }
 
@@ -401,12 +402,12 @@ namespace Bomber_GUI.Forms
             GameConfig.UseStrat = config.UseStrat;
             GameConfig.StratergySquares = config.StratergySquares;
             useStratCheck.Checked = config.UseStrat;
-            groupBox5.Enabled = config.UseStrat;
-            stratDisplay.Reset();
+            groupBox5.Enabled = true;
+            embeddedStratGrid.Reset();
             if (config.UseStrat && config.StratergySquares != null)
             {
                 foreach (int sv in config.StratergySquares)
-                    stratDisplay.SetSquare(sv, Brushes.Green);
+                    embeddedStratGrid.SetValue(sv, 1);
             }
             numberofBets.Value = NudClamp(numberofBets,
                 (config.UseStrat && config.StratergySquares != null)
@@ -879,7 +880,8 @@ namespace Bomber_GUI.Forms
             Properties.Settings.Default.SavedTabIndex = cmbFetchMode.SelectedIndex;
             Properties.Settings.Default.Save();
             bool isExtension = cmbFetchMode.SelectedIndex == 1;
-
+            cfgTag.Items.Clear();
+            UpdateCookieStatusLabel();
             if (isExtension)
             {
                 BrowserFetch.StartServer();
@@ -891,7 +893,10 @@ namespace Bomber_GUI.Forms
                 lblWsIndicator.ForeColor = already ? Color.LimeGreen : Color.Gray;
                 lblWsStatus.ForeColor    = already ? Color.LimeGreen : Color.Gray;
                 lblWsStatus.Text         = already ? "Connected" : "Not connected";
-
+                if (already)
+                {
+                    button3.PerformClick();
+                }
                 // Show WS controls, hide Get Cookie button.
                 btnGetCookie.Visible      = false;
                 lblCookieStatus.Visible   = false;

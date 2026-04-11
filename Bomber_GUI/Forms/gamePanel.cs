@@ -512,6 +512,17 @@ namespace Bomber_GUI.Forms
                     //Proxy = null;
                 }
                 running = true;
+                // Pre-seed random tiles for the first game only when no strategy tiles
+                // are selected. If the user picked specific tiles, honour them for game 1;
+                // randomisation will kick in after the first result as configured.
+                bool hasStratTiles = GameConfig.UseStrat
+                    && GameConfig.StratergySquares != null
+                    && GameConfig.StratergySquares.Length > 0;
+                bool anyRandomActive = GameConfig.RandomEveryGameChecked
+                    || GameConfig.RandomEveryLossChecked
+                    || GameConfig.RandomEveryWinChecked;
+                if (!hasStratTiles && anyRandomActive)
+                    ApplyRandomTiles();
                 if (GameConfig.Instant)
                 {
                     fastRequest();
@@ -623,8 +634,18 @@ namespace Bomber_GUI.Forms
                 button1.Text = "Stop after game.";
                 button1.Enabled = true;
 
+                // "Every Game" randomises tiles at the START of each new game
+                if (GameConfig.RandomEveryGameChecked)
+                    ApplyRandomTiles();
+
                 List<int> fieldsToReveal;
-                if (GameConfig.UseStrat && GameConfig.StratergySquares != null && GameConfig.StratergySquares.Length > 0)
+                bool anyRandomActive = GameConfig.RandomEveryGameChecked
+                    || GameConfig.RandomEveryLossChecked
+                    || GameConfig.RandomEveryWinChecked;
+                bool hasSquares = GameConfig.StratergySquares != null
+                    && GameConfig.StratergySquares.Length > 0;
+
+                if ((GameConfig.UseStrat || anyRandomActive) && hasSquares)
                 {
                     fieldsToReveal = GameConfig.StratergySquares.Take(GameConfig.BetAmmount).ToList();
                 }
@@ -865,9 +886,7 @@ namespace Bomber_GUI.Forms
                     (hitBomb && GameConfig.RandomEveryLossChecked) ||
                     (!hitBomb && GameConfig.RandomEveryWinChecked))
                 {
-                    GameConfig.StratergySquares = Randomize(
-                        new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 })
-                        .Take(GameConfig.StratergySquares.Length).ToArray();
+                    ApplyRandomTiles();
                 }
 
                 if (running)
@@ -903,7 +922,9 @@ namespace Bomber_GUI.Forms
                 button1.Text = "Stop after game.";
                 button1.Enabled = true;
 
-                Guid guid = Guid.NewGuid();
+                // "Every Game" randomises tiles at the START of each new game
+                if (GameConfig.RandomEveryGameChecked)
+                    ApplyRandomTiles();
                 var json = await GraphQL(
                     "MinesBet",
                     "mutation MinesBet($amount: Float!, $currency: CurrencyEnum!, $minesCount: Int!, $fields: [Int!], $identifier: String) {\n  minesBet(\n    amount: $amount\n    currency: $currency\n    minesCount: $minesCount\n    fields: $fields\n    identifier: $identifier\n  ) {\n    ...CasinoBet\n    state {\n      ...CasinoGameMines\n    }\n  }\n}\n\nfragment CasinoBet on CasinoBet {\n  id\n  active\n  payoutMultiplier\n  amountMultiplier\n  amount\n  payout\n  updatedAt\n  currency\n  game\n  user {\n    id\n    name\n  }\n}\n\nfragment CasinoGameMines on CasinoGameMines {\n  mines\n  minesCount\n  rounds {\n    field\n    payoutMultiplier\n  }\n}\n",
@@ -1034,15 +1055,22 @@ namespace Bomber_GUI.Forms
 
         public int getNextSquare()
         {
-            if (GameConfig.UseStrat)
+            // Determine whether to use the strategy/random-tile squares array
+            bool anyRandomActive = GameConfig.RandomEveryGameChecked
+                || GameConfig.RandomEveryLossChecked
+                || GameConfig.RandomEveryWinChecked;
+            bool hasSquares = GameConfig.StratergySquares != null
+                && GameConfig.StratergySquares.Length > 0;
+
+            if ((GameConfig.UseStrat || anyRandomActive) && hasSquares)
             {
                 lock (this)
                 {
-                    if ((GameConfig.StratergySquares.Length == 1) || (stratergyIndex >= GameConfig.StratergySquares.Length - 1))
+                    if (stratergyIndex >= GameConfig.StratergySquares.Length)
                         stratergyIndex = 0;
-                    else
-                        stratergyIndex++;
-                    return GameConfig.StratergySquares[stratergyIndex] + 1;
+                    int sq = GameConfig.StratergySquares[stratergyIndex] + 1;
+                    stratergyIndex = (stratergyIndex + 1) % GameConfig.StratergySquares.Length;
+                    return sq;
                 }
             }
             else if (GameConfig.OppositeTileChecked)
@@ -1230,9 +1258,9 @@ namespace Bomber_GUI.Forms
                         running = false;
                     }
 
-                    if (GameConfig.RandomEveryGameChecked || GameConfig.RandomEveryWinChecked)
+                    if (GameConfig.RandomEveryWinChecked)
                     {
-                        GameConfig.StratergySquares = Randomize(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 }).ToList().Take(GameConfig.StratergySquares.Length).ToArray();
+                        ApplyRandomTiles();
                     }
                     if (running)
                     {
@@ -1394,9 +1422,9 @@ namespace Bomber_GUI.Forms
                             Log("Balance is under " + GameConfig.BalanceStopBelow.ToString("0.00000000"));
                             running = false;
                         }
-                        if (GameConfig.RandomEveryGameChecked || GameConfig.RandomEveryLossChecked)
+                        if (GameConfig.RandomEveryLossChecked)
                         {
-                            GameConfig.StratergySquares = Randomize(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 }).ToList().Take(GameConfig.StratergySquares.Length).ToArray();
+                            ApplyRandomTiles();
                         }
                         if (running)
                         {
@@ -1532,6 +1560,24 @@ namespace Bomber_GUI.Forms
                 items[j] = temp;
             }
             return items;
+        }
+
+        /// <summary>
+        /// Generates a fresh random set of squares into GameConfig.StratergySquares.
+        /// Uses StratergySquares.Length when tiles are pre-selected, BetAmmount otherwise.
+        /// Does NOT modify GameConfig.UseStrat so user settings are never permanently altered.
+        /// </summary>
+        private void ApplyRandomTiles()
+        {
+            int count = (GameConfig.StratergySquares != null && GameConfig.StratergySquares.Length > 0)
+                ? GameConfig.StratergySquares.Length
+                : GameConfig.BetAmmount;
+
+            GameConfig.StratergySquares = Randomize(
+                new int[] { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24 })
+                .Take(count).ToArray();
+
+            stratergyIndex = 0;
         }
     }
 }

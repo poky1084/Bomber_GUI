@@ -46,7 +46,7 @@ namespace Bomber_GUI.Forms
             label5 = new Label();
             useStratCheck = new CheckBox();
             groupBox2 = new GroupBox();
-            stratDisplay = new SatoshiGrid();
+            embeddedStratGrid = new stratGrid();
             checkBox1 = new CheckBox();
             showGBombsCheck = new CheckBox();
             label6 = new Label();
@@ -258,29 +258,31 @@ namespace Bomber_GUI.Forms
             useStratCheck.TabIndex = 17;
             useStratCheck.Text = "Use Strategy";
             useStratCheck.UseVisualStyleBackColor = true;
+            useStratCheck.Visible = false;
             useStratCheck.CheckedChanged += useStratCheck_CheckedChanged;
             // 
             // groupBox2
             // 
-            groupBox2.Controls.Add(stratDisplay);
+            groupBox2.Controls.Add(embeddedStratGrid);
             groupBox2.Location = new Point(352, 184);
-            groupBox2.Margin = new Padding(5, 4, 5, 4);
+            groupBox2.Margin = new Padding(0, 0, 0, 0);
             groupBox2.Name = "groupBox2";
-            groupBox2.Padding = new Padding(5, 4, 5, 4);
-            groupBox2.Size = new Size(208, 220);
+            groupBox2.Padding = new Padding(2, 2, 2, 2);
+            groupBox2.Size = new Size(208, 228);
             groupBox2.TabIndex = 18;
             groupBox2.TabStop = false;
+            groupBox2.Text = "";
             // 
-            // stratDisplay
+            // embeddedStratGrid
             // 
-            stratDisplay.GridBorder = false;
-            stratDisplay.Location = new Point(24, 30);
-            stratDisplay.Margin = new Padding(5, 4, 5, 4);
-            stratDisplay.Name = "stratDisplay";
-            stratDisplay.Size = new Size(151, 151);
-            stratDisplay.SquareBorder = true;
-            stratDisplay.TabIndex = 18;
-            stratDisplay.Text = "satoshiGrid1";
+            embeddedStratGrid.Location = new Point(1, 1);
+            embeddedStratGrid.Margin = new Padding(0, 0, 0, 0);
+            embeddedStratGrid.Name = "embeddedStratGrid";
+            embeddedStratGrid.Size = new Size(204, 204);
+            embeddedStratGrid.SquareSpacing = 6;
+            embeddedStratGrid.TabIndex = 18;
+            embeddedStratGrid.Text = "embeddedStratGrid";
+            embeddedStratGrid.MouseUp += new MouseEventHandler(this.embeddedStratGrid_MouseUp);
             // 
             // checkBox1
             // 
@@ -996,7 +998,7 @@ namespace Bomber_GUI.Forms
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox showGBombsCheck;
         private System.Windows.Forms.Label label6;
-        private SatoshiGrid stratDisplay;
+        private stratGrid embeddedStratGrid;
         private System.Windows.Forms.CheckBox saveLog;
         private System.Windows.Forms.CheckBox stopAfterLossCheck;
         private System.Windows.Forms.CheckBox stopAfterGamesChecked;
