@@ -1,5 +1,4 @@
-﻿
-using Keno;
+﻿using Keno;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
@@ -34,6 +33,7 @@ namespace Bomber_GUI.Forms
             ApplyFont();
             GameConfig.BombCount = 3;
             LoadDefaultSettings();
+            //button3.PerformClick();
             this.Load += SettingsForm_Load;
         }
 
@@ -60,17 +60,12 @@ namespace Bomber_GUI.Forms
             }
         }
 
-        public SettingsForm(GameSettings gameConfig)
-        {
-            GameConfig = gameConfig;
-        }
-
         private void ApplyFont()
         {
             var font = new Font(FontHelper.Montserrat, 9f, FontStyle.Regular);
+            this.Font = font;
             foreach (Control c in GetAllControls(this))
                 c.Font = font;
-            this.Font = font;
         }
 
         private IEnumerable<Control> GetAllControls(Control parent)
@@ -82,7 +77,6 @@ namespace Bomber_GUI.Forms
                     yield return child;
             }
         }
-
         private void SettingsForm_Load(object sender, EventArgs e)
         {
             PutBalance(true);
@@ -206,7 +200,7 @@ namespace Bomber_GUI.Forms
             //GameConfig.Proxy = proxyBox.Text;
             GameConfig.Agent = Properties.Settings.Default.Agent;
             GameConfig.Cookie = Properties.Settings.Default.Cookie;
-            GameConfig.Instant = Properties.Settings.Default.Instant;
+            GameConfig.Instant = Properties.Settings.Default.Type;
 
             GameConfig.PlayerHash = Properties.Settings.Default.PlayerHash;
             GameConfig.BetAmmount = BetAmmount;
@@ -257,6 +251,18 @@ namespace Bomber_GUI.Forms
                 GameConfig.ResetBetMultiplyer = false;
                 GameConfig.ResetBetMultiplyerDeadline = 2;
             }
+            int savedIndex = Properties.Settings.Default.SavedTabIndex;
+
+            // Check if the index is valid for the current list
+            if (savedIndex >= 0 && savedIndex < cmbFetchMode.Items.Count)
+            {
+                cmbFetchMode.SelectedIndex = savedIndex;
+            }
+            else
+            {
+                // Optional: Default to the first item if nothing is saved
+                cmbFetchMode.SelectedIndex = 0;
+            }
         }
         private void LoadDefaultSettings()
         {
@@ -265,10 +271,10 @@ namespace Bomber_GUI.Forms
             //return;
             LoadingDefaults = true;
 
-            textBox1.Text = Properties.Settings.Default.Cookie;
-            textBox2.Text = Properties.Settings.Default.Agent;
+            GameConfig.Cookie = Properties.Settings.Default.Cookie;
+            GameConfig.Agent  = Properties.Settings.Default.Agent;
 
-            checkInstant.Checked = Properties.Settings.Default.Instant;
+            checkInstant.Checked = Properties.Settings.Default.Type;
             pHash.Text = Properties.Settings.Default.PlayerHash;
             numberofBets.Value = Properties.Settings.Default.BetAmmount;
             GameConfig.UseStrat = Properties.Settings.Default.UseStrat;
@@ -351,31 +357,38 @@ namespace Bomber_GUI.Forms
             balanceStopOverChecked.Checked = Properties.Settings.Default.CheckboxStopAbove;
             balanceStopUnderChecked.Checked = Properties.Settings.Default.CheckboxStopBelow;
             numberofBets.Enabled = !GameConfig.UseStrat;
+            int savedIndex = Properties.Settings.Default.SavedTabIndex;
 
+            // Check if the index is valid for the current list
+            if (savedIndex >= 0 && savedIndex < cmbFetchMode.Items.Count)
+            {
+                cmbFetchMode.SelectedIndex = savedIndex;
+            }
+            else
+            {
+                // Optional: Default to the first item if nothing is saved
+                cmbFetchMode.SelectedIndex = 0;
+            }
             LoadingDefaults = false;
 
         }
-
-        /// <summary>Clamps value to a NumericUpDown's own Minimum/Maximum so set_Value never throws.</summary>
-        private static decimal NudClamp(NumericUpDown nud, decimal value)
-            => Math.Max(nud.Minimum, Math.Min(nud.Maximum, value));
 
         /// <summary>
         /// Populates every UI control from an existing GameSettings object.
         /// Call this instead of loadConfigSettings() when editing a specific panel's config.
         /// </summary>
+        /// <summary>Clamps value to a NumericUpDown's own Minimum/Maximum so set_Value never throws.</summary>
+        private static decimal NudClamp(NumericUpDown nud, decimal value)
+            => Math.Max(nud.Minimum, Math.Min(nud.Maximum, value));
+
         public void LoadFromGameConfig(GameSettings config)
         {
             LoadingDefaults = true;
             GameConfig = config;
 
-            // These three are global — always load from saved settings, not the panel config.
-            pHash.Text = Properties.Settings.Default.PlayerHash;
-            SiteConfig.Text = Properties.Settings.Default.SiteConfig;
-            textBox1.Text = Properties.Settings.Default.Cookie;
-            textBox2.Text = Properties.Settings.Default.Agent;
-
             checkInstant.Checked = config.Instant;
+            pHash.Text = config.PlayerHash;
+            SiteConfig.Text = config.SiteConfig;
 
             // Strategy
             GameConfig.UseStrat = config.UseStrat;
@@ -450,7 +463,18 @@ namespace Bomber_GUI.Forms
             precentOnWin.Value = NudClamp(precentOnWin, config.precentOnWin);
 
             OppositeTileChecked.Checked = config.OppositeTileChecked;
+            int savedIndex = Properties.Settings.Default.SavedTabIndex;
 
+            // Check if the index is valid for the current list
+            if (savedIndex >= 0 && savedIndex < cmbFetchMode.Items.Count)
+            {
+                cmbFetchMode.SelectedIndex = savedIndex;
+            }
+            else
+            {
+                // Optional: Default to the first item if nothing is saved
+                cmbFetchMode.SelectedIndex = 0;
+            }
             LoadingDefaults = false;
         }
 
@@ -464,7 +488,18 @@ namespace Bomber_GUI.Forms
         public void initSettings()
         {
 
+            int savedIndex = Properties.Settings.Default.SavedTabIndex;
 
+            // Check if the index is valid for the current list
+            if (savedIndex >= 0 && savedIndex < cmbFetchMode.Items.Count)
+            {
+                cmbFetchMode.SelectedIndex = savedIndex;
+            }
+            else
+            {
+                // Optional: Default to the first item if nothing is saved
+                cmbFetchMode.SelectedIndex = 0;
+            }
             GameConfig.ConfigTag = coinList[coinIndex];
             int BetAmmount = (int)numberofBets.Value;
             if (GameConfig.UseStrat)
@@ -473,8 +508,8 @@ namespace Bomber_GUI.Forms
             GameConfig.Proxy = proxyBox.Text;
 
             GameConfig.Instant = checkInstant.Checked;
-            GameConfig.Agent = textBox2.Text;
-            GameConfig.Cookie = textBox1.Text;
+            //GameConfig.Agent = textBox2.Text;
+            //GameConfig.Cookie = textBox1.Text;
             GameConfig.PlayerHash = pHash.Text;
             GameConfig.BetAmmount = BetAmmount;
             GameConfig.BetCost = betCostNUD.Value;
@@ -486,8 +521,8 @@ namespace Bomber_GUI.Forms
             GameConfig.BombCount = (int)BombCountBox.Value;
             GameConfig.ShowGameBombs = showGBombsCheck.Checked;
             GameConfig.SaveLogToFile = saveLog.Checked;
-
-
+    
+            
             GameConfig.SiteConfig = SiteConfig.Text;
             GameConfig.StopAfterGamesAmmount = (int)stopAfterGamesNum.Value;
             GameConfig.StopAfterGames = stopAfterGamesChecked.Checked;
@@ -536,9 +571,9 @@ namespace Bomber_GUI.Forms
                 BetAmmount = GameConfig.StratergySquares.Length;
             //Properties.Settings.Default.UseProxy = GameConfig.UseProxy;
             //GameConfig.Proxy = proxyBox.Text;
-            Properties.Settings.Default.Instant = checkInstant.Checked;
-            Properties.Settings.Default.Agent = textBox2.Text;
-            Properties.Settings.Default.Cookie = textBox1.Text;
+            Properties.Settings.Default.Type = checkInstant.Checked;
+            Properties.Settings.Default.Cookie = GameConfig.Cookie;
+            Properties.Settings.Default.Agent  = GameConfig.Agent;
             Properties.Settings.Default.PlayerHash = pHash.Text;
             Properties.Settings.Default.BetAmmount = BetAmmount;
             Properties.Settings.Default.BetCost = betCostNUD.Value;
@@ -600,32 +635,67 @@ namespace Bomber_GUI.Forms
         {
             PutBalance(false);
         }
+        private async Task<string> GraphQL(string operationName, string query,
+                                  BetClass variables = null)
+        {
+            var url = "https://" + SiteConfig.Text + "/_api/graphql";
 
+            if (BrowserFetch.ExtensionMode)
+            {
+                var body = new BetSend
+                {
+                    operationName = operationName,
+                    query = query,
+                    variables = variables
+                };
+                var options = new
+                {
+                    method = "POST",
+                    headers = new Dictionary<string, string>
+                    {
+                        { "Content-Type", "application/json" },
+                        { "x-access-token", pHash.Text }
+                    },
+                    body = body
+                };
+                return await BrowserFetch.FetchAsync(url, options);
+            }
+            else
+            {
+                // Cookie mode — use RestSharp with cf_clearance cookie.
+                var client = new RestClient(url);
+                client.CookieContainer = cc;
+                client.UserAgent = GameConfig.Agent;
+                client.CookieContainer.Add(
+                    new System.Net.Cookie("cf_clearance", GameConfig.Cookie, "/", SiteConfig.Text));
+
+                var payload = new BetSend
+                {
+                    operationName = operationName,
+                    query = query,
+                    variables = variables
+                };
+
+                var request = new RestRequest(Method.POST);
+                request.AddHeader("Content-Type", "application/json");
+                request.AddHeader("x-access-token", pHash.Text);
+                request.AddParameter("application/json",
+                    JsonConvert.SerializeObject(payload), ParameterType.RequestBody);
+
+                var resp = await client.ExecuteAsync(request);
+                return resp.Content;
+            }
+        }
         public async void PutBalance(bool sign)
         {
             try
             {
-                var mainurl = "https://" + SiteConfig.Text + "/_api/graphql";
-                var request = new RestRequest(Method.POST);
-                var client = new RestClient(mainurl);
-                client.CookieContainer = cc;
-                client.UserAgent = textBox2.Text; ;
-                client.CookieContainer.Add(new Cookie("cf_clearance", textBox1.Text, "/", SiteConfig.Text));
-                BetQuery payload = new BetQuery();
-                payload.operationName = "UserBalances";
-                payload.query = "query UserBalances {\n  user {\n    id\n    balances {\n      available {\n        amount\n        currency\n        __typename\n      }\n      vault {\n        amount\n        currency\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n";
-                //request.RequestFormat = DataFormat.Json;
-                request.AddHeader("Content-Type", "application/json");
-                request.AddHeader("x-access-token", pHash.Text);
+                var json = await GraphQL(
+                    "UserBalances",
+                    "query UserBalances {\n  user {\n    id\n    balances {\n      available {\n        amount\n        currency\n        __typename\n      }\n      vault {\n        amount\n        currency\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n"
+                );
 
-                request.AddParameter("application/json", JsonConvert.SerializeObject(payload), ParameterType.RequestBody);
-                //request.AddJsonBody(payload);
-                //IRestResponse response = client.Execute(request);
-
-                var restResponse =
-                    await client.ExecuteAsync(request);
-
-                BalancesData response = JsonConvert.DeserializeObject<BalancesData>(restResponse.Content);
+                BalancesData response = JsonConvert.DeserializeObject<BalancesData>(json);
 
                 if (response.errors != null)
                 {
@@ -636,7 +706,8 @@ namespace Bomber_GUI.Forms
                     if (response.data != null)
                     {
                         // *** Save current selection before clearing ***
-                        string currentSelected = coinList.Count > 0 ? coinList[coinIndex] : Properties.Settings.Default.ConfigTag;
+                        string currentSelected = coinList.Count > 0 ? coinList[coinIndex]
+                            : (!string.IsNullOrEmpty(GameConfig.ConfigTag) ? GameConfig.ConfigTag : Properties.Settings.Default.ConfigTag);
 
                         if (sign)
                         {
@@ -655,12 +726,11 @@ namespace Bomber_GUI.Forms
                                 if (balance.amount > 0)
                                 {
                                     cfgTag.Items.Add($"{balance.currency.ToUpper()} - {balance.amount.ToString("N8")}");
-                                } 
+                                }
                                 else
                                 {
                                     cfgTag.Items.Add(response.data.user.balances[i].available.currency.ToUpper());
                                 }
-                                
                             }
 
                             if (response.data.user.balances[i].available.currency == currentSelected.ToLower())
@@ -748,7 +818,26 @@ namespace Bomber_GUI.Forms
 
         private void button3_Click(object sender, EventArgs e)
         {
+            // Login just refreshes the balance regardless of mode.
             PutBalance(true);
+        }
+
+        private void btnGetCookie_Click(object sender, EventArgs e)
+        {
+            using (var loginForm = new WebViewLogin(SiteConfig.Text))
+            {
+                if (loginForm.ShowDialog(this) == DialogResult.OK)
+                {
+                    GameConfig.Cookie = loginForm.CapturedClearance;
+                    GameConfig.Agent  = loginForm.CapturedUserAgent;
+
+                    Properties.Settings.Default.Cookie = GameConfig.Cookie;
+                    Properties.Settings.Default.Agent  = GameConfig.Agent;
+                    Properties.Settings.Default.Save();
+
+                    cc = new CookieContainer();
+                }
+            }
         }
 
         private void pHash_TextChanged(object sender, EventArgs e)
@@ -777,54 +866,80 @@ namespace Bomber_GUI.Forms
 
         }
 
-        private void btnWebViewLogin_Click_1(object sender, EventArgs e)
+        private void cmbFetchMode_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
-        }
+            Properties.Settings.Default.SavedTabIndex = cmbFetchMode.SelectedIndex;
+            Properties.Settings.Default.Save();
+            bool isExtension = cmbFetchMode.SelectedIndex == 1;
 
-        private void SiteConfig_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void SiteConfig_TextChanged_1(object sender, EventArgs e)
-        {
-            GameConfig.SiteConfig = SiteConfig.Text;
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            using (var loginForm = new WebViewLogin(SiteConfig.Text))
+            if (isExtension)
             {
-                // ShowDialog blocks until user clicks Done (DialogResult.OK)
-                var result = loginForm.ShowDialog(this);
+                BrowserFetch.StartServer();
+                BrowserFetch.Connected    += OnWsConnected;
+                BrowserFetch.Disconnected += OnWsDisconnected;
 
-                if (result == DialogResult.OK)
-                {
-                    // Apply captured values
-                    GameConfig.Cookie = loginForm.CapturedClearance;
-                    GameConfig.Agent = loginForm.CapturedUserAgent;
+                // Reflect live connection state immediately.
+                bool already          = BrowserFetch.IsConnected;
+                lblWsIndicator.ForeColor = already ? Color.LimeGreen : Color.Gray;
+                lblWsStatus.ForeColor    = already ? Color.LimeGreen : Color.Gray;
+                lblWsStatus.Text         = already ? "Connected" : "Not connected";
 
-                    // Update UI text fields
-                    textBox1.Text = GameConfig.Cookie;
-                    textBox2.Text = GameConfig.Agent;
-
-                    // Save to settings
-                    Properties.Settings.Default.Cookie = GameConfig.Cookie;
-                    Properties.Settings.Default.Agent = GameConfig.Agent;
-                    Properties.Settings.Default.Save();
-
-                    // Rebuild CookieContainer fresh
-                    cc = new CookieContainer();
-
-                    // Verify connection with new cookies
-                    //await Authorize();
-                }
-                else
-                {
-                    
-                }
+                // Show WS controls, hide Get Cookie button.
+                btnGetCookie.Visible   = false;
+                lblWsIndicator.Visible = true;
+                lblWsStatus.Visible    = true;
             }
+            else
+            {
+                BrowserFetch.Connected    -= OnWsConnected;
+                BrowserFetch.Disconnected -= OnWsDisconnected;
+                BrowserFetch.StopServer();
+
+                lblWsIndicator.ForeColor = Color.Gray;
+                lblWsStatus.ForeColor    = Color.Gray;
+                lblWsStatus.Text         = "Not connected";
+
+                // Hide WS controls, show Get Cookie button.
+                lblWsIndicator.Visible = false;
+                lblWsStatus.Visible    = false;
+                btnGetCookie.Visible   = true;
+            }
+        }
+
+        private void OnWsConnected(object sender, EventArgs e)
+        {
+            void Apply()
+            {
+                lblWsIndicator.ForeColor = Color.LimeGreen;
+                lblWsStatus.ForeColor    = Color.LimeGreen;
+                lblWsStatus.Text         = "Connected";
+                button3.PerformClick();
+            }
+            if (lblWsIndicator.InvokeRequired)
+                lblWsIndicator.Invoke((MethodInvoker)Apply);
+            else
+                Apply();
+        }
+
+        private void OnWsDisconnected(object sender, EventArgs e)
+        {
+            void Apply()
+            {
+                lblWsIndicator.ForeColor = Color.Gray;
+                lblWsStatus.ForeColor    = Color.Gray;
+                lblWsStatus.Text         = "Not connected";
+            }
+            if (lblWsIndicator.InvokeRequired)
+                lblWsIndicator.Invoke((MethodInvoker)Apply);
+            else
+                Apply();
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            BrowserFetch.Connected    -= OnWsConnected;
+            BrowserFetch.Disconnected -= OnWsDisconnected;
+            base.OnFormClosing(e);
         }
     }
 }
