@@ -71,18 +71,18 @@ namespace Bomber_GUI.Forms
             // 
             this.winStats.AutoSize = true;
             this.winStats.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.winStats.Location = new System.Drawing.Point(368, 20);
+            this.winStats.Location = new System.Drawing.Point(364, 20);
             this.winStats.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.winStats.Name = "winStats";
             this.winStats.Size = new System.Drawing.Size(144, 16);
             this.winStats.TabIndex = 12;
-            this.winStats.Text = "0% | Wins: 0 | Losses: 0";
+            this.winStats.Text = "0% | W: 0 | L: 0";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label2.Location = new System.Drawing.Point(310, 20);
+            this.label2.Location = new System.Drawing.Point(306, 20);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(54, 16);
@@ -158,7 +158,7 @@ namespace Bomber_GUI.Forms
             // buttonS — opens settings for this panel
             // 
             this.buttonS.Location = new System.Drawing.Point(119, 17);
-            this.buttonS.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.buttonS.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
             this.buttonS.Name = "buttonS";
             this.buttonS.Size = new System.Drawing.Size(65, 25);
             this.buttonS.TabIndex = 21;
@@ -168,8 +168,8 @@ namespace Bomber_GUI.Forms
             // 
             // buttonLog — toggles the output log / bet history panel
             // 
-            this.buttonLog.Location = new System.Drawing.Point(188, 17);
-            this.buttonLog.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.buttonLog.Location = new System.Drawing.Point(185, 17);
+            this.buttonLog.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
             this.buttonLog.Name = "buttonLog";
             this.buttonLog.Size = new System.Drawing.Size(60, 25);
             this.buttonLog.TabIndex = 20;
@@ -179,8 +179,8 @@ namespace Bomber_GUI.Forms
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(252, 17);
-            this.button3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.button3.Location = new System.Drawing.Point(246, 17);
+            this.button3.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(52, 25);
             this.button3.TabIndex = 16;

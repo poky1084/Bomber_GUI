@@ -423,7 +423,7 @@ namespace Bomber_GUI.Forms
         {
             historyVisible = !historyVisible;
             betHistoryView.Visible = historyVisible;
-            buttonLog.Text = historyVisible ? "Close Log" : "Log";
+            buttonLog.Text = historyVisible ? "Close Log" : "Bet Log";
 
             this.Height = historyVisible
                 ? gameGroupBox.Bottom + betHistoryView.Height
@@ -1015,7 +1015,7 @@ namespace Bomber_GUI.Forms
                 double percent = 0;
                 if (wins != 0 || loss != 0)
                     percent = (wins / (wins + loss)) * 100;
-                winStats.Text = string.Format("{0}% | Wins: {1} | Losses: {2}", Math.Round(percent, 2), wins, loss);
+                winStats.Text = string.Format("{0}% | W: {1} | L: {2}", Math.Round(percent, 2), wins, loss);
             });
         }
 
