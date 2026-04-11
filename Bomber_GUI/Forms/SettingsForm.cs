@@ -81,6 +81,13 @@ namespace Bomber_GUI.Forms
         {
             PutBalance(true);
         }
+
+        private void UpdateCookieStatusLabel()
+        {
+            bool hasCookie = !string.IsNullOrWhiteSpace(Properties.Settings.Default.Cookie);
+            lblCookieStatus.Text      = hasCookie ? "◯ Found" : "◯ Not found";
+            lblCookieStatus.ForeColor = hasCookie ? Color.Orange : Color.Gray;
+        }
         private void metaChecked_CheckedChanged(object sender, EventArgs e)
         {
             metaBox.Enabled = metaChecked.Checked;
@@ -370,7 +377,7 @@ namespace Bomber_GUI.Forms
                 cmbFetchMode.SelectedIndex = 0;
             }
             LoadingDefaults = false;
-
+            UpdateCookieStatusLabel();
         }
 
         /// <summary>
@@ -471,6 +478,7 @@ namespace Bomber_GUI.Forms
                 : 0;
 
             LoadingDefaults = false;
+            UpdateCookieStatusLabel();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -495,7 +503,7 @@ namespace Bomber_GUI.Forms
                 // Optional: Default to the first item if nothing is saved
                 cmbFetchMode.SelectedIndex = 0;
             }
-            GameConfig.ConfigTag = coinList[coinIndex];
+            GameConfig.ConfigTag = coinList.Count > 0 ? coinList[coinIndex] : string.Empty;
             int BetAmmount = (int)numberofBets.Value;
             if (GameConfig.UseStrat)
                 BetAmmount = GameConfig.StratergySquares.Length;
@@ -589,7 +597,7 @@ namespace Bomber_GUI.Forms
             Properties.Settings.Default.BombCount = (int)BombCountBox.Value;
             Properties.Settings.Default.ShowGameBombs = showGBombsCheck.Checked;
             //Properties.Settings.Default.SaveLogToFile = saveLog.Checked;
-            Properties.Settings.Default.ConfigTag = coinList[coinIndex];
+            Properties.Settings.Default.ConfigTag = coinList.Count > 0 ? coinList[coinIndex] : string.Empty;
             Properties.Settings.Default.SiteConfig = SiteConfig.Text;
             Properties.Settings.Default.StopAfterGamesAmmount = (int)stopAfterGamesNum.Value;
             Properties.Settings.Default.StopAfterGames = stopAfterGamesChecked.Checked;
@@ -835,6 +843,7 @@ namespace Bomber_GUI.Forms
                     Properties.Settings.Default.Save();
 
                     cc = new CookieContainer();
+                    UpdateCookieStatusLabel();
                 }
             }
         }
@@ -884,7 +893,8 @@ namespace Bomber_GUI.Forms
                 lblWsStatus.Text         = already ? "Connected" : "Not connected";
 
                 // Show WS controls, hide Get Cookie button.
-                btnGetCookie.Visible   = false;
+                btnGetCookie.Visible      = false;
+                lblCookieStatus.Visible   = false;
                 lblWsIndicator.Visible = true;
                 lblWsStatus.Visible    = true;
             }
@@ -899,9 +909,10 @@ namespace Bomber_GUI.Forms
                 lblWsStatus.Text         = "Not connected";
 
                 // Hide WS controls, show Get Cookie button.
-                lblWsIndicator.Visible = false;
-                lblWsStatus.Visible    = false;
-                btnGetCookie.Visible   = true;
+                lblWsIndicator.Visible    = false;
+                lblWsStatus.Visible       = false;
+                btnGetCookie.Visible      = true;
+                lblCookieStatus.Visible   = true;
             }
         }
 

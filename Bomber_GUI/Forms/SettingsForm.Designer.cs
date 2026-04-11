@@ -98,6 +98,7 @@ namespace Bomber_GUI.Forms
             SiteConfig = new TextBox();
             cmbFetchMode = new ComboBox();
             btnGetCookie = new Button();
+            lblCookieStatus = new Label();
             lblWsIndicator = new Label();
             lblWsStatus = new Label();
             ((System.ComponentModel.ISupportInitialize)numberofBets).BeginInit();
@@ -883,6 +884,16 @@ namespace Bomber_GUI.Forms
             btnGetCookie.Visible = true;
             btnGetCookie.Click += btnGetCookie_Click;
             // 
+            // lblCookieStatus — shown next to Get Cookie button in Cookie mode
+            // 
+            lblCookieStatus.AutoSize = true;
+            lblCookieStatus.ForeColor = Color.Gray;
+            lblCookieStatus.Location = new Point(490, 9);
+            lblCookieStatus.Name = "lblCookieStatus";
+            lblCookieStatus.TabIndex = 54;
+            lblCookieStatus.Text = "◯ Not found";
+            lblCookieStatus.Visible = true;
+            // 
             // lblWsIndicator — only visible in Extension mode
             // 
             lblWsIndicator.AutoSize = true;
@@ -911,6 +922,7 @@ namespace Bomber_GUI.Forms
             ClientSize = new Size(576, 676);
             Controls.Add(lblWsStatus);
             Controls.Add(lblWsIndicator);
+            Controls.Add(lblCookieStatus);
             Controls.Add(btnGetCookie);
             Controls.Add(cmbFetchMode);
             Controls.Add(SiteConfig);
@@ -1034,6 +1046,7 @@ namespace Bomber_GUI.Forms
         private TextBox SiteConfig;
         private ComboBox cmbFetchMode;
         private Button btnGetCookie;
+        private Label lblCookieStatus;
         private Label lblWsIndicator;
         private Label lblWsStatus;
     }
