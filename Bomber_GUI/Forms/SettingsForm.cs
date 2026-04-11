@@ -892,7 +892,7 @@ namespace Bomber_GUI.Forms
             {
                 BrowserFetch.Connected    -= OnWsConnected;
                 BrowserFetch.Disconnected -= OnWsDisconnected;
-                BrowserFetch.StopServer();
+                //BrowserFetch.StopServer();
 
                 lblWsIndicator.ForeColor = Color.Gray;
                 lblWsStatus.ForeColor    = Color.Gray;
