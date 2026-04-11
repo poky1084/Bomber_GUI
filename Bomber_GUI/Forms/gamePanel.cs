@@ -377,10 +377,13 @@ namespace Bomber_GUI.Forms
 			{
 				while (!token.IsCancellationRequested)
 				{
-					// Skip the request if the config hasn't been set yet
+					// Skip the request if the config hasn't been set yet.
+					// In cookie mode (FetchModeIndex != 1) do NOT send a UserBalances
+					// request — only extension-mode panels are allowed to poll balance.
 					if (!string.IsNullOrEmpty(GameConfig.SiteConfig)
 						&& !string.IsNullOrEmpty(GameConfig.PlayerHash)
-						&& !string.IsNullOrEmpty(GameConfig.ConfigTag))
+						&& !string.IsNullOrEmpty(GameConfig.ConfigTag)
+						&& GameConfig.FetchModeIndex == 1)
 					{
 						await CheckBalance(GameConfig.SiteConfig, GameConfig.PlayerHash, GameConfig.ConfigTag);
 					}
