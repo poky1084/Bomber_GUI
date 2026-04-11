@@ -71,7 +71,7 @@ namespace Bomber_GUI.Forms
             // 
             this.winStats.AutoSize = true;
             this.winStats.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.winStats.Location = new System.Drawing.Point(300, 20);
+            this.winStats.Location = new System.Drawing.Point(368, 20);
             this.winStats.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.winStats.Name = "winStats";
             this.winStats.Size = new System.Drawing.Size(144, 16);
@@ -82,7 +82,7 @@ namespace Bomber_GUI.Forms
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label2.Location = new System.Drawing.Point(242, 20);
+            this.label2.Location = new System.Drawing.Point(310, 20);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(54, 16);
@@ -160,31 +160,31 @@ namespace Bomber_GUI.Forms
             this.buttonS.Location = new System.Drawing.Point(119, 17);
             this.buttonS.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.buttonS.Name = "buttonS";
-            this.buttonS.Size = new System.Drawing.Size(36, 25);
+            this.buttonS.Size = new System.Drawing.Size(65, 25);
             this.buttonS.TabIndex = 21;
-            this.buttonS.Text = "Set";
+            this.buttonS.Text = "Settings";
             this.buttonS.UseVisualStyleBackColor = true;
             this.buttonS.Click += new System.EventHandler(this.buttonS_Click);
             // 
             // buttonLog — toggles the output log / bet history panel
             // 
-            this.buttonLog.Location = new System.Drawing.Point(157, 17);
+            this.buttonLog.Location = new System.Drawing.Point(188, 17);
             this.buttonLog.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.buttonLog.Name = "buttonLog";
-            this.buttonLog.Size = new System.Drawing.Size(54, 25);
+            this.buttonLog.Size = new System.Drawing.Size(60, 25);
             this.buttonLog.TabIndex = 20;
-            this.buttonLog.Text = "Log";
+            this.buttonLog.Text = "Bet Log";
             this.buttonLog.UseVisualStyleBackColor = true;
             this.buttonLog.Click += new System.EventHandler(this.buttonLog_Click);
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(213, 17);
+            this.button3.Location = new System.Drawing.Point(252, 17);
             this.button3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(24, 25);
+            this.button3.Size = new System.Drawing.Size(52, 25);
             this.button3.TabIndex = 16;
-            this.button3.Text = "R";
+            this.button3.Text = "Reset";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click_1);
             // 
