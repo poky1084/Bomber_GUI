@@ -647,8 +647,8 @@ namespace Bomber_GUI.Forms
                                   BetClass variables = null)
         {
             var url = "https://" + SiteConfig.Text + "/_api/graphql";
-
-            if (BrowserFetch.ExtensionMode)
+			bool isExtension = cmbFetchMode.SelectedIndex == 1;
+            if (isExtension)
             {
                 var body = new BetSend
                 {

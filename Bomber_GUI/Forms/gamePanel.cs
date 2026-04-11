@@ -313,8 +313,8 @@ namespace Bomber_GUI.Forms
                                     BetClass variables = null)
         {
             var url = "https://" + GameConfig.SiteConfig + "/_api/graphql";
-
-            if (GameConfig.FetchModeIndex == 1) // Extension mode for this panel
+			bool isExtension = GameConfig.FetchModeIndex == 1;
+            if (isExtension) // Extension mode for this panel
             {
                 var body = new BetSend
                 {
