@@ -893,14 +893,14 @@ namespace Bomber_GUI.Forms
             lblCookieStatus.Location = new Point(490, 9);
             lblCookieStatus.Name = "lblCookieStatus";
             lblCookieStatus.TabIndex = 54;
-            lblCookieStatus.Text = "◯ Not found";
+            lblCookieStatus.Text = "Cookie OFF";
             lblCookieStatus.Visible = true;
             // 
             // lblWsIndicator — only visible in Extension mode
             // 
             lblWsIndicator.AutoSize = true;
             lblWsIndicator.ForeColor = Color.Gray;
-            lblWsIndicator.Location = new Point(397, 7);
+            lblWsIndicator.Location = new Point(399, 7);
             lblWsIndicator.Name = "lblWsIndicator";
             lblWsIndicator.Size = new Size(16, 20);
             lblWsIndicator.TabIndex = 51;
@@ -914,7 +914,7 @@ namespace Bomber_GUI.Forms
             lblWsStatus.Location = new Point(419, 7);
             lblWsStatus.Name = "lblWsStatus";
             lblWsStatus.TabIndex = 52;
-            lblWsStatus.Text = "Not connected";
+            lblWsStatus.Text = "Extension OFF";
             lblWsStatus.Visible = false;
             // 
             // SettingsForm

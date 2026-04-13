@@ -85,7 +85,7 @@ namespace Bomber_GUI.Forms
         private void UpdateCookieStatusLabel()
         {
             bool hasCookie = !string.IsNullOrWhiteSpace(Properties.Settings.Default.Cookie);
-            lblCookieStatus.Text      = hasCookie ? "◯ Found" : "◯ Not found";
+            lblCookieStatus.Text      = hasCookie ? "Cookie OK" : "Cookie OFF";
             lblCookieStatus.ForeColor = hasCookie ? Color.Orange : Color.Gray;
             if (hasCookie)
             {
@@ -892,7 +892,7 @@ namespace Bomber_GUI.Forms
                 bool already          = BrowserFetch.IsConnected;
                 lblWsIndicator.ForeColor = already ? Color.LimeGreen : Color.Gray;
                 lblWsStatus.ForeColor    = already ? Color.LimeGreen : Color.Gray;
-                lblWsStatus.Text         = already ? "Connected" : "Not connected";
+                lblWsStatus.Text         = already ? "Extension OK" : "Extension OFF";
                 if (already)
                 {
                     button3.PerformClick();
@@ -911,7 +911,7 @@ namespace Bomber_GUI.Forms
 
                 lblWsIndicator.ForeColor = Color.Gray;
                 lblWsStatus.ForeColor    = Color.Gray;
-                lblWsStatus.Text         = "Not connected";
+                lblWsStatus.Text         = "Extension OFF";
 
                 // Hide WS controls, show Get Cookie button.
                 lblWsIndicator.Visible    = false;
@@ -927,7 +927,7 @@ namespace Bomber_GUI.Forms
             {
                 lblWsIndicator.ForeColor = Color.LimeGreen;
                 lblWsStatus.ForeColor    = Color.LimeGreen;
-                lblWsStatus.Text         = "Connected";
+                lblWsStatus.Text         = "Extension OK";
                 button3.PerformClick();
             }
             if (lblWsIndicator.InvokeRequired)
@@ -942,7 +942,7 @@ namespace Bomber_GUI.Forms
             {
                 lblWsIndicator.ForeColor = Color.Gray;
                 lblWsStatus.ForeColor    = Color.Gray;
-                lblWsStatus.Text         = "Not connected";
+                lblWsStatus.Text         = "Extension OFF";
             }
             if (lblWsIndicator.InvokeRequired)
                 lblWsIndicator.Invoke((MethodInvoker)Apply);
